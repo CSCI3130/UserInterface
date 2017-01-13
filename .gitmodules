@@ -1,0 +1,3 @@
+[submodule "compute-layer"]
+	path = compute-layer
+	url = git@github.com:CSCI3130/compute-layer
