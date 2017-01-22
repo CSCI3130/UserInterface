@@ -1,0 +1,1 @@
+$wnd.com_piccritic_website_AppWidgetSet.runAsyncCallback2('z6(1202,1,Gfd);_.vc=function LXb(){_Mb((!UMb&&(UMb=new eNb),UMb),this.b.e)};sad(Vh)(2);\n//# sourceURL=com.piccritic.website.AppWidgetSet-2.js\n')
