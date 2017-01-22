@@ -1,3 +1,2 @@
-# User Interface
-
-Where we display processed data to the user and collect data from the user.
+[![Build Status](https://travis-ci.org/CSCI3130/piccritic.png)]
+(https://travis-ci.org/CSCI3130/piccritic)
