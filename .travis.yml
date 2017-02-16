@@ -6,3 +6,12 @@ sudo: false
 
 notifications:
   slack: piccritic:FMcdf3bMNpPc8RBufZhDk9uJ
+
+env:
+- JDBC_DATABASE_URL=localhost:postgres
+
+services:
+- postgresql
+
+before_script:
+- psql < ./database/User.sql -U postgres
