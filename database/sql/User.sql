@@ -1,4 +1,4 @@
-﻿CREATE SCHEMA IF NOT EXISTS piccritic;
+﻿CREATE SCHEMA piccritic;
 
 CREATE TABLE piccritic."User"
 (
