@@ -113,11 +113,12 @@ public class User implements Serializable, Cloneable {
 	}
 
 	/**
-	 * Custom equals method, uses toString value
+	 * Compares this User to another object.
+	 * Returns true if both string representations are equal.
 	 *
 	 * @param o Object to compare
+	 * @return true if both Users have identical data
 	 */
-	@Override
 	public boolean equals(Object o) {
 		if (o != null && o instanceof User) {
 			User u = (User) o;

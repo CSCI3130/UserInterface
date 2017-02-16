@@ -29,7 +29,9 @@ public class DBUserConnector extends DBConnector implements UserConnector {
 	private PreparedStatement simpleUpdateStatement;
 	private PreparedStatement updateStatement;
 	private PreparedStatement selectStatement;
-	private ResultSet res; // go
+	private PreparedStatement loginStatement;
+	
+	private ResultSet res;
 
 	public DBUserConnector() throws SQLException {
 		insertStatement = dbCon.prepareStatement("insert into piccritic.\"User\" values(?,?,?,?,?,?,?,?);");
@@ -45,6 +47,8 @@ public class DBUserConnector extends DBConnector implements UserConnector {
 				+ "\"License_ID\"=? where \"User_handle\"=?;");
 
 		selectStatement = dbCon.prepareStatement("select * from piccritic.\"User\" where \"User_handle\"=?;");
+
+		loginStatement = dbCon.prepareStatement("select \"User_hash\", \"User_salt\" from piccritic.\"User\" where \"User_handle\" = ?;");
 	}
 
 	public User insertUser(User user, String hash, String salt) {
@@ -112,7 +116,7 @@ public class DBUserConnector extends DBConnector implements UserConnector {
 		try {
 			selectStatement.setString(1, handle);
 			res = selectStatement.executeQuery();
-			res.next();
+			if (!res.next()) return null;
 
 			user.setHandle(res.getString(1));
 			user.setFirstName(res.getString(4));
@@ -125,5 +129,25 @@ public class DBUserConnector extends DBConnector implements UserConnector {
 			return null;
 		}
 		return user;
+	}
+
+	/**
+	 * @see com.piccritic.database.user.UserConnector#getUserLogin(java.lang.String)
+	 */
+	public UserLogin getUserLogin(String handle) {
+      	UserLogin login = new UserLogin();
+		try {
+          loginStatement.setString(1, handle);
+          res = loginStatement.executeQuery();
+          if (!res.next()) return null;
+          
+          login.setHandle(handle);
+          login.setHash(res.getString(1));
+          login.setSalt(res.getString(2));
+        } catch (SQLException e) {
+          e.printStackTrace();
+          return null;
+        }
+		return login;
 	}
 }
