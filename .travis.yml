@@ -14,4 +14,4 @@ services:
 - postgresql
 
 before_script:
-- psql < ./database/User.sql -U postgres
+- psql < ./database/sql/User.sql -U postgres
