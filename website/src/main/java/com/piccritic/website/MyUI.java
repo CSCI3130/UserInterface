@@ -1,6 +1,5 @@
 package com.piccritic.website;
 
-import static com.piccritic.compute.GetProcData.*;
 
 import javax.servlet.annotation.WebServlet;
 
@@ -31,7 +30,7 @@ public class MyUI extends UI {
 
 		Button button = new Button("Get Project Name");
 		button.addClickListener( e -> {
-		layout.addComponent(new Label(getProjectName()));
+		layout.addComponent(new Label("PicCritic"));
 		});
 
 		layout.addComponent(button);
