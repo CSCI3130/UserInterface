@@ -4,32 +4,34 @@
  */
 package com.piccritic.database.user;
 
-import static org.junit.Assert.*;
-
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.After;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.sql.Date;
 
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
 /**
- * Because of the database structure, insert must work for any
- * of the tests to work.
+ * Because of the database structure, insert must work for any of the tests to
+ * work.
  *
- * @author Ryan Lowe<br>Damien Robichaud
+ * @author Ryan Lowe<br>
+ *         Damien Robichaud
  */
 public class UserConnectorTest {
 
 	UserConnector con = new JPAUserConnector();
 	Critic critic;
 	Critic inserted;
-  
-  	private String handle = "damienr74";
-  	private String firstName = "Damien";
-  	private String differentName = "Different";
-  	private String lastName = "Lowe";
-  	private String bio = "I'm cool";
-  	private String hash = "hash";
+
+	private String handle = "damienr74";
+	private String firstName = "Damien";
+	private String differentName = "Different";
+	private String lastName = "Lowe";
+	private String bio = "I'm cool";
+	private String hash = "hash";
 
 	@Before
 	public void init() {
@@ -41,7 +43,11 @@ public class UserConnectorTest {
 		critic.setJoinDate(new Date(0));
 		critic.setLicenseID(0);
 		critic.setBio(bio);
-		inserted = con.insertCritic(critic, hash);
+		try {
+			inserted = con.insertCritic(critic, hash);
+		} catch (UserException e) {
+
+		}
 	}
 
 	@Test
@@ -52,30 +58,45 @@ public class UserConnectorTest {
 	@Test
 	public void testDelete() {
 		assertTrue(con.deleteCritic(inserted));
-		con.insertCritic(critic, hash);
+		try {
+			con.insertCritic(critic, hash);
+		} catch (UserException e) {
+		}
 	}
 
 	@Test
 	public void testSimpleUpdateUser() {
 		critic.setFirstName(differentName);
-		Critic updated = con.updateCritic(critic);
+		Critic updated;
+		try {
+			updated = con.updateCritic(critic);
+		} catch (UserException e) {
+			assertTrue(false);
+			return;
+		}
 		assertEquals(critic, updated);
 	}
 
 	@Test
 	public void testUpdateUser() {
 		String newHash = "newhash";
-		Critic updated = con.updateCritic(critic, newHash);
-      	String storedHash = con.getUserHash(updated.getHandle());
-      	assertEquals(newHash, storedHash);
+		Critic updated;
+		try {
+			updated = con.updateCritic(critic, newHash);
+		} catch (UserException e) {
+			assertTrue(false);
+			return;
+		}
+		String storedHash = con.getUserHash(updated.getHandle());
+		assertEquals(newHash, storedHash);
 	}
 
-  	@Test
-  	public void testLoginUser() {
-      	String storedHash = con.getUserHash(handle);
-      	assertEquals(storedHash, hash);
-    }
-    
+	@Test
+	public void testLoginUser() {
+		String storedHash = con.getUserHash(handle);
+		assertEquals(storedHash, hash);
+	}
+
 	@After
 	public void clearUsers() {
 		con.deleteCritic(critic);

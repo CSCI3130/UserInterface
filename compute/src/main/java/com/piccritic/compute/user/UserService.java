@@ -4,7 +4,13 @@
  */
 package com.piccritic.compute.user;
 
-import com.piccritic.database.user.*;
+import java.sql.Date;
+import java.util.Calendar;
+
+import com.piccritic.database.user.Critic;
+import com.piccritic.database.user.JPAUserConnector;
+import com.piccritic.database.user.UserConnector;
+import com.piccritic.database.user.UserException;
 
 /**
  * 
@@ -18,7 +24,7 @@ public class UserService {
     private static String updateSuccess = "Profile successfully updated!";
     private static String createFailure = "Profile could not be created.";
     private static String updateFailure = "Profile could not be updated.";
-    private static String passwordTooShort = "Password too short; must be at least 10 characters.";
+    private static String passwordShort = "Password must be at least 8 characters.";
     private static String handleInUse = "Handle already in use.";
   	
   	private UserService() {
@@ -35,10 +41,19 @@ public class UserService {
       	return instance;
     }
 
-  	public String create(Critic critic, String password) {
+  	public String create(Critic critic, String password) throws UserException {
+  		if (critic == null) {
+  			throw new UserException(createFailure);
+  		}
+  		
+  		if (password.length() < 8) {
+  			throw new UserException(passwordShort);
+  		}
+
+		critic.setJoinDate(new Date(Calendar.getInstance().getTime().getTime()));
       	Critic selected = connector.selectCritic(critic.getHandle());
       	if (selected != null) {
-          	return handleInUse;
+          	throw new UserException(handleInUse);
         }
 
       	//TODO implement hashing
@@ -47,30 +62,30 @@ public class UserService {
       	Critic inserted = connector.insertCritic(critic, hash);
       
       	if (inserted == null) {
-          	return createFailure;
+          	throw new UserException(createFailure);
         }
       
       	return createSuccess;
     }
   
-  	public String update(Critic critic, String password) {
+  	public String update(Critic critic, String password) throws UserException {
       	Critic selected = connector.selectCritic(critic.getHandle());
       	if (selected == null) {
-        	return updateFailure;
+        	throw new UserException(updateFailure);
         }
       
       	Critic updated;
       	if (password.isEmpty()) {
           	updated = connector.updateCritic(critic);
           	if (updated == null) {
-              	return updateFailure;
+              	throw new UserException(updateFailure);
             }
           	return updateSuccess;
         }
       
       	String hash = connector.getUserHash(critic.getHandle());
       	if (hash == null) {
-        	return updateFailure;
+        	throw new UserException(updateFailure);
         }
       
       	return updateSuccess;

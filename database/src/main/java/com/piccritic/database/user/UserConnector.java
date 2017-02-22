@@ -22,7 +22,7 @@ public interface UserConnector {
 	 * @param hash the hashed and salted password to store with the critic data
 	 * @return Critic object that was added
 	 */
-	public Critic insertCritic(Critic critic, String hash);
+	public Critic insertCritic(Critic critic, String hash) throws UserException;
 	
 	/**
 	 * Deletes a given critic object from the database.
@@ -45,8 +45,9 @@ public interface UserConnector {
 	 *
 	 * @param critic Critic to update
 	 * @return Critic object that was updated
+	 * @throws UserException 
 	 */
-	public Critic updateCritic(Critic critic);
+	public Critic updateCritic(Critic critic) throws UserException;
 	
 	/**
 	 * Updates a critic from the database given the Critic object.
@@ -55,7 +56,7 @@ public interface UserConnector {
 	 * @param hash the critic's new hash
 	 * @return Critic object that was updated
 	 */
-	public Critic updateCritic(Critic critic, String hash);
+	public Critic updateCritic(Critic critic, String hash) throws UserException;
 	
 	/**
 	 * Gets the hash from the database

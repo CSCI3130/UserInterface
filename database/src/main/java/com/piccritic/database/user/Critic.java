@@ -25,9 +25,9 @@ public class Critic {
 	@Id
 	@Size(min=5,max=15)
 	private String handle;
-	@Size(max=15)
+	@Size(min=1,max=15)
 	private String firstName;
-	@Size(max=15)
+	@Size(min=1,max=15)
 	private String lastName;
 	@NotNull
 	private Date joinDate;
