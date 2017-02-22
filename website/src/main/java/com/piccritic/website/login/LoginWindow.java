@@ -2,6 +2,15 @@ package com.piccritic.website.login;
 
 import com.vaadin.ui.Window;
 
+/**
+ * This object is used to generate a login window
+ * that allows the user to login.
+ * 
+ * @see LoginForm
+ * 
+ * @author Damien Robichaud <br>
+ * 		Francis Bosse
+ */
 public class LoginWindow extends Window {
 
 	LoginForm loginForm = new LoginForm();
@@ -12,5 +21,4 @@ public class LoginWindow extends Window {
 		setModal(true);
 		setContent(loginForm);
 	}
-
 }
