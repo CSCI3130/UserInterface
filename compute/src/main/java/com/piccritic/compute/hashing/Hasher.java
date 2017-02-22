@@ -49,6 +49,9 @@ public class Hasher implements HashInterface {
 	 */
 	public boolean checkLogin(String handle, String password) {
 		UserLogin userLogin = con.getUserLogin(handle);
+		if (userLogin == null) {
+			return false;
+		}
 		return BCrypt.checkpw(password, userLogin.getHash());
 	}
 }

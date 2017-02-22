@@ -41,7 +41,7 @@ public class LoginForm extends FormLayout {
 		}
 		String userHandle = handle.getValue();
 		String userPassword = password.getValue();
-		switch (getUI().loginService.loginUser(userHandle, userPassword)) {
+		switch (LoginService.loginUser(userHandle, userPassword)) {
 		case INVALID_INFO:
 			Notification.show("Invalid Credentials", Type.WARNING_MESSAGE);
 			break;

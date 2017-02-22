@@ -81,6 +81,11 @@ public class HasherTest {
 		assertFalse(hasher.checkLogin(handle1, "wrongpassword"));
 	}
 	
+	@Test
+	public void testInvalidUser() {
+		assertFalse(hasher.checkLogin("newUser", "somepassword"));
+	}
+	
 	@After
 	public void clearUsers() {
 		con.deleteUser(user1);

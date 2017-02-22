@@ -2,8 +2,6 @@ package com.piccritic.website;
 
 import javax.servlet.annotation.WebServlet;
 
-import com.piccritic.compute.LoginConnector;
-import com.piccritic.website.login.AuthService;
 import com.piccritic.website.login.LoginWindow;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.VaadinServletConfiguration;
@@ -26,12 +24,9 @@ import com.vaadin.ui.Window;
 @Theme("mytheme")
 public class PicCritic extends UI {
 
-	public LoginConnector loginService;
-	
 	@Override
 	protected void init(VaadinRequest vaadinRequest) {
 		final VerticalLayout layout = new VerticalLayout();
-		loginService = new LoginConnector();
 		Button button = new Button("Login");
 		button.addClickListener(e -> {
 			Window login = new LoginWindow();

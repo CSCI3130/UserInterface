@@ -10,6 +10,7 @@ import com.vaadin.server.VaadinService;
 import com.vaadin.server.VaadinSession;
 
 /**
+ * Cookie Authentification (for later)
  * Source code heavily inspired from:
  * @see https://github.com/alejandro-du/remember-me-feature/blob/master/src/main/java/com/example/AuthService.java
  * 

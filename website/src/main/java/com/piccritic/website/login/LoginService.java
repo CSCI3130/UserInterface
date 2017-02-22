@@ -4,20 +4,10 @@
  */
 package com.piccritic.website.login;
 
-/**
- * This class offers methods for logging a user in, out, and checking login status
- * for the current session.
- * 
- * @author ian-dawson <br>
- * 		ajsteadly
- */
-
-import com.vaadin.server.VaadinRequest;
-import com.vaadin.server.VaadinSession;
-
 import java.sql.SQLException;
 
-import com.piccritic.compute.hashing.*;
+import com.piccritic.compute.hashing.Hasher;
+import com.vaadin.server.VaadinSession;
 
 public class LoginService {
 	public enum LoginStatus {
@@ -33,12 +23,17 @@ public class LoginService {
 	 * @return LoginStatus for the user's session
 	 * @throws SQLException 
 	 */
-	public LoginStatus loginUser(String handle, String password) throws SQLException {
-		Hasher hasher = new Hasher();
-		if (hasher.checkLogin(handle, password)) {
-			VaadinSession.getCurrent().setAttribute("LoginStatus", LoginStatus.LOGGED_IN);
-			return LoginStatus.LOGGED_IN;
-		} else {
+	public static LoginStatus loginUser(String handle, String password) {
+		try {
+			Hasher hasher = new Hasher();
+			if (hasher.checkLogin(handle, password)) {
+				VaadinSession.getCurrent().setAttribute("LoginStatus", LoginStatus.LOGGED_IN);
+				return LoginStatus.LOGGED_IN;
+			} else {
+				return LoginStatus.INVALID_INFO;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
 			return LoginStatus.INVALID_INFO;
 		}
 	}
@@ -48,7 +43,7 @@ public class LoginService {
 	 * 
 	 * @return LoginStatus
 	 */
-	public LoginStatus getLoginStatus() {
+	public static LoginStatus getLoginStatus() {
 		LoginStatus status = (LoginStatus) VaadinSession.getCurrent().getAttribute("LoginStatus");
 		if (status == null) {
 			return LoginStatus.ERROR;
@@ -62,7 +57,7 @@ public class LoginService {
 	 * 
 	 * @return LoginStatus is LOGGED_OUT if the log out is successful.
 	 */
-	public LoginStatus logoutUser() {
+	public static LoginStatus logoutUser() {
 		LoginStatus status = (LoginStatus) VaadinSession.getCurrent().getAttribute("LoginStatus");
 		if (status == null) {
 			return LoginStatus.ERROR;
