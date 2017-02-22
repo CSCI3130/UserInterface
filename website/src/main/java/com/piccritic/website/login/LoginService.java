@@ -1,4 +1,16 @@
+/**
+ * LoginSerice.java
+ * Created Feb 21, 2017
+ */
 package com.piccritic.website.login;
+
+/**
+ * This class offers methods for logging a user in, out, and checking login status
+ * for the current session.
+ * 
+ * @author ian-dawson <br>
+ * 		ajsteadly
+ */
 
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinSession;

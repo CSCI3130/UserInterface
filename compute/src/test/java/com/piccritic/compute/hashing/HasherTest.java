@@ -1,4 +1,15 @@
+/**
+ * HasherTest.java
+ * Created Feb 21, 2017
+ */
 package com.piccritic.compute.hashing;
+
+/**
+ * This class is for testing the Hasher class.
+ * 
+ * @author ian-dawson <br>
+ * 		ajsteadly
+ */
 
 import java.sql.Date;
 import java.sql.SQLException;

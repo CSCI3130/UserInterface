@@ -1,4 +1,15 @@
+/**
+ * Hasher.java
+ * Created Feb 21, 2017
+ */
 package com.piccritic.compute.hashing;
+
+/**
+ * This class is for hashing user passwords.
+ * 
+ * @author ian-dawson <br>
+ * 		ajsteadly
+ */
 
 import java.sql.SQLException;
 

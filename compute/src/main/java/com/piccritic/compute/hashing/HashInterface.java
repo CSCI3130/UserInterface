@@ -1,17 +1,14 @@
 /**
- * LoginInterface.java
+ * HashInterface.java
  * Created Feb 19, 2017
  */
 package com.piccritic.compute.hashing;
 
 /**
- * This interface is to be used to submit the user login information and check login status.
- * 
- * This interface should be used by the UI.
+ * This interface is for hashing user passwords.
  * 
  * @author ian-dawson <br>
  * 		ajsteadly
- *
  */
 
 public interface HashInterface {
