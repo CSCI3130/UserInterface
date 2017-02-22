@@ -6,11 +6,10 @@ package com.piccritic.database.user;
 
 import static org.junit.Assert.*;
 
-import java.sql.SQLException;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.After;
+
 import java.sql.Date;
 
 /**
@@ -21,9 +20,9 @@ import java.sql.Date;
  */
 public class UserConnectorTest {
 
-	UserConnector con;
-	User user;
-	User inserted;
+	UserConnector con = new JPAUserConnector();
+	Critic critic;
+	Critic inserted;
   
   	private String handle = "damienr74";
   	private String firstName = "Damien";
@@ -31,57 +30,54 @@ public class UserConnectorTest {
   	private String lastName = "Lowe";
   	private String bio = "I'm cool";
   	private String hash = "hash";
-  	private String salt = "salt";
 
 	@Before
-	public void init() throws SQLException {
-		con = new DBUserConnector();
-		user = new User();
+	public void init() {
+		critic = new Critic();
 
-		user.setHandle(handle);
-		user.setFirstName(firstName);
-		user.setLastName(lastName);
-		user.setJoinDate(new Date(0));
-		user.setLicenseID(0);
-		user.setBio(bio);
-		inserted = con.insertUser(user, hash, salt);
+		critic.setHandle(handle);
+		critic.setFirstName(firstName);
+		critic.setLastName(lastName);
+		critic.setJoinDate(new Date(0));
+		critic.setLicenseID(0);
+		critic.setBio(bio);
+		inserted = con.insertCritic(critic, hash);
 	}
 
 	@Test
 	public void testSelectUser() {
-		assertEquals(user, con.selectUser(inserted.getHandle()));
+		assertEquals(critic, con.selectCritic(inserted.getHandle()));
 	}
 
 	@Test
 	public void testDelete() {
-		assertTrue(con.deleteUser(inserted));
-		con.insertUser(user, hash, salt);
+		assertTrue(con.deleteCritic(inserted));
+		con.insertCritic(critic, hash);
 	}
 
 	@Test
 	public void testSimpleUpdateUser() {
-		user.setFirstName(differentName);
-		User updated = con.updateUser(user);
-		assertEquals(user, updated);
+		critic.setFirstName(differentName);
+		Critic updated = con.updateCritic(critic);
+		assertEquals(critic, updated);
 	}
 
 	@Test
 	public void testUpdateUser() {
-		User updated = con.updateUser(user, hash+"new");
-      	UserLogin login = con.getUserLogin(updated.getHandle());
-      	assertEquals(hash+"new", login.getHash());
+		String newHash = "newhash";
+		Critic updated = con.updateCritic(critic, newHash);
+      	String storedHash = con.getUserHash(updated.getHandle());
+      	assertEquals(newHash, storedHash);
 	}
 
   	@Test
   	public void testLoginUser() {
-      	UserLogin login = con.getUserLogin(handle);
-      	assertEquals(handle, login.getHandle());
-      	assertEquals(hash, login.getHash());
-      	assertEquals(salt, login.getSalt());
+      	String storedHash = con.getUserHash(handle);
+      	assertEquals(storedHash, hash);
     }
     
 	@After
 	public void clearUsers() {
-		con.deleteUser(user);
+		con.deleteCritic(critic);
 	}
 }

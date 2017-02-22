@@ -1,35 +1,42 @@
 /**
- * User.java
+ * Critic.java
  * Created Feb 15, 2017
  */
 package com.piccritic.database.user;
 
-import java.io.Serializable;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
 import java.sql.Date;
 
 /**
- * User class is a User Java Bean for the piccritic project.
+ * Critic class is a Critic Java Bean for the piccritic project.
  *
- * The bean holds the information needed to store a user in the database
- * according to the User table. The handle field is the primary key.
- * The getter and setters do not directly update the database. The
- * UserConnector has to be used to handle queries.
+ * The bean holds the information needed to store a critic in the database
+ * according to the Critic table. The handle field is the primary key.
  *
  * @author Ryan Lowe<br>Damien Robichaud
  */
-public class User implements Serializable, Cloneable {
+@Entity
+public class Critic {
 
-	private static final long serialVersionUID = 1L;
-
+	@Id
+	@Size(min=5,max=15)
 	private String handle;
+	@Size(max=15)
 	private String firstName;
+	@Size(max=15)
 	private String lastName;
+	@NotNull
 	private Date joinDate;
 	private int licenseID;
+	@Size(max=200)
 	private String bio;
 
 	/**
-	 * @return the handle of this User
+	 * @return the handle of this Critic
 	 */
 	public String getHandle() {
 		return handle;
@@ -43,7 +50,7 @@ public class User implements Serializable, Cloneable {
 	}
 
 	/**
-	 * @return the firstName of this User
+	 * @return the firstName of this Critic
 	 */
 	public String getFirstName() {
 		return firstName;
@@ -57,7 +64,7 @@ public class User implements Serializable, Cloneable {
 	}
 
 	/**
-	 * @return the lastName of this User
+	 * @return the lastName of this Critic
 	 */
 	public String getLastName() {
 		return lastName;
@@ -71,7 +78,7 @@ public class User implements Serializable, Cloneable {
 	}
 
 	/**
-	 * @return the joinDate of this User
+	 * @return the joinDate of this Critic
 	 */
 	public Date getJoinDate() {
 		return joinDate;
@@ -85,7 +92,7 @@ public class User implements Serializable, Cloneable {
 	}
 
 	/**
-	 * @return the licenseID of this User
+	 * @return the licenseID of this Critic
 	 */
 	public int getLicenseID() {
 		return licenseID;
@@ -99,7 +106,7 @@ public class User implements Serializable, Cloneable {
 	}
 
 	/**
-	 * @return the bio of this User
+	 * @return the bio of this Critic
 	 */
 	public String getBio() {
 		return bio;
@@ -113,15 +120,15 @@ public class User implements Serializable, Cloneable {
 	}
 
 	/**
-	 * Compares this User to another object.
+	 * Compares this Critic to another object.
 	 * Returns true if both string representations are equal.
 	 *
 	 * @param o Object to compare
 	 * @return true if both Users have identical data
 	 */
 	public boolean equals(Object o) {
-		if (o != null && o instanceof User) {
-			User u = (User) o;
+		if (o != null && o instanceof Critic) {
+			Critic u = (Critic) o;
 			return this.toString().equals(u.toString());
 		}
 		return false;
@@ -131,7 +138,7 @@ public class User implements Serializable, Cloneable {
 	 * @return string representing bean value
 	 */
 	public String toString() {
-		return "User{" + "handle=" + handle + ", firstName=" + firstName
+		return "Critic{" + "handle=" + handle + ", firstName=" + firstName
 			+ ", lastName=" + lastName + ", joinDate=" + joinDate.toString()
  			+ ", licenseID=" + licenseID + ", bio=" + bio + "}";
 	}
