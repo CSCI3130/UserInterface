@@ -14,6 +14,9 @@ public class LoginService {
 		LOGGED_IN, LOGGED_OUT, INVALID_INFO, SESSION_TIMEOUT, ERROR
 	}
 	
+	private static final String LOGIN_STATUS = "LoginStatus";
+	private static final String SESSION_HANDLE = "Handle";
+	
 	/**
 	 * Attempts to login user with submitted information, returns status
 	 * of login attempt.
@@ -27,7 +30,8 @@ public class LoginService {
 		try {
 			Hasher hasher = new Hasher();
 			if (hasher.checkLogin(handle, password)) {
-				VaadinSession.getCurrent().setAttribute("LoginStatus", LoginStatus.LOGGED_IN);
+				VaadinSession.getCurrent().setAttribute(LOGIN_STATUS, LoginStatus.LOGGED_IN);
+				VaadinSession.getCurrent().setAttribute(SESSION_HANDLE, handle);
 				return LoginStatus.LOGGED_IN;
 			} else {
 				return LoginStatus.INVALID_INFO;
@@ -44,7 +48,7 @@ public class LoginService {
 	 * @return LoginStatus
 	 */
 	public static LoginStatus getLoginStatus() {
-		LoginStatus status = (LoginStatus) VaadinSession.getCurrent().getAttribute("LoginStatus");
+		LoginStatus status = (LoginStatus) VaadinSession.getCurrent().getAttribute(LOGIN_STATUS);
 		if (status == null) {
 			return LoginStatus.ERROR;
 		} else {
@@ -58,13 +62,23 @@ public class LoginService {
 	 * @return LoginStatus is LOGGED_OUT if the log out is successful.
 	 */
 	public static LoginStatus logoutUser() {
-		LoginStatus status = (LoginStatus) VaadinSession.getCurrent().getAttribute("LoginStatus");
+		LoginStatus status = (LoginStatus) VaadinSession.getCurrent().getAttribute(LOGIN_STATUS);
 		if (status == null) {
 			return LoginStatus.ERROR;
 		} else {
-			VaadinSession.getCurrent().setAttribute("LoginStatus", LoginStatus.LOGGED_OUT);
+			VaadinSession.getCurrent().setAttribute(LOGIN_STATUS, LoginStatus.LOGGED_OUT);
+			VaadinSession.getCurrent().setAttribute(SESSION_HANDLE, null);
 			return LoginStatus.LOGGED_OUT;
 		}
+	}
+	
+	/**
+	 * Returns the user handle of the logged in user
+	 * 
+	 * @return string handle
+	 */
+	public static String getHandle() {
+		return (String) VaadinSession.getCurrent().getAttribute(SESSION_HANDLE);
 	}
 	
 }

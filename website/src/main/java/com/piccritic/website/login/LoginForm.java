@@ -2,6 +2,7 @@ package com.piccritic.website.login;
 
 import com.piccritic.website.PicCritic;
 import com.vaadin.data.Validator.EmptyValueException;
+import com.vaadin.server.Page;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.HorizontalLayout;
@@ -52,6 +53,8 @@ public class LoginForm extends FormLayout {
 			break;
 		case LOGGED_IN:
 			Notification.show("Logged in",Type.TRAY_NOTIFICATION);
+			((Window) getParent()).close();
+			Page.getCurrent().reload();
 			break;
 		default:
 			Notification.show("Unknown Error", Type.WARNING_MESSAGE);

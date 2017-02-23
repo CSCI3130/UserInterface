@@ -96,4 +96,8 @@ public class UserService {
       
       	return updateSuccess;
     }
+  	
+  	public Critic select(String handle) {
+  		return connector.selectCritic(handle);
+  	}
 }

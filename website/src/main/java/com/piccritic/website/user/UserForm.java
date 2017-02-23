@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import com.piccritic.compute.user.UserService;
 import com.piccritic.database.user.Critic;
 import com.piccritic.database.user.UserException;
 import com.piccritic.website.PicCritic;
@@ -20,6 +21,7 @@ import com.vaadin.ui.Notification.Type;
 import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
+import com.vaadin.ui.UI;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.ValoTheme;
 
@@ -51,12 +53,21 @@ public class UserForm extends FormLayout {
 	private PasswordField password = new PasswordField("Password");
 	private PasswordField confirmPass = new PasswordField("Confirm password");
 
-	private Critic critic = new Critic();
+	private Critic critic;
 	boolean newProfile;
 
 	public UserForm(String userHandle) {
 		newProfile = (userHandle == null);
 		handle.setValue((userHandle == null) ? "" : userHandle);
+		critic = PicCritic.userService.select(userHandle);
+		if (critic != null) {
+			firstName.setValue(critic.getFirstName());
+			lastName.setValue(critic.getLastName());
+			bio.setValue(critic.getBio());
+			license.setValue(critic.getLicenseID());
+		} else {
+			critic = new Critic();
+		}
 		handle.setEnabled(newProfile);
 
 		licenses.put("License 1", new Integer(1));
@@ -97,9 +108,9 @@ public class UserForm extends FormLayout {
 		}
 		try {
 			if (newProfile) {
-				status = getUI().userService.create(critic, password.getValue());
+				status = PicCritic.userService.create(critic, password.getValue());
 			} else {
-				status = getUI().userService.update(critic, password.getValue());
+				status = PicCritic.userService.update(critic, password.getValue());
 			}
 		} catch (UserException ue) {
 			Notification.show(ue.getLocalizedMessage(), Type.WARNING_MESSAGE);
@@ -126,10 +137,5 @@ public class UserForm extends FormLayout {
 	
 	private void closeWindow() {
 		((Window) getParent().getParent()).close();
-	}
-
-	@Override
-	public PicCritic getUI() {
-		return (PicCritic) super.getUI();
 	}
 }
