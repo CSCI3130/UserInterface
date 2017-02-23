@@ -4,26 +4,27 @@
  */
 package com.piccritic.database.user;
 
-import java.io.Serializable;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 /**
- * This class is a Java Bean that holds login information.
- *
- * Used to store the result of a query from the database.
- * @see UserConnector
+ * This class is a Java Bean that keeps critic login data
+ * separate from the rest of the critic data.
  *
  * @author Ryan Lowe<br>Damien Robichaud
  */
-public class UserLogin implements Serializable, Cloneable {
-	
-	private static final long serialVersionUID = 2L;
-	
+@Entity
+public class UserLogin {
+	@Id
+	@Size(min=5,max=15)
 	private String handle;
+	@NotNull
 	private String hash;
-	private String salt;
 	
 	/**
-     * @return the handle of this user
+     * @return the handle of this critic
      */
   	public String getHandle() {
 		return handle;
@@ -37,7 +38,7 @@ public class UserLogin implements Serializable, Cloneable {
 	}
 	
   	/**
-     * @return the hash of this user
+     * @return the hash of this critic
      */
 	public String getHash() {
 		return hash;
@@ -51,26 +52,12 @@ public class UserLogin implements Serializable, Cloneable {
 	}
 	
   	/**
-     * @return the salt of this user
-     */
-	public String getSalt() {
-		return salt;
-	}
-	
-  	/**
-     * @param salt the salt to set
-     */
-	public void setSalt(String salt) {
-		this.salt = salt;
-	}
-	
-  	/**
      * Gets a formatted string of the data.
      *
      * @return formatted UserLogin String
      */
 	public String toString() {
-		return String.format("UserLogin{handle=%s, hash=%s, salt=%s}", handle, hash, salt);
+		return String.format("UserLogin{handle=%s, hash=%s}", handle, hash);
 	}
 	
   	/**
@@ -82,7 +69,7 @@ public class UserLogin implements Serializable, Cloneable {
 	public boolean equals(Object o) {
 		if (o != null && o instanceof UserLogin) {
 			UserLogin u = (UserLogin) o;
-			return handle.equals(u.getHandle()) && hash.equals(u.getHash()) && salt.equals(u.getSalt());
+			return handle.equals(u.getHandle()) && hash.equals(u.getHash());
 		}
 		return false;
 	}

@@ -2,7 +2,9 @@ package com.piccritic.website;
 
 import javax.servlet.annotation.WebServlet;
 
+import com.piccritic.compute.user.UserService;
 import com.piccritic.website.login.LoginWindow;
+import com.piccritic.website.user.UserForm;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.server.VaadinRequest;
@@ -23,17 +25,28 @@ import com.vaadin.ui.Window;
  */
 @Theme("mytheme")
 public class PicCritic extends UI {
+	
+	public UserService userService = UserService.createService();
 
 	@Override
 	protected void init(VaadinRequest vaadinRequest) {
 		final VerticalLayout layout = new VerticalLayout();
-		Button button = new Button("Login");
-		button.addClickListener(e -> {
+		Button loginUser = new Button("Login");
+		loginUser.addClickListener(e -> {
 			Window login = new LoginWindow();
-			getUI().addWindow(login);
+			addWindow(login);
 		});
 
-		layout.addComponent(button);
+		Button createUser = new Button("Create User");
+		createUser.addClickListener( e -> {
+			Window userForm = new Window();
+			userForm.setModal(true);
+			userForm.setContent(new VerticalLayout(new UserForm(null)));
+			addWindow(userForm);
+		});
+
+		layout.addComponent(loginUser);
+		layout.addComponent(createUser);
 		layout.setMargin(true);
 		layout.setSpacing(true);
 

@@ -13,23 +13,25 @@ package com.piccritic.compute.hashing;
 
 import java.sql.SQLException;
 
-import com.piccritic.database.user.*;
+import com.piccritic.database.user.JPAUserConnector;
+import com.piccritic.database.user.UserConnector;
 
 public class Hasher implements HashInterface {
-	
+
 	private UserConnector con;
-	
+
 	/**
 	 * Initializes a new Hasher
 	 * 
-	 * @param con Connection to user information from database
-	 * @throws SQLException 
+	 * @param con
+	 *            Connection to user information from database
+	 * @throws SQLException
 	 */
 	public Hasher() throws SQLException {
-		UserConnector con = new DBUserConnector();
+		UserConnector con = new JPAUserConnector();
 		this.con = con;
 	}
-	
+
 	/**
 	 * Generates the hash of password
 	 * 
@@ -39,19 +41,21 @@ public class Hasher implements HashInterface {
 	public String generateHash(String password) {
 		return BCrypt.hashpw(password, BCrypt.gensalt(12));
 	}
-	
+
 	/**
 	 * Verifies login information
 	 * 
-	 * @param handle User-input handle
-	 * @param password User-input password
+	 * @param handle
+	 *            User-input handle
+	 * @param password
+	 *            User-input password
 	 * @return true if information correct, false otherwise
 	 */
 	public boolean checkLogin(String handle, String password) {
-		UserLogin userLogin = con.getUserLogin(handle);
+		String userLogin = con.getUserHash(handle);
 		if (userLogin == null) {
 			return false;
 		}
-		return BCrypt.checkpw(password, userLogin.getHash());
+		return BCrypt.checkpw(password, userLogin);
 	}
 }

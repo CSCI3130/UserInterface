@@ -9,6 +9,7 @@ import com.vaadin.ui.Notification;
 import com.vaadin.ui.Notification.Type;
 import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.TextField;
+import com.vaadin.ui.Window;
 
 /**
  * This object implements a form to allow users to enter login information
@@ -21,15 +22,19 @@ public class LoginForm extends FormLayout {
 	private TextField handle = new TextField("Handle");
 	private PasswordField password = new PasswordField("Password");
 	private Button login = new Button("login", this::loginAction);
-	private Button signUp = new Button("Sign Up");
+	private Button cancel = new Button("Cancel", this::cancelAction);
 
 	public LoginForm() {
 		handle.setRequired(true);
 		handle.setRequiredError("Must enter handle");
 		password.setRequired(true);
 		password.setRequiredError("Must enter password");
-		HorizontalLayout actions = new HorizontalLayout(login, signUp);
+		HorizontalLayout actions = new HorizontalLayout(login, cancel);
 		addComponents(handle, password, actions);
+	}
+
+	public void cancelAction(Button.ClickEvent event) {
+		((Window) getParent()).close();
 	}
 
 	public void loginAction(Button.ClickEvent event) {
@@ -46,7 +51,6 @@ public class LoginForm extends FormLayout {
 			Notification.show("Invalid Credentials", Type.WARNING_MESSAGE);
 			break;
 		case LOGGED_IN:
-			AuthService.createUserSession(userHandle);
 			Notification.show("Logged in",Type.TRAY_NOTIFICATION);
 			break;
 		default:

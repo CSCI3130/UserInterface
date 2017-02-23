@@ -12,14 +12,14 @@ package com.piccritic.compute.hashing;
  */
 
 public interface HashInterface {
-	
+
 	/**
 	 * Generates the hash
 	 * 
 	 * @return a String containing the hash
 	 */
 	public String generateHash(String password);
-	
+
 	/**
 	 * Checks user-input login info for validity
 	 * 

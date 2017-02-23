@@ -5,7 +5,7 @@
 package com.piccritic.database.user;
 
 /**
- * This interface is to be used for any user data queries.
+ * This interface is to be used for any critic data queries.
  *
  * It provides an abstraction of the database model and the query structure to
  * keep the code modular and decoupled.
@@ -16,54 +16,54 @@ package com.piccritic.database.user;
 public interface UserConnector {
 	
 	/**
-	 * Inserts a new user in the database.
+	 * Inserts a new critic in the database.
 	 *
-	 * @param user the user to add to the database
-	 * @param hash the hashed password to store with the user data
-	 * @param salt the salt to store with the hashed password
-	 * @return User object that was added
+	 * @param critic the critic to add to the database
+	 * @param hash the hashed and salted password to store with the critic data
+	 * @return Critic object that was added
 	 */
-	public User insertUser(User user, String hash, String salt);
+	public Critic insertCritic(Critic critic, String hash) throws UserException;
 	
 	/**
-	 * Deletes a given user object from the database.
+	 * Deletes a given critic object from the database.
 	 *
-	 * @param user the user to be deleted
+	 * @param critic the critic to be deleted
 	 * @return true on success
 	 */
-	public boolean deleteUser(User user);
+	public boolean deleteCritic(Critic critic);
 	
 	/**
-	 * Selects a user from the database with the user handle.
+	 * Selects a critic from the database with the critic handle.
 	 *
-	 * @param handle primary key for the User table
-	 * @return User object selected from the database
+	 * @param handle primary key for the Critic table
+	 * @return Critic object selected from the database
 	 */
-	public User selectUser(String handle);
+	public Critic selectCritic(String handle);
 	
 	/**
-	 * updateUser method updates a user from the database given the User object.
+	 * updateUser method updates a critic from the database given the Critic object.
 	 *
-	 * @param user User to update
-	 * @return User object that was updated
+	 * @param critic Critic to update
+	 * @return Critic object that was updated
+	 * @throws UserException 
 	 */
-	public User updateUser(User user);
+	public Critic updateCritic(Critic critic) throws UserException;
 	
 	/**
-	 * Updates a user from the database given the User object.
+	 * Updates a critic from the database given the Critic object.
 	 *
-	 * @param user User to update
-	 * @param hash
-	 * @return User object that was updated
+	 * @param critic Critic to update
+	 * @param hash the critic's new hash
+	 * @return Critic object that was updated
 	 */
-	public User updateUser(User user, String hash);
+	public Critic updateCritic(Critic critic, String hash) throws UserException;
 	
 	/**
-	 * Gets the hash and salt from the database
+	 * Gets the hash from the database
 	 * to process the information at login.
 	 *
 	 * @param handle String containing primary key
-	 * @return UserLogin object
+	 * @return The hash corresponding to the critic handle
 	 */
-	public UserLogin getUserLogin(String handle);
+	public String getUserHash(String handle);
 }

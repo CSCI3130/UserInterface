@@ -4,84 +4,101 @@
  */
 package com.piccritic.database.user;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
-import java.sql.SQLException;
-
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.After;
 import java.sql.Date;
 
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
 /**
- * Because of the database structure, insert must work for any
- * of the tests to work.
+ * Because of the database structure, insert must work for any of the tests to
+ * work.
  *
- * @author Ryan Lowe<br>Damien Robichaud
+ * @author Ryan Lowe<br>
+ *         Damien Robichaud
  */
 public class UserConnectorTest {
 
-	UserConnector con;
-	User user;
-	User inserted;
-  
-  	private String handle = "damienr74";
-  	private String firstName = "Damien";
-  	private String differentName = "Different";
-  	private String lastName = "Lowe";
-  	private String bio = "I'm cool";
-  	private String hash = "hash";
-  	private String salt = "salt";
+	UserConnector con = new JPAUserConnector();
+	Critic critic;
+	Critic inserted;
+
+	private String handle = "damienr74";
+	private String firstName = "Damien";
+	private String differentName = "Different";
+	private String lastName = "Lowe";
+	private String bio = "I'm cool";
+	private String hash = "hash";
 
 	@Before
-	public void init() throws SQLException {
-		con = new DBUserConnector();
-		user = new User();
+	public void init() {
+		critic = new Critic();
 
-		user.setHandle(handle);
-		user.setFirstName(firstName);
-		user.setLastName(lastName);
-		user.setJoinDate(new Date(0));
-		user.setLicenseID(0);
-		user.setBio(bio);
-		inserted = con.insertUser(user, hash, salt);
+		critic.setHandle(handle);
+		critic.setFirstName(firstName);
+		critic.setLastName(lastName);
+		critic.setJoinDate(new Date(0));
+		critic.setLicenseID(0);
+		critic.setBio(bio);
+		try {
+			inserted = con.insertCritic(critic, hash);
+		} catch (UserException e) {
+
+		}
 	}
 
 	@Test
 	public void testSelectUser() {
-		assertEquals(user, con.selectUser(inserted.getHandle()));
+		assertEquals(critic, con.selectCritic(inserted.getHandle()));
 	}
 
 	@Test
 	public void testDelete() {
-		assertTrue(con.deleteUser(inserted));
-		con.insertUser(user, hash, salt);
+		assertTrue(con.deleteCritic(inserted));
+		try {
+			con.insertCritic(critic, hash);
+		} catch (UserException e) {
+		}
 	}
 
 	@Test
 	public void testSimpleUpdateUser() {
-		user.setFirstName(differentName);
-		User updated = con.updateUser(user);
-		assertEquals(user, updated);
+		critic.setFirstName(differentName);
+		Critic updated;
+		try {
+			updated = con.updateCritic(critic);
+		} catch (UserException e) {
+			assertTrue(false);
+			return;
+		}
+		assertEquals(critic, updated);
 	}
 
 	@Test
 	public void testUpdateUser() {
-		User updated = con.updateUser(user, hash+"new");
-      	UserLogin login = con.getUserLogin(updated.getHandle());
-      	assertEquals(hash+"new", login.getHash());
+		String newHash = "newhash";
+		Critic updated;
+		try {
+			updated = con.updateCritic(critic, newHash);
+		} catch (UserException e) {
+			assertTrue(false);
+			return;
+		}
+		String storedHash = con.getUserHash(updated.getHandle());
+		assertEquals(newHash, storedHash);
 	}
 
-  	@Test
-  	public void testLoginUser() {
-      	UserLogin login = con.getUserLogin(handle);
-      	assertEquals(handle, login.getHandle());
-      	assertEquals(hash, login.getHash());
-      	assertEquals(salt, login.getSalt());
-    }
-    
+	@Test
+	public void testLoginUser() {
+		String storedHash = con.getUserHash(handle);
+		assertEquals(storedHash, hash);
+	}
+
 	@After
 	public void clearUsers() {
-		con.deleteUser(user);
+		con.deleteCritic(critic);
 	}
 }
