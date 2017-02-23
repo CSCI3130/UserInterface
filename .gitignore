@@ -1,3 +1,6 @@
 website/target
 compute/target
 database/target
+.project
+*/.project
+*/.classpath

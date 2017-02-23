@@ -131,7 +131,11 @@ public class JPAUserConnector implements UserConnector {
 	 */
 	public String getUserHash(String handle) {
 
-		return (String) logins.getItem(handle).getItemProperty("hash").getValue();
+		EntityItem<UserLogin> login = logins.getItem(handle);
+		if (login == null) {
+			return null;
+		}
+		return (String) login.getItemProperty("hash").getValue();
 	}
 
 	private void validate(Critic critic) throws UserException {

@@ -5,8 +5,10 @@
 package com.piccritic.compute.user;
 
 import java.sql.Date;
+import java.sql.SQLException;
 import java.util.Calendar;
 
+import com.piccritic.compute.hashing.Hasher;
 import com.piccritic.database.user.Critic;
 import com.piccritic.database.user.JPAUserConnector;
 import com.piccritic.database.user.UserConnector;
@@ -56,14 +58,18 @@ public class UserService {
           	throw new UserException(handleInUse);
         }
 
-      	//TODO implement hashing
-      	String salt = "abcdef";
-      	String hash = password+salt;
-      	Critic inserted = connector.insertCritic(critic, hash);
+		try {
+			Hasher hasher = new Hasher();
+			String hash = hasher.generateHash(password);
+			Critic inserted = connector.insertCritic(critic, hash);
+			if (inserted == null) {
+				throw new UserException(createFailure);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new UserException(createFailure);
+		}
       
-      	if (inserted == null) {
-          	throw new UserException(createFailure);
-        }
       
       	return createSuccess;
     }
@@ -90,4 +96,8 @@ public class UserService {
       
       	return updateSuccess;
     }
+  	
+  	public Critic select(String handle) {
+  		return connector.selectCritic(handle);
+  	}
 }
