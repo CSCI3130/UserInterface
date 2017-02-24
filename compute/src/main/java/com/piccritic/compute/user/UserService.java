@@ -87,6 +87,18 @@ public class UserService {
               	throw new UserException(updateFailure);
             }
           	return updateSuccess;
+        } else {
+			try {
+				Hasher hasher = new Hasher();
+				String hash = hasher.generateHash(password);
+				Critic inserted = connector.insertCritic(critic, hash);
+				if (inserted == null) {
+					throw new UserException(createFailure);
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+				throw new UserException(createFailure);
+			}
         }
       
       	String hash = connector.getUserHash(critic.getHandle());

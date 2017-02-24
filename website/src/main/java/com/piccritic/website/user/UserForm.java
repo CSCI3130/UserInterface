@@ -8,7 +8,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import com.piccritic.compute.user.UserService;
 import com.piccritic.database.user.Critic;
 import com.piccritic.database.user.UserException;
 import com.piccritic.website.PicCritic;
@@ -21,7 +20,6 @@ import com.vaadin.ui.Notification.Type;
 import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
-import com.vaadin.ui.UI;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.ValoTheme;
 
@@ -38,6 +36,8 @@ public class UserForm extends FormLayout {
 	private static final long serialVersionUID = 3L;
 
 	private static final String cancelNotif = "Request canceled.";
+	private static final String passwordMatch = "Passwords do not match";
+	private static final String passwordLength = "Password must be at least 8 characters";
 
 	private Map<String, Integer> licenses = new HashMap<String, Integer>();
 
@@ -67,6 +67,11 @@ public class UserForm extends FormLayout {
 			license.setValue(critic.getLicenseID());
 		} else {
 			critic = new Critic();
+			handle.setRequired(true);
+			firstName.setRequired(true);
+			lastName.setRequired(true);
+			password.setRequired(true);
+			confirmPass.setRequired(true);
 		}
 		handle.setEnabled(newProfile);
 
@@ -103,9 +108,15 @@ public class UserForm extends FormLayout {
 		String status;
 
 		if (!password.getValue().equals(confirmPass.getValue())) {
-			Notification.show("Passwords do not match", Type.WARNING_MESSAGE);
+			Notification.show(passwordMatch, Type.WARNING_MESSAGE);
 			return;
 		}
+
+		if (password.getValue().length() < 8) {
+			Notification.show(passwordLength, Type.WARNING_MESSAGE);
+			return;
+		}
+
 		try {
 			if (newProfile) {
 				status = PicCritic.userService.create(critic, password.getValue());
