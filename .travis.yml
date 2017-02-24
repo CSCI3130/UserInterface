@@ -1,8 +1,18 @@
 language: java
 jdk:
 - oraclejdk8
-
 sudo: false
-
 notifications:
   slack: piccritic:FMcdf3bMNpPc8RBufZhDk9uJ
+env:
+- JDBC_DATABASE_URL=jdbc:postgresql://localhost:5432/postgres?user=postgres
+services:
+- postgresql
+deploy:
+  provider: heroku
+  api_key:
+    secure: S0Uc9m/8eNt3zGPprc7hc0o7jRVEFsqvVGeUs+vEYZCm/sBaRHIkovAxXIuni/1qKEMoa56ZVZ0S0I+vSF3IloEXH4xxwRj9UzcumI5FWD8dvvEQTxPOzAyUG7r4e6r0nJWC2BVeEQMbydw/ahkse9kas22vzd/1ITaQ4ANOILnxXR53yKAao1Np46mSLy7fbfQO2F9M8CG9FoWc2njO12wl8nYa5MzRJF+1+JSglbdsDJX1r4f+ccCz/nNNwnGFoJhH5IqWucss5T0fBvoyNKQZdorSeVqRPvWUldjwm2KRC/XY7iPS/6/wx7Rk+xhWLoxNE+3kms1wRBnA3KMCbmJhBstLZJBCObfsUZCsvjAcpatwcl1i0GQasnrTqWjV/kK9bj0YP+s//Cba0DQxkgWzaqei4klIQRFYdCJIyIXCmPOSeT7J/utwFglWkc2hM2kQgsgXn0XL+PLSew4/E71VFZm37mT4b1q2fTqqorAc4sIkrBSI223Q0sF6gS8/kiPKGZ+FPX/yf1WOAULbvUDcTADaXhZcTRT2LTTG9GCD8WIpW/yoWqzVPT7YkLdUiafg0Cn97WDzqe+w7o5lhqZykYnJmcY4mcit3HcPYv/7aDi083Q+KGGtxgufSmJ6+D67vt5uVBo6j65QRl7XzQCReQvvcIeyb2pcuN/wxdQ=
+  app: piccritic-dev
+  on:
+    repo: CSCI3130/piccritic
+    branch: development
