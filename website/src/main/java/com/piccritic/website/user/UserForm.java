@@ -37,7 +37,7 @@ public class UserForm extends FormLayout {
 
 	private static final String cancelNotif = "Request canceled.";
 	private static final String passwordMatch = "Passwords do not match";
-	private static final String passwordLenght = "Password must be at least 8 characters";
+	private static final String passwordLength = "Password must be at least 8 characters";
 
 	private Map<String, Integer> licenses = new HashMap<String, Integer>();
 
@@ -113,7 +113,7 @@ public class UserForm extends FormLayout {
 		}
 
 		if (password.getValue().length() < 8) {
-			Notification.show(passwordLenght, Type.WARNING_MESSAGE);
+			Notification.show(passwordLength, Type.WARNING_MESSAGE);
 			return;
 		}
 

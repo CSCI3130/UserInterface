@@ -4,6 +4,7 @@
  */
 package com.piccritic.database.user;
 
+import java.lang.annotation.Annotation;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -12,6 +13,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.Persistence;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
+import javax.validation.metadata.ConstraintDescriptor;
 
 import com.vaadin.addon.jpacontainer.EntityItem;
 import com.vaadin.addon.jpacontainer.JPAContainer;
@@ -142,7 +144,7 @@ public class JPAUserConnector implements UserConnector {
 		Set<ConstraintViolation<Critic>> violations = Validation.buildDefaultValidatorFactory().getValidator()
 				.validate(critic);
 		for (ConstraintViolation<Critic> violation : violations) {
-			throw new UserException(violation.getMessage());
+			throw new UserException(violation.getPropertyPath() + " " + violation.getMessage());
 		}
 	}
 }
