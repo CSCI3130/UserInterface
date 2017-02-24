@@ -27,9 +27,7 @@ public class LoginForm extends FormLayout {
 
 	public LoginForm() {
 		handle.setRequired(true);
-		handle.setRequiredError("Must enter handle");
 		password.setRequired(true);
-		password.setRequiredError("Must enter password");
 		HorizontalLayout actions = new HorizontalLayout(login, cancel);
 		addComponents(handle, password, actions);
 	}
