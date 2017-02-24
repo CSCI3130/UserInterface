@@ -112,7 +112,7 @@ public class UserForm extends FormLayout {
 			return;
 		}
 
-		if (password.getValue().length() < 8) {
+		if ((!newProfile && !password.getValue().isEmpty()) && password.getValue().length() < 8) {
 			Notification.show(passwordLength, Type.WARNING_MESSAGE);
 			return;
 		}
