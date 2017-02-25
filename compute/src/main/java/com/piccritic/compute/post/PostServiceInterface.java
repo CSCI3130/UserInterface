@@ -1,8 +1,9 @@
-package compute.piccritic.compute.post;
+package com.piccritic.compute.post;
 
 import java.io.File;
 
 import com.piccritic.database.post.Post;
+import com.piccritic.database.post.PostException;
 
 /**
  * 
@@ -22,7 +23,6 @@ public interface PostServiceInterface {
 	 * @return File used for Image storage
 	 */
 	public File getImageFile(String handle);
-
 	/**
 	 * Creates a post in the database.
 	 * 
@@ -30,7 +30,7 @@ public interface PostServiceInterface {
 	 *            to store
 	 * @return Post Object created
 	 */
-	public Post createPost(Post post);
+	public Post createPost(Post post) throws PostException;
 
 	/**
 	 * Deletes a post from the database, returns null if not found
@@ -39,5 +39,5 @@ public interface PostServiceInterface {
 	 *            to delete
 	 * @return Post object deleted
 	 */
-	public Post deletePost(Post post);
+	public boolean deletePost(Post post) throws PostException;
 }
