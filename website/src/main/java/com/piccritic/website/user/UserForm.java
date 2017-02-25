@@ -10,7 +10,7 @@ import java.util.Map.Entry;
 
 import com.piccritic.database.user.Critic;
 import com.piccritic.database.user.UserException;
-import com.piccritic.website.MyUI;
+import com.piccritic.website.PicCritic;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.FormLayout;
@@ -129,7 +129,7 @@ public class UserForm extends FormLayout {
 	}
 
 	@Override
-	public MyUI getUI() {
-		return (MyUI) super.getUI();
+	public PicCritic getUI() {
+		return (PicCritic) super.getUI();
 	}
 }

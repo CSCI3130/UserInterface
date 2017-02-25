@@ -2,6 +2,7 @@ package com.piccritic.website;
 
 import javax.servlet.annotation.WebServlet;
 
+import com.piccritic.compute.user.UserService;
 import com.piccritic.website.post.CreatePost;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.VaadinServletConfiguration;
@@ -28,6 +29,7 @@ public class PicCritic extends UI {
 
 	private static final long serialVersionUID = 1L;
 	public PostServiceInterface postService;
+	public UserService userService;
 
 	@Override
 	protected void init(VaadinRequest vaadinRequest) {

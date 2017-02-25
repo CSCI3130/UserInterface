@@ -6,15 +6,17 @@ package com.piccritic.database.user;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import com.piccritic.database.post.Album;
+
 import java.sql.Date;
+import java.util.Set;
 
 /**
- * Critic class is a Critic Java Bean for the piccritic project.
- *
- * The bean holds the information needed to store a critic in the database
+ * This class is a bean that holds the information needed to store a critic in the database
  * according to the Critic table. The handle field is the primary key.
  *
  * @author Ryan Lowe<br>Damien Robichaud
@@ -34,6 +36,9 @@ public class Critic {
 	private int licenseID;
 	@Size(max=200)
 	private String bio;
+	
+	@OneToMany(mappedBy="critic") 
+	private Set<Album> albums; 
 
 	/**
 	 * @return the handle of this Critic
@@ -117,6 +122,20 @@ public class Critic {
 	 */
 	public void setBio(String bio) {
 		this.bio = bio;
+	}
+
+	/**
+	 * @return the albums of this critic
+	 */
+	public Set<Album> getAlbums() {
+		return albums;
+	}
+
+	/**
+	 * @param albums the album set to assign
+	 */
+	public void setAlbums(Set<Album> albums) {
+		this.albums = albums;
 	}
 
 	/**

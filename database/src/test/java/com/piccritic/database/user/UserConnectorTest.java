@@ -14,11 +14,10 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * Because of the database structure, insert must work for any of the tests to
- * work.
+ * This class uses JUnit to test the methods
+ * of JPAUserConnector.
  *
- * @author Ryan Lowe<br>
- *         Damien Robichaud
+ * @author Ryan Lowe<br>Damien Robichaud
  */
 public class UserConnectorTest {
 
