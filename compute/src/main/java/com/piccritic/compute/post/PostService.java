@@ -10,6 +10,7 @@ import java.util.Random;
 
 import com.piccritic.database.post.JPAPostConnector;
 import com.piccritic.database.post.Post;
+import com.piccritic.database.post.PostConnector;
 import com.piccritic.database.post.PostException;	
 /**
  * This class implements the PostServiceInterface.
@@ -18,18 +19,20 @@ import com.piccritic.database.post.PostException;
  * @author Rhianna Goguen
  */
 public class PostService implements PostServiceInterface {
+	
+	public static final String USERS_DIR = "users";
 
-	static JPAPostConnector pc;
+	static PostConnector pc = new JPAPostConnector();
+	
 	public File getImageFile(String handle) {
-		
-		Path p0 = Paths.get(System.getProperty("user.home"), handle);
+		Path p0 = Paths.get(USERS_DIR, handle);
 		File directory = p0.toFile();
 		File[] flist = directory.listFiles();
 
 		String newFileName="";
 		boolean used = true;
 		while(used) {
-			newFileName = getNewName();
+			newFileName = getRandomName();
 			used = false;
 		    for (File f : flist) {
 		        if (f.getName().equals(newFileName)) {
@@ -37,11 +40,11 @@ public class PostService implements PostServiceInterface {
 		        }
 		    }
 		}
-		Path p1 = Paths.get(System.getProperty("user.home"), handle, newFileName);
+		Path p1 = Paths.get(USERS_DIR, handle, newFileName);
 		return p1.toFile();
 	}
 
-	private String getNewName() {
+	private String getRandomName() {
 		byte[] rbytes = new byte[24];
 		Random random = new Random();
 		random.nextBytes(rbytes);

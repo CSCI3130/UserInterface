@@ -1,15 +1,19 @@
 package com.piccritic.compute.post;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 
 import java.sql.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import com.piccritic.database.post.Album;
+import com.piccritic.database.post.AlbumException;
 import com.piccritic.database.post.JPAPostConnector;
 import com.piccritic.database.post.Post;
 import com.piccritic.database.post.PostException;
@@ -45,6 +49,7 @@ public class PostServiceTest {
 		album.setName("albumName");
 		album.setCreationDate(new Date(0));
 		album.setCritic(critic);
+		album.setPosts(postSet);
 		
 		post.setDescription("Description");
 		post.setTitle("Title");
@@ -87,8 +92,9 @@ public class PostServiceTest {
 	@Test
 	public void testDeletePost(){
 		try{
-			Post created = pc.insertPost(post);
+			Post created = ps.createPost(post);
 			ps.deletePost(created);			
+			pc.insertPost(post);
 		} catch(PostException e){
 			e.printStackTrace();
 			fail("Delete Post Failed...");
@@ -98,6 +104,19 @@ public class PostServiceTest {
 	@Test 
 	public void testGetImageFile(){
 		//TODO test later...
+		try {
+			ps.createPost(post);
+		} catch (PostException e) {
+		}
 	}
 		
+	@After
+	public void tearDown() {
+		try {
+			pc.deletePost(post);
+			pc.deleteAlbum(album);
+			uc.deleteCritic(critic);
+		} catch (PostException|AlbumException e) {
+		}
+	}
 }

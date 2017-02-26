@@ -104,7 +104,8 @@ public class Post {
 
 	public String toString() {
 		return String.format("Post{id=%d, path=%s, uploadDate=%s, title=%s, description=%s, rating=%f, album.id=%d}", 
-				id.longValue(), path, uploadDate.toString(), title, description, rating, album.getId());
+				(id == null) ? null:id.longValue(), path, (uploadDate == null) ? null :uploadDate.toString(),
+				title, description, rating, (album == null) ? null : album.getId());
 	}
 	
 	/**

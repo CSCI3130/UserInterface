@@ -79,6 +79,9 @@ public class JPAPostConnector implements PostConnector {
 	 */
 	public boolean deleteAlbum(Album album) throws AlbumException {
 		validate(album);
+		if (album == null) {
+			throw new AlbumException("Cannot delete null album");
+		}
 		albums.removeItem(album.getId());
 		return !albums.containsId(album.getId());
 		
@@ -122,6 +125,9 @@ public class JPAPostConnector implements PostConnector {
 	 */
 	public boolean deletePost(Post post) throws PostException {
 		validate(post);
+		if (post == null) {
+			throw new PostException("Cannot delete null post");
+		}
 		post.getAlbum().getPosts().remove(post);
 		posts.removeItem(post.getId());
 		return !posts.containsId(post.getId());

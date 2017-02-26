@@ -23,6 +23,7 @@ public interface PostServiceInterface {
 	 * @return File used for Image storage
 	 */
 	public File getImageFile(String handle);
+
 	/**
 	 * Creates a post in the database.
 	 * 

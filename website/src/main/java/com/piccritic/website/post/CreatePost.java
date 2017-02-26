@@ -1,9 +1,9 @@
 package com.piccritic.website.post;
 
+import com.piccritic.compute.post.PostService;
 import com.piccritic.database.post.Post;
-import com.piccritic.website.PicCritic;
+import com.piccritic.database.post.PostException;
 import com.vaadin.annotations.Theme;
-import com.vaadin.data.Validator.InvalidValueException;
 import com.vaadin.server.FileResource;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;
@@ -13,14 +13,14 @@ import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Image;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Notification.Type;
+import com.vaadin.ui.Panel;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
+import com.vaadin.ui.UI;
 import com.vaadin.ui.Upload;
 import com.vaadin.ui.Upload.SucceededEvent;
 import com.vaadin.ui.Upload.SucceededListener;
 import com.vaadin.ui.Window;
-
-import compute.piccritic.compute.post.PostServiceInterface;
 
 /**
  * CreatePost Window to allow user to create post.
@@ -40,7 +40,8 @@ public class CreatePost extends Window implements SucceededListener {
 	private Post post = new Post();
 	private ImageReceiver receiver;
 	private Image image = new Image("Uploaded Image");
-	private Button confirm = new Button("Confirm Upload", this::confirmUpload);
+	private Button confirm = new Button("Confirm", this::confirmUpload);
+	private PostService service = new PostService();
 
 	/**
 	 * This window is responsible for creating a post form with an @see Upload
@@ -50,10 +51,21 @@ public class CreatePost extends Window implements SucceededListener {
 	 * @param handle user that is creating the post
 	 */
 	public CreatePost(String handle) {
+		setSizeFull();
+		setModal(true);
+		Panel layout = new Panel();
+		setContent(layout);
 		final FormLayout form = new FormLayout();
+		layout.setContent(form);
+		if (handle == null) {
+			close();
+		}
+		
 
 		image.setVisible(false);
-		receiver = new ImageReceiver(getUI(), handle);
+		image.setSizeFull();
+		image.setHeightUndefined();
+		receiver = new ImageReceiver(handle, post);
 		upload = new Upload("Upload Image Here", receiver);
 		upload.addSucceededListener(this);
 
@@ -61,12 +73,10 @@ public class CreatePost extends Window implements SucceededListener {
 		 * make sure confirm is only enabled when there's a valid picture
 		 */
 		upload.addStartedListener(e -> {
-			confirm.setEnabled(false);
+			confirm.setEnabled(true);
 		});
 
-		setContent(form);
 		form.setMargin(true);
-		form.setWidth("80%");
 		form.addComponent(title);
 		form.addComponent(image);
 		form.addComponent(description);
@@ -75,23 +85,25 @@ public class CreatePost extends Window implements SucceededListener {
 		form.addComponent(upload);
 		form.addComponent(confirm);
 		form.getComponent(0);
-		for (int i = 0; i < form.getComponentCount(); i++) {
-			form.getComponent(i).setSizeFull();
-		}
-		confirm.setEnabled(false);
+		title.setSizeFull();
+		description.setSizeFull();
+
+		confirm.setEnabled(true);
 		description.setRequired(true);
-		description.setRequiredError("Post needs a desctription");
 		tags.addComponent(new CheckBox("Nature"), 0, 0);
 		tags.addComponent(new CheckBox("People"), 1, 0);
 		tags.addComponent(new CheckBox("Sports"), 0, 1);
 		tags.addComponent(new CheckBox("Urban"), 1, 1);
 		title.setRequired(true);
-		title.setRequiredError("Post needs a title");
 	}
-
-	@Override
-	public PicCritic getUI() {
-		return (PicCritic) super.getUI();
+	
+	public CreatePost(String handle, Post post) {
+		this(handle);
+		this.post = post;
+		if (post != null) {
+			title.setValue(post.getTitle());
+			description.setValue(post.getDescription());
+		}
 	}
 
 	@Override
@@ -100,7 +112,6 @@ public class CreatePost extends Window implements SucceededListener {
 		confirm.setEnabled(true);
 		image.setVisible(true);
 		image.setSource(new FileResource(receiver.getFile()));
-		image.setSizeFull();
 		Notification.show("Image Saved", Type.TRAY_NOTIFICATION);
 	}
 
@@ -113,18 +124,23 @@ public class CreatePost extends Window implements SucceededListener {
 		try {
 			title.validate();
 			description.validate();
-			PostServiceInterface service = getUI().postService;
 			if (service != null) {
-				/*
-				 * TODO Set post attributes remember to add filename to post.
-				 */
-				if (service.createPost(post) != null) {
+				Post created = service.createPost(post);
+				if (created != null) {
 					Notification.show("Post Uploaded", Type.TRAY_NOTIFICATION);
+					close();
+					String postLocation = "#!post/" + post.getPath();
+					UI.getCurrent().getPage().setLocation(postLocation);
+					UI.getCurrent().getPage().reload();
 				}
 			}
-		} catch (InvalidValueException e) {
+			
+			Notification.show("Could not create post.", Type.WARNING_MESSAGE);
+
+		} catch (PostException e) {
 			upload.interruptUpload();
 			Notification.show(e.getMessage(), Type.WARNING_MESSAGE);
 		}
+		
 	}
 }

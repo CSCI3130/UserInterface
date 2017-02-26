@@ -83,7 +83,8 @@ public class Album {
 	}
 	
 	public String toString() {
-		return String.format("Album{ id=%d, name=%s, creationDate=%s, critic.handle=%s }", id, name, creationDate, critic.getHandle());
+		return String.format("Album{ id=%d, name=%s, creationDate=%s, critic.handle=%s }", id, name, creationDate,
+				(critic == null) ? null : critic.getHandle());
 	}
 	
 	/**
