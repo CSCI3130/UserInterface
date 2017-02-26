@@ -13,12 +13,15 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.piccritic.database.post.Album;
+import com.piccritic.database.post.AlbumException;
+import com.piccritic.database.post.JPAPostConnector;
+
 /**
- * Because of the database structure, insert must work for any of the tests to
- * work.
+ * This class uses JUnit to test the methods
+ * of JPAUserConnector.
  *
- * @author Ryan Lowe<br>
- *         Damien Robichaud
+ * @author Ryan Lowe<br>Damien Robichaud
  */
 public class UserConnectorTest {
 
@@ -98,7 +101,7 @@ public class UserConnectorTest {
 	}
 
 	@After
-	public void clearUsers() {
+	public void clearUsers() throws AlbumException {
 		con.deleteCritic(critic);
 	}
 }

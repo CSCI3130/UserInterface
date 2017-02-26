@@ -16,3 +16,7 @@ deploy:
   on:
     repo: CSCI3130/piccritic
     branch: development
+  app: piccritic
+  on:
+    repo: CSCI3130/piccritic
+    branch: master

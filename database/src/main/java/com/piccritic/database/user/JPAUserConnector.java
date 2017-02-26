@@ -4,7 +4,6 @@
  */
 package com.piccritic.database.user;
 
-import java.lang.annotation.Annotation;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -13,7 +12,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.Persistence;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
-import javax.validation.metadata.ConstraintDescriptor;
 
 import com.vaadin.addon.jpacontainer.EntityItem;
 import com.vaadin.addon.jpacontainer.JPAContainer;
@@ -35,8 +33,7 @@ public class JPAUserConnector implements UserConnector {
 		Map<String, Object> configOverrides = new HashMap<String, Object>();
 		configOverrides.put("hibernate.connection.url", System.getenv("JDBC_DATABASE_URL"));
 
-		EntityManager entity = Persistence.createEntityManagerFactory("postgres", configOverrides)
-				.createEntityManager();
+		EntityManager entity = Persistence.createEntityManagerFactory("postgres", configOverrides).createEntityManager();
 
 		critics = JPAContainerFactory.make(Critic.class, entity);
 		logins = JPAContainerFactory.make(UserLogin.class, entity);
@@ -83,7 +80,6 @@ public class JPAUserConnector implements UserConnector {
 	 * com.piccritic.database.user.UserConnector#selectCritic(java.lang.String)
 	 */
 	public Critic selectCritic(String handle) {
-
 		EntityItem<Critic> criticItem = critics.getItem(handle);
 		return (criticItem != null) ? criticItem.getEntity() : null;
 	}
@@ -139,7 +135,14 @@ public class JPAUserConnector implements UserConnector {
 		}
 		return (String) login.getItemProperty("hash").getValue();
 	}
-
+	
+	/**
+	 * Validates the fields and throws exceptions when the fields
+	 * do not currently abide by the rules defined in the critic class
+	 * 
+	 * @param critic
+	 * @throws UserException Message for the UI portion of the code.
+	 */
 	private void validate(Critic critic) throws UserException {
 		Set<ConstraintViolation<Critic>> violations = Validation.buildDefaultValidatorFactory().getValidator()
 				.validate(critic);
