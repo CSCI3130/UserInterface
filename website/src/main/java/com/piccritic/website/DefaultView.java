@@ -6,6 +6,12 @@ import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
 
+/**
+ * This class implements the home page for the PicCritic App
+ * 
+ * @author Damien Robichaud <br> Francis Bosse
+ *
+ */
 public class DefaultView extends Panel implements View {
 	
 	public static final String NAME = "home";

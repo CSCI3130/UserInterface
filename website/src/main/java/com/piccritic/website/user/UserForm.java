@@ -24,6 +24,7 @@ import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.ValoTheme;
 
 /**
+ * Create User form
  * 
  * @author Ryan Lowe<br>
  *         Damien Robichaud

@@ -17,6 +17,14 @@ import com.vaadin.ui.Notification.Type;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 
+/**
+ * This class implements the view post page where the creator
+ * can edit/delete and other users cannot. everyone can view.
+ * 
+ * @author Damien Robichaud <br>
+ * 		Francis Bosse
+ *
+ */
 public class ViewPost extends VerticalLayout implements View {
 	private Post post; // post object to view
 	private Image image = new Image();

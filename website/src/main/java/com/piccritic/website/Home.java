@@ -18,6 +18,12 @@ import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
+/**
+ * This class implements the UI navigation for the project
+ * 
+ * @author Damien Robichaud <br> Francis Bosse
+ *
+ */
 public class Home extends HorizontalSplitPanel {
 	VerticalLayout menu = new VerticalLayout();
 	Panel content = new Panel();
@@ -42,6 +48,9 @@ public class Home extends HorizontalSplitPanel {
 	}
 	
 	
+	/**
+	 * Sets up menu based on auth
+	 */
 	private void setupMenu() {
 		Button home = new Button("Home", e-> {
 			navigator.navigateTo(DefaultView.NAME);
@@ -86,6 +95,11 @@ public class Home extends HorizontalSplitPanel {
 
 	}
 	
+	/**
+	 * Shortcut method to add window
+	 * 
+	 * @param w Window to add
+	 */
 	private void addWindow(Window w) {
 		UI.getCurrent().addWindow(w);
 	}
