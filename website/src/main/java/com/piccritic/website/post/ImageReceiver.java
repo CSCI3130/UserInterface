@@ -52,8 +52,13 @@ class ImageReceiver implements Receiver {
 			return null;
 		}
 
-		file = ui.postService.getImageFile(handle);
-		post.setPath(file.getName());
+		System.out.println(post.getPath());
+		if (post != null && post.getPath() != null) {
+			file = new File(post.getPath());
+		} else {
+			file = ui.postService.getImageFile(handle);
+			post.setPath(file.getPath());
+		}
 		FileOutputStream fos;
 		try {
 			fos = new FileOutputStream(file);

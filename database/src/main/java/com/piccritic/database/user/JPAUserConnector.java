@@ -129,7 +129,11 @@ public class JPAUserConnector implements UserConnector {
 	 */
 	public String getUserHash(String handle) {
 
-		return (String) logins.getItem(handle).getItemProperty("hash").getValue();
+		EntityItem<UserLogin> login = logins.getItem(handle);
+		if (login == null) {
+			return null;
+		}
+		return (String) login.getItemProperty("hash").getValue();
 	}
 	
 	/**
@@ -143,7 +147,7 @@ public class JPAUserConnector implements UserConnector {
 		Set<ConstraintViolation<Critic>> violations = Validation.buildDefaultValidatorFactory().getValidator()
 				.validate(critic);
 		for (ConstraintViolation<Critic> violation : violations) {
-			throw new UserException(violation.getMessage());
+			throw new UserException(violation.getPropertyPath() + " " + violation.getMessage());
 		}
 	}
 }

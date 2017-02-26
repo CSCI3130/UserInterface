@@ -62,17 +62,18 @@ public class PostConnectorTest {
 		
 		album.setCreationDate(date);
 		album.setPosts(postSet);
-		album.setCritic(critic);
 		album.setName(albumName);
 
 		post.setUploadDate(date);
-		post.setAlbum(album);
-		post.setPath(path);
 		post.setTitle(postTitle);
+		post.setDescription("description");
 
 		try {
 			uc.insertCritic(critic, hash);
+			album.setCritic(critic);
 			pc.insertAlbum(album);
+			post.setPath(path);
+			post.setAlbum(album);
 			pc.insertPost(post);
 		} catch (UserException|PostException|AlbumException e) {
 			fail(e.getMessage());
@@ -81,7 +82,7 @@ public class PostConnectorTest {
 	
 	@Test
 	public void testSelectPost() {
-		assertEquals(post, pc.selectPost(post.getId()));
+		assertEquals(post, pc.selectPost(post.getPath()));
 	}
 	
 	@Test
@@ -100,7 +101,7 @@ public class PostConnectorTest {
 	public void testDeletePost() {
 		try {
 			assertTrue(pc.deletePost(post));
-			assertNull(pc.selectPost(post.getId()));
+			assertNull(pc.selectPost(post.getPath()));
 			pc.insertPost(post);
 		} catch (Exception e) {
 			fail(e.getLocalizedMessage());

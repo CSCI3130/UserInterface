@@ -5,10 +5,10 @@
 package com.piccritic.database.post;
 
 import java.sql.Date;
-
 import java.util.Set;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -36,7 +36,7 @@ public class Album {
 	@NotNull
 	private Date creationDate;
 	
-	@ManyToOne(optional=false)
+	@ManyToOne(fetch=FetchType.EAGER, optional=false)
 	private Critic critic;
 	
 	@OneToMany(mappedBy="album")

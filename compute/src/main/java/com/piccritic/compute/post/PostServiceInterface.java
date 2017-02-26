@@ -2,6 +2,7 @@ package com.piccritic.compute.post;
 
 import java.io.File;
 
+import com.piccritic.database.post.Album;
 import com.piccritic.database.post.Post;
 import com.piccritic.database.post.PostException;
 
@@ -41,4 +42,20 @@ public interface PostServiceInterface {
 	 * @return Post object deleted
 	 */
 	public boolean deletePost(Post post) throws PostException;
+
+	/**
+	 * Returns a user's default album
+	 * 
+	 * @param handle of user
+	 * @return Album default
+	 */
+	public Album getDefaultAlbum(String handle);
+	
+	/**
+	 * Returns a post from it's handle
+	 * 
+	 * @param post path
+	 * @return Post matching
+	 */
+	public Post getPost(String path);
 }

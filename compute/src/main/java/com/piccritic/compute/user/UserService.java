@@ -4,9 +4,19 @@
  */
 package com.piccritic.compute.user;
 
+import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.Date;
+import java.sql.SQLException;
 import java.util.Calendar;
+import java.util.HashSet;
+import java.util.Set;
 
+import com.piccritic.compute.hashing.Hasher;
+import com.piccritic.database.post.Album;
+import com.piccritic.database.post.AlbumException;
+import com.piccritic.database.post.JPAPostConnector;
 import com.piccritic.database.user.Critic;
 import com.piccritic.database.user.JPAUserConnector;
 import com.piccritic.database.user.UserConnector;
@@ -56,15 +66,40 @@ public class UserService {
           	throw new UserException(handleInUse);
         }
 
-      	//TODO implement hashing
-      	String salt = "abcdef";
-      	String hash = password+salt;
-      	Critic inserted = connector.insertCritic(critic, hash);
-      
-      	if (inserted == null) {
-          	throw new UserException(createFailure);
-        }
-      
+		try {
+			Hasher hasher = new Hasher();
+			String hash = hasher.generateHash(password);
+			Critic inserted = connector.insertCritic(critic, hash);
+			if (inserted == null) {
+				throw new UserException(createFailure);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new UserException(createFailure);
+		}
+
+		Album defaultAlbum = new Album();
+		defaultAlbum.setCritic(critic);
+		defaultAlbum.setCreationDate(critic.getJoinDate());
+		defaultAlbum.setName("default");
+		Set<Album> albums = new HashSet<Album>();
+		albums.add(defaultAlbum);
+		critic.setAlbums(albums);
+
+		try {
+			JPAPostConnector pc = new JPAPostConnector();
+			pc.insertAlbum(defaultAlbum);
+		} catch (AlbumException e) {
+			e.printStackTrace();
+			throw new UserException(e.getLocalizedMessage());
+		}
+		
+		Path usersPath = Paths.get("users", critic.getHandle());
+		File users = usersPath.toFile();
+		if (!users.mkdirs()) {
+			throw new UserException("Could not create image storage");
+		}
+
       	return createSuccess;
     }
   
@@ -81,6 +116,18 @@ public class UserService {
               	throw new UserException(updateFailure);
             }
           	return updateSuccess;
+        } else {
+			try {
+				Hasher hasher = new Hasher();
+				String hash = hasher.generateHash(password);
+				Critic inserted = connector.insertCritic(critic, hash);
+				if (inserted == null) {
+					throw new UserException(createFailure);
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+				throw new UserException(createFailure);
+			}
         }
       
       	String hash = connector.getUserHash(critic.getHandle());
@@ -90,4 +137,8 @@ public class UserService {
       
       	return updateSuccess;
     }
+  	
+  	public Critic select(String handle) {
+  		return connector.selectCritic(handle);
+  	}
 }

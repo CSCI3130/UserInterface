@@ -71,7 +71,7 @@ public interface PostConnector {
 	 * @param id the id to search for
 	 * @return the post with the given ID, or null if it doesn't exist
 	 */
-	public Post selectPost(Long id);
+	public Post selectPost(String path);
 	
 	/**
 	 * Deletes the specified Post from the database.

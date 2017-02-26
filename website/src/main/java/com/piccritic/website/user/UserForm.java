@@ -36,6 +36,8 @@ public class UserForm extends FormLayout {
 	private static final long serialVersionUID = 3L;
 
 	private static final String cancelNotif = "Request canceled.";
+	private static final String passwordMatch = "Passwords do not match";
+	private static final String passwordLength = "Password must be at least 8 characters";
 
 	private Map<String, Integer> licenses = new HashMap<String, Integer>();
 
@@ -51,12 +53,26 @@ public class UserForm extends FormLayout {
 	private PasswordField password = new PasswordField("Password");
 	private PasswordField confirmPass = new PasswordField("Confirm password");
 
-	private Critic critic = new Critic();
+	private Critic critic;
 	boolean newProfile;
 
 	public UserForm(String userHandle) {
 		newProfile = (userHandle == null);
 		handle.setValue((userHandle == null) ? "" : userHandle);
+		critic = PicCritic.userService.select(userHandle);
+		if (critic != null) {
+			firstName.setValue(critic.getFirstName());
+			lastName.setValue(critic.getLastName());
+			bio.setValue(critic.getBio());
+			license.setValue(critic.getLicenseID());
+		} else {
+			critic = new Critic();
+			handle.setRequired(true);
+			firstName.setRequired(true);
+			lastName.setRequired(true);
+			password.setRequired(true);
+			confirmPass.setRequired(true);
+		}
 		handle.setEnabled(newProfile);
 
 		licenses.put("License 1", new Integer(1));
@@ -92,14 +108,20 @@ public class UserForm extends FormLayout {
 		String status;
 
 		if (!password.getValue().equals(confirmPass.getValue())) {
-			Notification.show("Passwords do not match", Type.WARNING_MESSAGE);
+			Notification.show(passwordMatch, Type.WARNING_MESSAGE);
 			return;
 		}
+
+		if ((!newProfile && !password.getValue().isEmpty()) && password.getValue().length() < 8) {
+			Notification.show(passwordLength, Type.WARNING_MESSAGE);
+			return;
+		}
+
 		try {
 			if (newProfile) {
-				status = getUI().userService.create(critic, password.getValue());
+				status = PicCritic.userService.create(critic, password.getValue());
 			} else {
-				status = getUI().userService.update(critic, password.getValue());
+				status = PicCritic.userService.update(critic, password.getValue());
 			}
 		} catch (UserException ue) {
 			Notification.show(ue.getLocalizedMessage(), Type.WARNING_MESSAGE);
@@ -126,10 +148,5 @@ public class UserForm extends FormLayout {
 	
 	private void closeWindow() {
 		((Window) getParent().getParent()).close();
-	}
-
-	@Override
-	public PicCritic getUI() {
-		return (PicCritic) super.getUI();
 	}
 }

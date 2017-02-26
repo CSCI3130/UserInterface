@@ -53,12 +53,12 @@ public class PostServiceTest {
 		
 		post.setDescription("Description");
 		post.setTitle("Title");
-		post.setPath("path");
-		post.setUploadDate(new Date(0));
+		post.setUploadDate(null);
 		post.setAlbum(album);
 		
 		uc.insertCritic(critic, "hash");
 		pc.insertAlbum(album);
+		post.setPath("path");
 	}
 	
 	@Test
@@ -66,10 +66,9 @@ public class PostServiceTest {
 		try {
 			Post created = ps.createPost(post);
 			assertNotNull( created );
-			assertNotNull( created.getId());
+			assertNotNull( created.getUploadDate());
 		} catch(PostException e){
-			e.printStackTrace();
-			fail("Create Post Failed...");
+			fail(e.getLocalizedMessage());
 		}		
 	}
 	
@@ -83,8 +82,7 @@ public class PostServiceTest {
 			assertEquals("different", edited.getDescription());
 			
 		} catch(PostException e){
-			e.printStackTrace();
-			fail("Edit Post Failed...");
+			fail(e.getLocalizedMessage());
 		}
 		
 	}
@@ -97,7 +95,7 @@ public class PostServiceTest {
 			pc.insertPost(post);
 		} catch(PostException e){
 			e.printStackTrace();
-			fail("Delete Post Failed...");
+			fail(e.getLocalizedMessage());
 		}
 	}
 	

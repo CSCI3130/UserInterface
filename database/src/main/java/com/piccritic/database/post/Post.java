@@ -7,8 +7,6 @@ package com.piccritic.database.post;
 import java.sql.Date;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
@@ -27,9 +25,6 @@ import javax.validation.constraints.NotNull;
 public class Post {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO) 
-	private Long id;
-	@NotNull
 	private String path;
 	@NotNull
 	private Date uploadDate;
@@ -40,13 +35,13 @@ public class Post {
 	@ManyToOne(optional=false)
 	private Album album;
 
-	public Long getId() {
+	/*public Long getId() {
 		return id;
 	}
 
 	public void setId(Long id) {
 		this.id = id;
-	}
+	}*/
 
 	public String getPath() {
 		return path;
@@ -103,8 +98,8 @@ public class Post {
 	}
 
 	public String toString() {
-		return String.format("Post{id=%d, path=%s, uploadDate=%s, title=%s, description=%s, rating=%f, album.id=%d}", 
-				(id == null) ? null:id.longValue(), path, (uploadDate == null) ? null :uploadDate.toString(),
+		return String.format("Post{path=%s, uploadDate=%s, title=%s, description=%s, rating=%f, album.id=%d}", 
+				/*(id == null) ? null:id.longValue(),*/ path, (uploadDate == null) ? null :uploadDate.toString(),
 				title, description, rating, (album == null) ? null : album.getId());
 	}
 	

@@ -92,9 +92,8 @@ public class JPAPostConnector implements PostConnector {
 	 */
 	public Post insertPost(Post post) throws PostException {
 		validate(post);
-		post.setId(null);
-		post.setId((Long) posts.addEntity(post));
-		return selectPost(post.getId());
+		posts.addEntity(post);
+		return selectPost(post.getPath());
 	}
 	
 	/* (non-Javadoc)
@@ -103,20 +102,23 @@ public class JPAPostConnector implements PostConnector {
 	@SuppressWarnings("unchecked")
 	public Post updatePost(Post post) throws PostException {
 		validate(post);
-		EntityItem<Post> postItem = posts.getItem(post.getId());
+		EntityItem<Post> postItem = posts.getItem(post.getPath());
+		if (postItem == null) {
+			throw new PostException("Cannot update null post");
+		}
 		postItem.getItemProperty("title").setValue(post.getTitle());
 		postItem.getItemProperty("description").setValue(post.getDescription());
 		postItem.getItemProperty("rating").setValue(post.getRating());
 		postItem.getItemProperty("album").setValue(post.getAlbum());
 		postItem.commit();
-		return selectPost(post.getId());
+		return selectPost(post.getPath());
 	}
 	
 	/* (non-Javadoc)
 	 * @see com.piccritic.database.post.PostConnector#selectPost(Long)
 	 */
-	public Post selectPost(Long id) {
-		EntityItem<Post> postItem = posts.getItem(id);
+	public Post selectPost(String path) {
+		EntityItem<Post> postItem = posts.getItem(path);
 		return (postItem != null) ? postItem.getEntity() : null;
 	}
 	
@@ -129,8 +131,8 @@ public class JPAPostConnector implements PostConnector {
 			throw new PostException("Cannot delete null post");
 		}
 		post.getAlbum().getPosts().remove(post);
-		posts.removeItem(post.getId());
-		return !posts.containsId(post.getId());
+		posts.removeItem(post.getPath());
+		return !posts.containsId(post.getPath());
 	}
 	
 	/**

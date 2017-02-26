@@ -10,7 +10,6 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
 import com.vaadin.ui.UI;
 
-
 /**
  * This UI is the application entry point. A UI may either represent a browser
  * window (or tab) or some part of a html page where a Vaadin application is
@@ -24,18 +23,18 @@ import com.vaadin.ui.UI;
 public class PicCritic extends UI {
 
 	private static final long serialVersionUID = 1L;
-	public PostService postService = new PostService();
-	public UserService userService;
+	public static PostService postService = new PostService();
+	public static UserService userService = UserService.createService();
 
 	@Override
 	protected void init(VaadinRequest vaadinRequest) {
 		setContent(new Home());
 	}
 
+
 	@WebServlet(urlPatterns = "/*", name = "MyUIServlet", asyncSupported = true)
 	@VaadinServletConfiguration(ui = PicCritic.class, productionMode = false)
 	public static class MyUIServlet extends VaadinServlet {
-
 		private static final long serialVersionUID = 1L;
 	}
 }

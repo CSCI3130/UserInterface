@@ -1,8 +1,15 @@
 package com.piccritic.website.post;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import com.piccritic.compute.post.PostService;
+import com.piccritic.database.post.Album;
+import com.piccritic.database.post.AlbumException;
+import com.piccritic.database.post.JPAPostConnector;
 import com.piccritic.database.post.Post;
 import com.piccritic.database.post.PostException;
+import com.piccritic.website.login.LoginService;
 import com.vaadin.annotations.Theme;
 import com.vaadin.server.FileResource;
 import com.vaadin.ui.Button;
@@ -42,6 +49,8 @@ public class CreatePost extends Window implements SucceededListener {
 	private Image image = new Image("Uploaded Image");
 	private Button confirm = new Button("Confirm", this::confirmUpload);
 	private PostService service = new PostService();
+	private String handle;
+	private FormLayout form = new FormLayout();
 
 	/**
 	 * This window is responsible for creating a post form with an @see Upload
@@ -51,30 +60,20 @@ public class CreatePost extends Window implements SucceededListener {
 	 * @param handle user that is creating the post
 	 */
 	public CreatePost(String handle) {
+		this.handle = handle;
 		setSizeFull();
 		setModal(true);
 		Panel layout = new Panel();
+		layout.setSizeFull();
 		setContent(layout);
-		final FormLayout form = new FormLayout();
 		layout.setContent(form);
 		if (handle == null) {
 			close();
 		}
-		
 
 		image.setVisible(false);
 		image.setSizeFull();
 		image.setHeightUndefined();
-		receiver = new ImageReceiver(handle, post);
-		upload = new Upload("Upload Image Here", receiver);
-		upload.addSucceededListener(this);
-
-		/*
-		 * make sure confirm is only enabled when there's a valid picture
-		 */
-		upload.addStartedListener(e -> {
-			confirm.setEnabled(true);
-		});
 
 		form.setMargin(true);
 		form.addComponent(title);
@@ -82,19 +81,32 @@ public class CreatePost extends Window implements SucceededListener {
 		form.addComponent(description);
 		form.addComponent(tags);
 		form.addComponent(license);
-		form.addComponent(upload);
 		form.addComponent(confirm);
 		form.getComponent(0);
 		title.setSizeFull();
 		description.setSizeFull();
 
-		confirm.setEnabled(true);
+		confirm.setEnabled(false);
 		description.setRequired(true);
 		tags.addComponent(new CheckBox("Nature"), 0, 0);
 		tags.addComponent(new CheckBox("People"), 1, 0);
 		tags.addComponent(new CheckBox("Sports"), 0, 1);
 		tags.addComponent(new CheckBox("Urban"), 1, 1);
 		title.setRequired(true);
+		setupImagereceiver();
+	}
+	
+	public void setupImagereceiver() {
+		if (upload != null) {
+			form.removeComponent(upload);
+		}
+		receiver = new ImageReceiver(handle, post);
+		upload = new Upload("Upload Image Here", receiver);
+		upload.addSucceededListener(this);
+		upload.addStartedListener(e -> {
+			confirm.setEnabled(false);
+		});
+		form.addComponent(upload);
 	}
 	
 	public CreatePost(String handle, Post post) {
@@ -103,6 +115,7 @@ public class CreatePost extends Window implements SucceededListener {
 		if (post != null) {
 			title.setValue(post.getTitle());
 			description.setValue(post.getDescription());
+			setupImagereceiver();
 		}
 	}
 
@@ -124,8 +137,18 @@ public class CreatePost extends Window implements SucceededListener {
 		try {
 			title.validate();
 			description.validate();
+			post.setDescription(description.getValue());
+			post.setTitle(title.getValue());
 			if (service != null) {
+				Album defaultAlbum = service.getDefaultAlbum(LoginService.getHandle());
+				post.setAlbum(defaultAlbum);
+				Set<Post> posts = new HashSet<>();
+				posts.add(post);
+				defaultAlbum.setPosts(posts);
 				Post created = service.createPost(post);
+				JPAPostConnector pc = new JPAPostConnector();
+				pc.updateAlbum(defaultAlbum);
+
 				if (created != null) {
 					Notification.show("Post Uploaded", Type.TRAY_NOTIFICATION);
 					close();
@@ -137,7 +160,7 @@ public class CreatePost extends Window implements SucceededListener {
 			
 			Notification.show("Could not create post.", Type.WARNING_MESSAGE);
 
-		} catch (PostException e) {
+		} catch (PostException|AlbumException e) {
 			upload.interruptUpload();
 			Notification.show(e.getMessage(), Type.WARNING_MESSAGE);
 		}

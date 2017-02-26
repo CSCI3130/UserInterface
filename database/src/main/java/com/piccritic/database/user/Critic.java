@@ -4,16 +4,17 @@
  */
 package com.piccritic.database.user;
 
+import java.sql.Date;
+import java.util.Set;
+
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import com.piccritic.database.post.Album;
-
-import java.sql.Date;
-import java.util.Set;
 
 /**
  * This class is a bean that holds the information needed to store a critic in the database
@@ -37,7 +38,7 @@ public class Critic {
 	@Size(max=200)
 	private String bio;
 	
-	@OneToMany(mappedBy="critic") 
+	@OneToMany(fetch=FetchType.EAGER, mappedBy="critic") 
 	private Set<Album> albums; 
 
 	/**

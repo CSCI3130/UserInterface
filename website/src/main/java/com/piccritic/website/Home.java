@@ -1,8 +1,16 @@
 package com.piccritic.website;
 
+import static com.piccritic.website.login.LoginService.getHandle;
+import static com.piccritic.website.login.LoginService.getLoginStatus;
+import static com.piccritic.website.login.LoginService.logoutUser;
+
+import com.piccritic.website.login.LoginService.LoginStatus;
+import com.piccritic.website.login.LoginWindow;
 import com.piccritic.website.post.CreatePost;
 import com.piccritic.website.post.ViewPost;
+import com.piccritic.website.user.UserForm;
 import com.vaadin.navigator.Navigator;
+import com.vaadin.server.Page;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.Panel;
@@ -25,24 +33,61 @@ public class Home extends HorizontalSplitPanel {
 		setLocked(true);
 		
 		navigator.addView(ViewPost.NAME, ViewPost.class);
+		navigator.addView(DefaultView.NAME, DefaultView.class);
 		if (navigator.getState().isEmpty()) {
-			navigator.navigateTo(ViewPost.NAME);
+			navigator.navigateTo(DefaultView.NAME);
 		} else {
 			navigator.navigateTo(navigator.getState());
 		}
 	}
 	
 	
-
 	private void setupMenu() {
-		Button button = new Button("Create Post");
-		button.addClickListener(e -> {
-			Window createPost = new CreatePost("handle");
-			UI.getCurrent().addWindow(createPost);
+		Button home = new Button("Home", e-> {
+			navigator.navigateTo(DefaultView.NAME);
+		});
+		menu.addComponent(home);
+		LoginStatus loginStatus = getLoginStatus();
+		if (loginStatus == LoginStatus.LOGGED_IN) {
+			Button logout = new Button("Log out");
+			logout.addClickListener(e -> {
+				logoutUser();
+				Page.getCurrent().reload();
+			});
+			menu.addComponent(logout);
+
+			Button button = new Button("Create Post");
+			button.addClickListener(e -> {
+				Window createPost = new CreatePost(getHandle());
+				UI.getCurrent().addWindow(createPost);
+			});
+
+			menu.addComponent(button);
+		} else {
+			Button loginUser = new Button("Login");
+			loginUser.addClickListener(e -> {
+				Window login = new LoginWindow();
+				addWindow(login);
+			});
+			menu.addComponent(loginUser);
+		}
+
+		Button createUser = new Button(((loginStatus == LoginStatus.LOGGED_IN) ? "Update" : "Create") + "User");
+		createUser.addClickListener( e -> {
+			Window userForm = new Window();
+			userForm.setModal(true);
+			userForm.setContent(new VerticalLayout(new UserForm(getHandle())));
+			addWindow(userForm);
 		});
 
-		menu.addComponent(button);
-		button.setSizeFull();
+		menu.addComponent(createUser);
+		menu.setMargin(true);
+		menu.setSpacing(true);
+
+	}
+	
+	private void addWindow(Window w) {
+		UI.getCurrent().addWindow(w);
 	}
 
 }
