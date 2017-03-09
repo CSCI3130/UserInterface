@@ -76,7 +76,6 @@ public class PostService implements PostServiceInterface {
 		return pc.deletePost(post);		
 	}
 
-	@Override
 	public Album getDefaultAlbum(String handle) {
 		JPAUserConnector uc = new JPAUserConnector();
 		Critic user = uc.selectCritic(handle);
@@ -92,7 +91,6 @@ public class PostService implements PostServiceInterface {
 		return defaultAlbum;
 	}
 
-	@Override
 	public Post getPost(String path) {
 		return pc.selectPost(path);
 	}

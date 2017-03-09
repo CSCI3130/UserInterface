@@ -17,10 +17,13 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.piccritic.database.feedback.Comment;
 import com.piccritic.database.user.Critic;
 import com.piccritic.database.user.JPAUserConnector;
 import com.piccritic.database.user.UserConnector;
 import com.piccritic.database.user.UserException;
+import com.piccritic.database.feedback.CommentException;
+import com.piccritic.database.feedback.Rating;
 
 /**
  * This class uses JUnit to test the functionality
@@ -46,6 +49,8 @@ public class PostConnectorTest {
 
 	private Set<Post> postSet = new HashSet<Post>();
 	private Set<Album> albumSet = new HashSet<Album>();
+	private Set<Comment> commentSet = new HashSet<Comment>();
+	private Set<Rating> ratingSet = new HashSet<Rating>();
 
 	PostConnector pc = new JPAPostConnector();
 	UserConnector uc = new JPAUserConnector();
@@ -59,6 +64,7 @@ public class PostConnectorTest {
 		critic.setFirstName(firstName);
 		critic.setLastName(lastName);
 		critic.setAlbums(albumSet);
+		critic.setComments(commentSet);
 		
 		album.setCreationDate(date);
 		album.setPosts(postSet);
@@ -67,6 +73,8 @@ public class PostConnectorTest {
 		post.setUploadDate(date);
 		post.setTitle(postTitle);
 		post.setDescription("description");
+		post.setComments(commentSet);
+		post.setRatings(ratingSet);
 
 		try {
 			uc.insertCritic(critic, hash);
