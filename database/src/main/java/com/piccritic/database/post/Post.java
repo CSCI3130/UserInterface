@@ -5,11 +5,17 @@
 package com.piccritic.database.post;
 
 import java.sql.Date;
+import java.util.Set;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
+
+import com.piccritic.database.feedback.Comment;
+import com.piccritic.database.feedback.Rating;
 
 /**
  * this class is a Java bean that defines the database table
@@ -34,6 +40,12 @@ public class Post {
 
 	@ManyToOne(optional=false)
 	private Album album;
+	
+	@OneToMany(fetch=FetchType.EAGER, mappedBy="post") 
+	private Set<Comment> comments;
+	
+	@OneToMany(fetch=FetchType.EAGER, mappedBy="post")
+	private Set<Rating> ratings;
 
 	/*public Long getId() {
 		return id;
@@ -95,6 +107,22 @@ public class Post {
 
 	public void setAlbum(Album album) {
 		this.album = album;
+	}
+
+	public Set<Comment> getComments() {
+		return comments;
+	}
+
+	public void setComments(Set<Comment> comments) {
+		this.comments = comments;
+	}
+
+	public Set<Rating> getRatings() {
+		return ratings;
+	}
+
+	public void setRatings(Set<Rating> ratings) {
+		this.ratings = ratings;
 	}
 
 	public String toString() {

@@ -60,7 +60,6 @@ public class JPAPostConnector implements PostConnector {
 		
 		validate(album);
 		albumItem.getItemProperty("name").setValue(album.getName());
-		albumItem.getItemProperty("posts").setValue(album.getPosts());
 		albumItem.commit();
 		
 		return selectAlbum(album.getId());
