@@ -39,7 +39,7 @@ public class Album {
 	@ManyToOne(fetch=FetchType.EAGER, optional=false)
 	private Critic critic;
 	
-	@OneToMany(mappedBy="album")
+	@OneToMany(fetch=FetchType.EAGER, mappedBy="album")
 	private Set<Post> posts;
 
 	public Long getId() {

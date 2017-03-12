@@ -107,7 +107,6 @@ public class JPAPostConnector implements PostConnector {
 		}
 		postItem.getItemProperty("title").setValue(post.getTitle());
 		postItem.getItemProperty("description").setValue(post.getDescription());
-		postItem.getItemProperty("rating").setValue(post.getRating());
 		postItem.getItemProperty("album").setValue(post.getAlbum());
 		postItem.commit();
 		return selectPost(post.getPath());
