@@ -97,7 +97,6 @@ public class PostConnectorTest {
 	public void testUpdatePost() {
 		post.setTitle("Better title");
 		post.setDescription("Really cool");
-		post.setRating(5.0f);
 		try {
 			assertEquals(post, pc.updatePost(post));
 		} catch (PostException e) {
