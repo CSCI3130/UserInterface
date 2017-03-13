@@ -35,6 +35,7 @@ public class Vote {
 	 */
 	private boolean rating;
 	
+	@ManyToOne
 	@NotNull
 	private Comment comment;
 	

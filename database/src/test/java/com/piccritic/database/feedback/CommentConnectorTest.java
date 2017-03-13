@@ -76,7 +76,7 @@ public class CommentConnectorTest {
 		comment.setCreationDate(date);
 		criticComments.add(comment);
 		comment.setReplies(new HashSet<Comment>());
-		comment.setVotes(0);
+		comment.setScore(0);
 		
 		try {
 			critic = uc.insertCritic(critic, "hash");
