@@ -8,6 +8,7 @@ import java.sql.Date;
 import java.util.Set;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -37,7 +38,7 @@ public class Comment {
 	@ManyToOne
 	private Comment anchor;
 	
-	@OneToMany(mappedBy="anchor")
+	@OneToMany(fetch=FetchType.EAGER, mappedBy="anchor")
 	private Set<Comment> replies;
 	
 	@ManyToOne
@@ -120,5 +121,12 @@ public class Comment {
 	public String toString() {
 		return String.format("Comment{id=%d, post.path=%s, anchor.id=%d, critic.handle=%s, content=%s, creationDate=%s, votes=%d}",
 				id, post.getPath(), (anchor != null) ? anchor.getId() : null, critic.getHandle(), content, creationDate.toString(), votes);
+	}
+	
+	public boolean equals(Object o) {
+		if (o instanceof Comment) {
+			return this.toString().equals(o.toString());
+		}
+		return false;
 	}
 }

@@ -36,7 +36,6 @@ public class Post {
 	private Date uploadDate;
 	private String title;
 	private String description;
-	private float rating;
 
 	@ManyToOne(optional=false)
 	private Album album;
@@ -93,14 +92,6 @@ public class Post {
 		this.description = description;
 	}
 
-	public float getRating() {
-		return rating;
-	}
-
-	public void setRating(float rating) {
-		this.rating = rating;
-	}
-
 	public Album getAlbum() {
 		return album;
 	}
@@ -126,9 +117,9 @@ public class Post {
 	}
 
 	public String toString() {
-		return String.format("Post{path=%s, uploadDate=%s, title=%s, description=%s, rating=%f, album.id=%d}", 
+		return String.format("Post{path=%s, uploadDate=%s, title=%s, description=%s, album.id=%d}", 
 				/*(id == null) ? null:id.longValue(),*/ path, (uploadDate == null) ? null :uploadDate.toString(),
-				title, description, rating, (album == null) ? null : album.getId());
+				title, description, (album == null) ? null : album.getId());
 	}
 	
 	/**
