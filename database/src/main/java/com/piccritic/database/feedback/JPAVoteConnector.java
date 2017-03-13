@@ -27,7 +27,7 @@ public class JPAVoteConnector implements VoteConnector{
 
 	private JPAContainer<Vote> votes;
 	
-	private JPAVoteConnector(){
+	public JPAVoteConnector(){
 		Map<String, Object> configOverrides = new HashMap<String, Object>();
 		configOverrides.put("hibernate.connection.url", System.getenv("JDBC_DATABASE_URL"));
 
