@@ -38,8 +38,14 @@ public class Comment {
 	@ManyToOne
 	private Comment anchor;
 	
+	@ManyToOne
+	private Vote vote;
+	
 	@OneToMany(fetch=FetchType.EAGER, mappedBy="anchor")
 	private Set<Comment> replies;
+	
+	@OneToMany(fetch=FetchType.EAGER, mappedBy="comment")
+	private Set<Vote> votes;
 	
 	@ManyToOne
 	private Critic critic;
@@ -52,7 +58,7 @@ public class Comment {
 	private Date creationDate;
 	
 	@NotNull
-	private int votes;
+	private int score;
 
 	public Long getId() {
 		return id;
@@ -110,17 +116,25 @@ public class Comment {
 		this.creationDate = creationDate;
 	}
 
-	public int getVotes() {
+	public int getScore() {
+		return score;
+	}
+
+	public void setScore(int votes) {
+		this.score = votes;
+	}
+	
+	public Set<Vote> getVotes() {
 		return votes;
 	}
 
-	public void setVotes(int votes) {
+	public void setVotes(Set<Vote> votes) {
 		this.votes = votes;
 	}
 	
 	public String toString() {
-		return String.format("Comment{id=%d, post.path=%s, anchor.id=%d, critic.handle=%s, content=%s, creationDate=%s, votes=%d}",
-				id, post.getPath(), (anchor != null) ? anchor.getId() : null, critic.getHandle(), content, creationDate.toString(), votes);
+		return String.format("Comment{id=%d, post.path=%s, anchor.id=%d, critic.handle=%s, content=%s, creationDate=%s, score=%d}",
+				id, post.getPath(), (anchor != null) ? anchor.getId() : null, critic.getHandle(), content, creationDate.toString(), score);
 	}
 	
 	public boolean equals(Object o) {

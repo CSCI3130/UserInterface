@@ -16,6 +16,7 @@ import javax.validation.constraints.Size;
 
 import com.piccritic.database.feedback.Comment;
 import com.piccritic.database.feedback.Rating;
+import com.piccritic.database.feedback.Vote;
 import com.piccritic.database.post.Album;
 
 /**
@@ -48,6 +49,9 @@ public class Critic {
 	
 	@OneToMany(fetch=FetchType.EAGER, mappedBy="critic")
 	private Set<Rating> ratings;
+	
+	@OneToMany(fetch=FetchType.EAGER, mappedBy="critic")
+	private Set<Vote> votes;
 
 	/**
 	 * @return the handle of this Critic
@@ -161,6 +165,14 @@ public class Critic {
 
 	public void setRatings(Set<Rating> ratings) {
 		this.ratings = ratings;
+	}
+	
+	public Set<Vote> getVotes() {
+		return votes;
+	}
+
+	public void setVotes(Set<Vote> votes) {
+		this.votes = votes;
 	}
 
 	/**
