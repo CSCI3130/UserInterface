@@ -5,6 +5,8 @@
 
 package com.piccritic.database.feedback;
 
+import com.piccritic.database.user.Critic;
+
 /**
  * Interface to provide methods that read to and write from the database
  * with regard to {@link Vote} objects.
@@ -18,6 +20,14 @@ public interface VoteConnector {
 	 * @return the vote with the matching ID
 	 */
 	public Vote selectVote(Long id);
+	
+	/**
+	 * Gets the vote id for the vote on comment by critic
+	 * @param critic
+	 * @param comment
+	 * @return Long voteId or null if not exists
+	 */
+	public Long getVoteId(Critic critic, Comment comment);
 	
 	/**
 	 * 

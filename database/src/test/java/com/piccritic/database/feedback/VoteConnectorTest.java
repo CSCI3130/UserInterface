@@ -111,6 +111,22 @@ public class VoteConnectorTest {
 	}
 	
 	@Test
+	public void testGetVoteId() {
+		assertEquals(vote.getId(), vc.getVoteId(critic, comment));
+	}
+	
+	@Test
+	public void testGetVoteIdNull() {
+		try {
+			vc.deleteVote(vote);
+			assertEquals(null, vc.getVoteId(critic, comment));
+			vc.insertVote(vote);
+		} catch (VoteException e) {
+			fail(e.getLocalizedMessage());
+		}
+	}
+	
+	@Test
 	public void testUpdateVote() {
 		vote.setRating(false);
 		try {

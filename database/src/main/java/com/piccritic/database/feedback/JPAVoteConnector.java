@@ -6,14 +6,17 @@
 package com.piccritic.database.feedback;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Persistence;
+import javax.persistence.TypedQuery;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 
+import com.piccritic.database.user.Critic;
 import com.vaadin.addon.jpacontainer.EntityItem;
 import com.vaadin.addon.jpacontainer.JPAContainer;
 import com.vaadin.addon.jpacontainer.JPAContainerFactory;
@@ -44,6 +47,25 @@ public class JPAVoteConnector implements VoteConnector{
 		return (voteItem != null) ? voteItem.getEntity() : null;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.piccritic.database.feedback.VoteConnector#getVoteId(com.piccritic.database.user.Critic, com.piccritic.database.feedback.Comment)
+	 */
+	public Long getVoteId(Critic critic, Comment comment) {
+		if (critic == null || comment == null) {
+			return null;
+		}
+		String query = "SELECT v from Vote v WHERE v.critic = :cr AND v.comment = :co";
+		TypedQuery<Vote> v = votes.getEntityProvider().getEntityManager().createQuery(query, Vote.class)
+				.setParameter("cr", critic)
+				.setParameter("co", comment);
+		List<Vote> votes = v.getResultList();
+		if (votes != null && votes.size() >= 1) {
+			return v.getResultList().get(0).getId();
+		} else {
+			return null;
+		}
+	}
+	
 	/* (non-Javadoc)
 	 * @see com.piccritic.database.feedback.VoteConnector#insertVote(com.piccritic.database.feedback.Vote)
 	 */

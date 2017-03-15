@@ -8,6 +8,10 @@ import com.piccritic.database.feedback.Comment;
 import com.piccritic.database.feedback.CommentConnector;
 import com.piccritic.database.feedback.CommentException;
 import com.piccritic.database.feedback.JPACommentConnector;
+import com.piccritic.database.feedback.JPAVoteConnector;
+import com.piccritic.database.feedback.Vote;
+import com.piccritic.database.feedback.VoteConnector;
+import com.piccritic.database.feedback.VoteException;
 import com.piccritic.database.post.JPAPostConnector;
 import com.piccritic.database.post.Post;
 import com.piccritic.database.post.PostConnector;
@@ -17,10 +21,12 @@ public class FeedbackService {
 	private static FeedbackService instance;
   	private static CommentConnector cc;
   	private static PostConnector pc;
+  	private static VoteConnector vc;
   	
   	private FeedbackService() {
       	cc = new JPACommentConnector();
       	pc = new JPAPostConnector();
+      	vc = new JPAVoteConnector();
     }
   
   	public static FeedbackService createService() {
@@ -73,5 +79,20 @@ public class FeedbackService {
 	 */
 	public Double[] getAvgRatings(Post post) {
 		return null;
+	}
+	
+	public Vote insertVote(Vote vote) {
+		Vote inserted = null;
+		try {
+			Long id = vc.getVoteId(vote.getCritic(), vote.getComment());
+			if (id == null) {
+				inserted = vc.insertVote(vote);
+			} else {
+				inserted = vc.updateVote(vote);
+			}
+		} catch (VoteException e) {
+			e.getLocalizedMessage();
+		}
+		return inserted;
 	}
 }

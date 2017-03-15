@@ -20,7 +20,10 @@ import com.piccritic.database.feedback.Comment;
 import com.piccritic.database.feedback.CommentConnector;
 import com.piccritic.database.feedback.CommentException;
 import com.piccritic.database.feedback.JPACommentConnector;
+import com.piccritic.database.feedback.JPAVoteConnector;
 import com.piccritic.database.feedback.Rating;
+import com.piccritic.database.feedback.Vote;
+import com.piccritic.database.feedback.VoteConnector;
 import com.piccritic.database.post.Album;
 import com.piccritic.database.post.AlbumException;
 import com.piccritic.database.post.JPAPostConnector;
@@ -43,6 +46,7 @@ public class FeedbackServiceTest {
 	Album album = new Album();
 	Post post = new Post();
 	Comment comment = new Comment();
+	Vote vote = new Vote();
 	
 	private Date date = new Date(0);
 	
@@ -55,6 +59,7 @@ public class FeedbackServiceTest {
 	UserConnector uc = new JPAUserConnector();
 	PostConnector pc = new JPAPostConnector();
 	CommentConnector cc = new JPACommentConnector();
+	VoteConnector vc = new JPAVoteConnector();
 	
 	FeedbackService fs = FeedbackService.createService();
 	
@@ -87,6 +92,8 @@ public class FeedbackServiceTest {
 		comment.setReplies(new HashSet<Comment>());
 		comment.setScore(0);
 		
+		vote.setRating(true);
+		
 		try {
 			critic = uc.insertCritic(critic, "hash");
 			album.setCritic(critic);
@@ -95,6 +102,8 @@ public class FeedbackServiceTest {
 			posts.add(post);
 			post = pc.insertPost(post);comment.setPost(post);
 			comment.setCritic(critic);
+			vote.setCritic(critic);
+			vote.setComment(comment);
 		} catch (UserException | AlbumException | PostException e) {
 			fail(e.getLocalizedMessage());
 		}
@@ -124,9 +133,36 @@ public class FeedbackServiceTest {
 		}
 	}
 	
+	@Test
+	public void testInsertVote() {
+		try {
+			comment = fs.insertComment(comment);
+			Vote v = fs.insertVote(vote);
+			assertEquals(v, vc.selectVote(v.getId()));
+			vc.deleteVote(v);
+			cc.deleteComment(comment);
+		} catch (CommentException e) {
+			fail(e.getLocalizedMessage());
+		}
+	}
+	
+	@Test
+	public void testUpdateVote() {
+		try {
+			comment = fs.insertComment(comment);
+			Vote v = fs.insertVote(vote);
+			vote.setRating(false);
+			v = fs.insertVote(vote);
+			assertEquals(v, vc.selectVote(v.getId()));
+			vc.deleteVote(v);
+			cc.deleteComment(comment);
+		} catch (CommentException e) {
+			fail(e.getLocalizedMessage());
+		}
+	}
+	
 	@After
 	public void tearDown() {
-		//cc.deleteComment(comment);
 		try {
 			pc.deletePost(post);
 			pc.deleteAlbum(album);
