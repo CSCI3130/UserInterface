@@ -76,4 +76,11 @@ public class Vote {
 		return String.format("Vote{id=%d, critic.handle=%s, comment.id=%d, rating=%s}",
 				id, critic.getHandle(), comment.getId(), rating ? "UPVOTE" : "DOWNVOTE");
 	}
+	
+	public boolean equals(Object o) {
+		if(o instanceof Vote) {
+			return this.toString().equals(o.toString());
+		}
+		return false;
+	}
 }
