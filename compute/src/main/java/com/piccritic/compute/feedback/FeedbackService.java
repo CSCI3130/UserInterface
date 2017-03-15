@@ -16,6 +16,7 @@ import com.piccritic.database.post.JPAPostConnector;
 import com.piccritic.database.post.Post;
 import com.piccritic.database.post.PostConnector;
 import com.piccritic.database.post.PostException;
+import com.piccritic.database.user.Critic;
 
 public class FeedbackService {
 	private static FeedbackService instance;
@@ -74,11 +75,34 @@ public class FeedbackService {
 	 * 3: FOCUS
 	 * 4: COLOR
 	 * 
-	 * @param post
+	 * @param post - post to average the ratings on
 	 * @return An ArrayList of integers
 	 */
 	public Double[] getAvgRatings(Post post) {
 		return null;
+	}
+	
+//	/**
+//	 * Method to calculate total comment score for a user (across all of their comments)
+//	 * @param critic - User to evaluate total comment score for
+//	 * @return total comment score
+//	 */
+//	public int getCommentScore(Critic critic){
+//		int total;
+//		List<Comment> comments = cc.getComments(critic);
+//		for(Comment comment : comments){
+//			total+= comment.get
+//		}
+//		return 0;
+//	}
+	
+	/**
+	 * Method to calculate total comment score for a user (across all of their comments)
+	 * @param critic - User to evaluate total comment score for
+	 * @return total comment score
+	 */
+	public int getTotalCommentScore(Critic critic){
+		return 0;
 	}
 	
 	public Vote insertVote(Vote vote) {

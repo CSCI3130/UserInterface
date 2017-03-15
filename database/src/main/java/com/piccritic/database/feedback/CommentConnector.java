@@ -7,6 +7,7 @@ package com.piccritic.database.feedback;
 import java.util.List;
 
 import com.piccritic.database.post.Post;
+import com.piccritic.database.user.Critic;
 
 /**
  * This interface provides methods that read to and write from the database
@@ -45,6 +46,18 @@ public interface CommentConnector {
 	 * @return true on successful deletion
 	 */
 	public boolean deleteComment(Comment comment);
-
+	
+	/**
+	 * 
+	 * @param post - the post to retrieve the comments from
+	 * @return a list of all comments from the post.
+	 */
 	public List<Comment> getComments(Post post);
+	
+	/**
+	 * 
+	 * @param critic - the critic to retrieve the comments from
+	 * @return a list of all comments from the user.
+	 */
+	public List<Comment> getComments(Critic critic);
 }

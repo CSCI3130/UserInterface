@@ -4,6 +4,10 @@
  */
 package com.piccritic.database.user;
 
+import java.util.List;
+
+import com.piccritic.database.feedback.Comment;
+
 /**
  * This interface is to be used for any critic data queries.
  *
