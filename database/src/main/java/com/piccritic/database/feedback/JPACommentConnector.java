@@ -5,14 +5,17 @@
 package com.piccritic.database.feedback;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Persistence;
+import javax.persistence.TypedQuery;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 
+import com.piccritic.database.post.Post;
 import com.piccritic.database.user.Critic;
 import com.vaadin.addon.jpacontainer.EntityItem;
 import com.vaadin.addon.jpacontainer.JPAContainer;
@@ -104,6 +107,13 @@ public class JPACommentConnector implements CommentConnector {
 		for (ConstraintViolation<Comment> violation : violations) {
 			throw new CommentException(violation.getMessage());
 		}
+	}
+
+	@Override
+	public List<Comment> getComments(Post post) {
+		String query = "SELECT c FROM Comment c WHERE c.post = :path ORDER BY c.creationDate";
+		TypedQuery<Comment> q = comments.getEntityProvider().getEntityManager().createQuery(query, Comment.class).setParameter("path", post);
+		return q.getResultList();
 	}
 	
 }

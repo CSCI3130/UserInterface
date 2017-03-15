@@ -3,7 +3,9 @@ compute/target
 database/target
 
 .project
+.setting
 */.project
+*/.setting
 */.classpath
 website/users
 /bin/

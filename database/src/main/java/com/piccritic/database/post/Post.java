@@ -14,6 +14,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 import com.piccritic.database.feedback.Comment;
 import com.piccritic.database.feedback.Rating;
 
@@ -41,6 +44,7 @@ public class Post {
 	private Album album;
 	
 	@OneToMany(fetch=FetchType.EAGER, mappedBy="post") 
+	@Fetch(FetchMode.SUBSELECT)
 	private Set<Comment> comments;
 	
 	@OneToMany(fetch=FetchType.EAGER, mappedBy="post")
