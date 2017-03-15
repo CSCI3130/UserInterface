@@ -69,11 +69,25 @@ public class JPAVoteConnector implements VoteConnector{
 	/* (non-Javadoc)
 	 * @see com.piccritic.database.feedback.VoteConnector#insertVote(com.piccritic.database.feedback.Vote)
 	 */
+	@SuppressWarnings("unchecked")
 	public Vote insertVote(Vote vote) throws VoteException {
 		validate(vote);
 		
 		vote.setId(null);
 		vote.setId((Long) votes.addEntity(vote));
+		
+		EntityItem<Vote> voteItem = votes.getItem(vote.getId());
+		boolean rating = (boolean) voteItem.getItemProperty("rating").getValue();
+		Comment change = (Comment) voteItem.getItemProperty("comment").getValue();
+		if(rating){
+			change.setScore(change.getScore() + 1);
+			voteItem.getItemProperty("comment").setValue(change);
+		}
+		else {
+			change.setScore(change.getScore() - 1);
+			voteItem.getItemProperty("comment").setValue(change);
+		}
+		voteItem.commit();
 		
 		return selectVote(vote.getId());
 	}
@@ -87,6 +101,17 @@ public class JPAVoteConnector implements VoteConnector{
 		EntityItem<Vote> voteItem = votes.getItem(vote.getId());
 		
 		voteItem.getItemProperty("rating").setValue(vote.getRating());
+
+		boolean rating = (boolean) voteItem.getItemProperty("rating").getValue();
+		Comment change = (Comment) voteItem.getItemProperty("comment").getValue();
+		if(rating){
+			change.setScore(change.getScore() + 1);
+			voteItem.getItemProperty("comment").setValue(change);
+		}
+		else {
+			change.setScore(change.getScore() - 1);
+			voteItem.getItemProperty("comment").setValue(change);
+		}
 		voteItem.commit();
 		
 		return selectVote(vote.getId());

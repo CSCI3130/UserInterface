@@ -130,8 +130,11 @@ public class VoteConnectorTest {
 	public void testUpdateVote() {
 		vote.setRating(false);
 		try {
+			int score = vc.selectVote(vote.getId()).getComment().getScore();
 			vc.updateVote(vote);
 			assertEquals(vote, vc.selectVote(vote.getId()));
+			assertEquals(cc.selectComment(comment.getId()), (vc.selectVote(vote.getId()).getComment()));
+			assertEquals(score - 1, vc.selectVote(vote.getId()).getComment().getScore());
 		} catch (VoteException e) {
 			fail(e.getLocalizedMessage());
 		}

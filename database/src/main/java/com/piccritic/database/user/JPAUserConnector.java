@@ -5,14 +5,18 @@
 package com.piccritic.database.user;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Persistence;
+import javax.persistence.TypedQuery;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 
+import com.piccritic.database.feedback.Comment;
+import com.piccritic.database.post.Post;
 import com.vaadin.addon.jpacontainer.EntityItem;
 import com.vaadin.addon.jpacontainer.JPAContainer;
 import com.vaadin.addon.jpacontainer.JPAContainerFactory;
@@ -150,4 +154,5 @@ public class JPAUserConnector implements UserConnector {
 			throw new UserException(violation.getPropertyPath() + " " + violation.getMessage());
 		}
 	}
+	
 }
