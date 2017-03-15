@@ -6,3 +6,4 @@ database/target
 */.project
 */.classpath
 website/users
+/bin/

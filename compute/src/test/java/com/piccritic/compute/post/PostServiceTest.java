@@ -19,7 +19,12 @@ import com.piccritic.database.post.Post;
 import com.piccritic.database.post.PostException;
 import com.piccritic.database.user.Critic;
 import com.piccritic.database.user.JPAUserConnector;
+import com.piccritic.database.user.UserException;
 
+/**
+ * 
+ * @author Ryan Lowe <br>Damian Robichaud<br>Jonathan Ignacio
+ */
 public class PostServiceTest {
 	
 	private Post post;
@@ -94,7 +99,6 @@ public class PostServiceTest {
 			ps.deletePost(created);			
 			pc.insertPost(post);
 		} catch(PostException e){
-			e.printStackTrace();
 			fail(e.getLocalizedMessage());
 		}
 	}
@@ -105,6 +109,7 @@ public class PostServiceTest {
 		try {
 			ps.createPost(post);
 		} catch (PostException e) {
+			fail(e.getLocalizedMessage());
 		}
 	}
 		
@@ -112,9 +117,15 @@ public class PostServiceTest {
 	public void tearDown() {
 		try {
 			pc.deletePost(post);
+			album.setPosts(null);
+			pc.updateAlbum(album);
 			pc.deleteAlbum(album);
+			critic.setAlbums(null);
+			uc.updateCritic(critic);
 			uc.deleteCritic(critic);
-		} catch (PostException|AlbumException e) {
+		} catch (PostException|AlbumException|UserException e) {
+			e.printStackTrace();
+			fail(e.getLocalizedMessage());
 		}
 	}
 }
