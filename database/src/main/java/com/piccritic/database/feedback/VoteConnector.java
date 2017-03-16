@@ -48,5 +48,12 @@ public interface VoteConnector {
 	 * @param vote the vote to delete
 	 * @return true on successful deletion
 	 */
-	public boolean deleteVote(Vote vote);
+	public boolean deleteVote(Vote vote) throws VoteException;
+	
+	/**
+	 * Returns the score for this comment (sum of votes)
+	 * @param comment
+	 * @return
+	 */
+	public int getScore(Comment comment);
 }

@@ -1,5 +1,5 @@
 /**
- * FeedbackService.java
+ * FeedbackServiceTest.java
  * Created Mar 14, 2017
  */
 
@@ -24,6 +24,7 @@ import com.piccritic.database.feedback.JPAVoteConnector;
 import com.piccritic.database.feedback.Rating;
 import com.piccritic.database.feedback.Vote;
 import com.piccritic.database.feedback.VoteConnector;
+import com.piccritic.database.feedback.VoteException;
 import com.piccritic.database.post.Album;
 import com.piccritic.database.post.AlbumException;
 import com.piccritic.database.post.JPAPostConnector;
@@ -104,31 +105,42 @@ public class FeedbackServiceTest {
 			comment.setCritic(critic);
 			vote.setCritic(critic);
 			vote.setComment(comment);
-		} catch (UserException | AlbumException | PostException e) {
+			comment = fs.insertComment(comment);
+		} catch (UserException | AlbumException | PostException | CommentException e) {
 			fail(e.getLocalizedMessage());
 		}
 	}
 	
 	@Test
 	public void testInsertComment() {
-		
 		try {
+			cc.deleteComment(comment);
 			comment = fs.insertComment(comment);
+			assertEquals(comment, cc.selectComment(comment.getId()));
 		} catch (CommentException e) {
 			fail(e.getLocalizedMessage());
 		}
-		assertEquals(comment, cc.selectComment(comment.getId()));
-		cc.deleteComment(comment);
 	}
 	
 	@Test
 	public void testGetComments() {
 		try {
-			comment = fs.insertComment(comment);
 			assertEquals(fs.getComments(post).size(), 1);
 			cc.deleteComment(comment);
 			assertEquals(fs.getComments(post).size(), 0);
+			fs.insertComment(comment);
 		} catch (PostException | CommentException e) {
+			fail(e.getLocalizedMessage());
+		}
+	}
+	
+	@Test
+	public void testGetVote() {
+		try {
+			Vote v = fs.insertVote(vote);
+			assertEquals(v, fs.getVote(critic, comment));
+			vc.deleteVote(v);
+		} catch (VoteException e) {
 			fail(e.getLocalizedMessage());
 		}
 	}
@@ -136,12 +148,10 @@ public class FeedbackServiceTest {
 	@Test
 	public void testInsertVote() {
 		try {
-			comment = fs.insertComment(comment);
 			Vote v = fs.insertVote(vote);
 			assertEquals(v, vc.selectVote(v.getId()));
 			vc.deleteVote(v);
-			cc.deleteComment(comment);
-		} catch (CommentException e) {
+		} catch (VoteException e) {
 			fail(e.getLocalizedMessage());
 		}
 	}
@@ -149,14 +159,35 @@ public class FeedbackServiceTest {
 	@Test
 	public void testUpdateVote() {
 		try {
-			comment = fs.insertComment(comment);
 			Vote v = fs.insertVote(vote);
 			vote.setRating(false);
 			v = fs.insertVote(vote);
 			assertEquals(v, vc.selectVote(v.getId()));
 			vc.deleteVote(v);
-			cc.deleteComment(comment);
-		} catch (CommentException e) {
+		} catch (VoteException e) {
+			fail(e.getLocalizedMessage());
+		}
+	}
+	
+	@Test
+	public void testDeleteVote() {
+		try {
+			Vote v = fs.insertVote(vote);
+			assertEquals(true, vc.deleteVote(v));
+		} catch (VoteException e) {
+			fail(e.getLocalizedMessage());
+		}
+	}
+	
+	@Test
+	public void testGetScore() {
+		try {
+			vote.setRating(true);
+			Vote v = fs.insertVote(vote);
+			assertEquals(1, fs.getScore(comment));
+			fs.deleteVote(v);
+			assertEquals(0, fs.getScore(comment));
+		} catch (VoteException e) {
 			fail(e.getLocalizedMessage());
 		}
 	}
@@ -164,6 +195,7 @@ public class FeedbackServiceTest {
 	@After
 	public void tearDown() {
 		try {
+			cc.deleteComment(comment);
 			pc.deletePost(post);
 			pc.deleteAlbum(album);
 		} catch (PostException | AlbumException e) {
@@ -171,5 +203,4 @@ public class FeedbackServiceTest {
 		}
 		uc.deleteCritic(critic);
 	}
-	
 }

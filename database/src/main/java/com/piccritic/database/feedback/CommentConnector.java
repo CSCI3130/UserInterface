@@ -60,4 +60,11 @@ public interface CommentConnector {
 	 * @return a list of all comments from the user.
 	 */
 	public List<Comment> getComments(Critic critic);
+	
+//	/**
+//	 * 
+//	 * @param comment
+//	 * @return Score of given comment
+//	 */
+//	public int getScore(Comment comment);
 }

@@ -120,9 +120,27 @@ public class JPAVoteConnector implements VoteConnector{
 	/* (non-Javadoc)
 	 * @see com.piccritic.database.feedback.VoteConnector#deleteVote(com.piccritic.database.feedback.Vote)
 	 */
-	public boolean deleteVote(Vote vote) {
+	@SuppressWarnings("unchecked")
+	public boolean deleteVote(Vote vote) throws VoteException {
+		validate(vote);
+		EntityItem<Vote> voteItem = votes.getItem(vote.getId());
+		
+		voteItem.getItemProperty("rating").setValue(vote.getRating());
+
+		boolean rating = (boolean) voteItem.getItemProperty("rating").getValue();
+		Comment change = (Comment) voteItem.getItemProperty("comment").getValue();
+		if(rating){
+			change.setScore(change.getScore() - 1);
+			voteItem.getItemProperty("comment").setValue(change);
+		}
+		else {
+			change.setScore(change.getScore() + 1);
+			voteItem.getItemProperty("comment").setValue(change);
+		}
+		voteItem.commit();
+		
 		votes.removeItem(vote.getId());
-		return votes.containsId(vote.getId());
+		return !votes.containsId(vote.getId());
 	}
 	
 	/**
@@ -136,5 +154,22 @@ public class JPAVoteConnector implements VoteConnector{
 			throw new VoteException(violation.getMessage());
 		}
 	}
-
+	
+	@Override
+	public int getScore(Comment comment) {
+		String query = "SELECT v FROM Vote v WHERE v.comment = :comment";
+		TypedQuery<Vote> q = votes.getEntityProvider().getEntityManager().createQuery(query, Vote.class)
+				.setParameter("comment", comment);
+		List<Vote> voteList = q.getResultList();
+		
+		int score = 0;
+		for (Vote vote : voteList) {
+			if (vote.getRating()) {
+				score++;
+			} else {
+				score--;
+			}
+		}
+		return score;
+	}
 }
