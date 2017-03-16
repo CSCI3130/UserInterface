@@ -99,7 +99,7 @@ public class ViewPost extends VerticalLayout implements View {
 		
 		for (Comment comment : comments) {
 			CommentComponent commentComponent = 
-					new CommentComponent(comment.getCritic().getHandle(), comment.getContent());
+					new CommentComponent(comment, fs, us);
 			addComponent(commentComponent);
 		}
 	}

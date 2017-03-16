@@ -142,12 +142,12 @@ public class VoteConnectorTest {
 	
 	@After
 	public void cleanUp() {
-		vc.deleteVote(vote);
-		cc.deleteComment(comment);
 		try {
+			vc.deleteVote(vote);
+			cc.deleteComment(comment);
 			pc.deletePost(post);
 			pc.deleteAlbum(album);
-		} catch (PostException | AlbumException e) {
+		} catch (PostException | AlbumException | VoteException e) {
 			e.getLocalizedMessage();
 		}
 		uc.deleteCritic(critic);
