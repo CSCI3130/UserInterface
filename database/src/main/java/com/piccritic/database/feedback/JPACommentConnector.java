@@ -118,8 +118,8 @@ public class JPACommentConnector implements CommentConnector {
 	
 	@Override
 	public List<Comment> getComments(Critic critic) {
-		String query = "SELECT c FROM Comment c WHERE c.post = :path ORDER BY c.creationDate";
-		TypedQuery<Comment> q = comments.getEntityProvider().getEntityManager().createQuery(query, Comment.class).setParameter("path", critic);
+		String query = "SELECT c FROM Comment c WHERE c.critic = :crit ORDER BY c.creationDate";
+		TypedQuery<Comment> q = comments.getEntityProvider().getEntityManager().createQuery(query, Comment.class).setParameter("crit", critic);
 		return q.getResultList();
 	}
 	

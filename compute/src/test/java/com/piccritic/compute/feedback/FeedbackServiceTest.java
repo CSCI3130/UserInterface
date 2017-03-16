@@ -192,6 +192,19 @@ public class FeedbackServiceTest {
 		}
 	}
 	
+	@Test
+	public void testGetCriticTotalScore() {
+		try {
+			vote.setRating(true);
+			Vote v = fs.insertVote(vote);
+			assertEquals(1, fs.getCriticTotalScore(critic));
+			fs.deleteVote(v);
+			assertEquals(0, fs.getCriticTotalScore(critic));
+		} catch (VoteException e) {
+			fail(e.getLocalizedMessage());
+		}
+	}
+	
 	@After
 	public void tearDown() {
 		try {
