@@ -92,27 +92,18 @@ public class FeedbackService {
 		return null;
 	}
 	
-//	/**
-//	 * Method to calculate total comment score for a user (across all of their comments)
-//	 * @param critic - User to evaluate total comment score for
-//	 * @return total comment score
-//	 */
-//	public int getCommentScore(Critic critic){
-//		int total;
-//		List<Comment> comments = cc.getComments(critic);
-//		for(Comment comment : comments){
-//			total+= comment.get
-//		}
-//		return 0;
-//	}
-	
 	/**
 	 * Method to calculate total comment score for a user (across all of their comments)
 	 * @param critic - User to evaluate total comment score for
 	 * @return total comment score
 	 */
-	public int getTotalCommentScore(Critic critic){
-		return 0;
+	public int getCriticTotalScore(Critic critic){
+		int total = 0;
+		List<Comment> comments = cc.getComments(critic);
+		for(Comment comment : comments){
+			total+= comment.getScore();
+		}
+		return total;
 	}
 	
 	/**
