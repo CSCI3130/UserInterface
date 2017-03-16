@@ -4,7 +4,7 @@
  */
 package com.piccritic.database.feedback;
 
-import java.sql.Date;
+import java.util.Date;
 import java.util.Set;
 
 import javax.persistence.Entity;
@@ -14,6 +14,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -22,7 +24,7 @@ import com.piccritic.database.user.Critic;
 
 /**
  * 
- * @author Ryan Lowe<br>Amelia Stead
+ * @author Ryan Lowe<br>Amelia Stead<br>Jonathan Ignacio
  */
 @Entity
 public class Comment {
@@ -55,6 +57,7 @@ public class Comment {
 	private String content;
 	
 	@NotNull
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date creationDate;
 	
 	@NotNull
