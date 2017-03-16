@@ -101,7 +101,7 @@ public class FeedbackService {
 		int total = 0;
 		List<Comment> comments = cc.getComments(critic);
 		for(Comment comment : comments){
-			total+= comment.getScore();
+			total += getScore(comment);
 		}
 		return total;
 	}
@@ -163,7 +163,6 @@ public class FeedbackService {
 	 * @param comment
 	 * @return score of given comment
 	 */
-	//TODO: test
 	public int getScore(Comment comment) {
 		return vc.getScore(comment);
 	}
