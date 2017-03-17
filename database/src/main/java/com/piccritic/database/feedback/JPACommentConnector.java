@@ -123,12 +123,21 @@ public class JPACommentConnector implements CommentConnector {
 		return q.getResultList();
 	}
 	
-//	@Override
-//	public int getScore(Comment comment) {
-//		String query = "SELECT c FROM Comment c WHERE c.id = :id";
-//		TypedQuery<Comment> q = comments.getEntityProvider().getEntityManager().createQuery(query, Comment.class)
-//				.setParameter("id", comment.getId());
-//		return q.getResultList().get(0).getScore();
-//	}
+	@Override
+	public int getCommentCount(Critic critic) {
+		String query = "SELECT c FROM Comment c WHERE c.critic = :critic";
+		TypedQuery<Comment> q = comments.getEntityProvider().getEntityManager().createQuery(query, Comment.class)
+				.setParameter("critic", critic);
+		List<Comment> commentList = q.getResultList();
+		
+		int total = 0;
+		for(Comment comment: commentList) {
+			if(comment.getId() != null) {
+				total++;
+			}
+		}
+		
+		return total;
+	}
 	
 }
