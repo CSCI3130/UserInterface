@@ -34,11 +34,42 @@ public class FeedbackService {
   	private static PostConnector pc;
   	private static VoteConnector vc;
   	
+  	//TODO possibly change these constants to an enum
+  	final private static int upperScoreLimit = 3;
+  	final private static int lowerScoreLimit = -5;
+  	final private static int repGain = 1;
+  	final private static int repLoss = -1;
+  	
   	private FeedbackService() {
       	cc = new JPACommentConnector();
       	pc = new JPAPostConnector();
       	vc = new JPAVoteConnector();
+      	//rc = new JPARatingConnector();
     }
+  	
+  	public int getUpperScoreLimit() {
+  		return upperScoreLimit;
+  	}
+  	
+  	public int  getLowerScoreLimit() {
+  		return lowerScoreLimit;
+  	}
+  	
+  	/**
+  	 * 
+  	 * @return the current reputation gain for positive contributions.
+  	 */
+  	public int getRepGain() {
+  		return repGain;
+  	}
+  	
+  	/**
+  	 * 
+  	 * @return the current reputation loss for negative contributions.
+  	 */
+  	public int getRepLoss() {
+  		return repLoss;
+  	}
   
   	public static FeedbackService createService() {
       	if (instance == null) {
@@ -90,20 +121,6 @@ public class FeedbackService {
 	 */
 	public Double[] getAvgRatings(Post post) {
 		return null;
-	}
-	
-	/**
-	 * Method to calculate total comment score for a user (across all of their comments)
-	 * @param critic - User to evaluate total comment score for
-	 * @return total comment score
-	 */
-	public int getCriticTotalScore(Critic critic){
-		int total = 0;
-		List<Comment> comments = cc.getComments(critic);
-		for(Comment comment : comments){
-			total += getScore(comment);
-		}
-		return total;
 	}
 	
 	/**
@@ -166,4 +183,38 @@ public class FeedbackService {
 	public int getScore(Comment comment) {
 		return vc.getScore(comment);
 	}
+	
+	/**
+	 * Method to calculate total reputation given by comments for a user 
+	 * (across all of their comments)
+	 * @param critic - User to evaluate total comment score for
+	 * @return total comment score
+	 */
+	public int getCriticCommentReputation(Critic critic){
+		int total = 0;
+		List<Comment> comments = cc.getComments(critic);
+		for(Comment comment : comments){
+			int score = getScore(comment);
+			if(score >= upperScoreLimit){
+				total += repGain;
+			}
+			else if(score <= lowerScoreLimit){
+				total += repLoss;
+			}
+		}
+		return total;
+	}
+	
+	/**
+	 * 
+	 * @param critic - critic to calculate the total reputation for
+	 * @return the total calculated reputation for a user.
+	 */
+	public long calculateReputation(Critic critic) {
+		int commentRep = getCriticCommentReputation(critic);
+		
+		
+		return 0; 
+	}
+	
 }

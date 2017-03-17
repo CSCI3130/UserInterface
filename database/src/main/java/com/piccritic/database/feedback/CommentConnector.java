@@ -61,10 +61,11 @@ public interface CommentConnector {
 	 */
 	public List<Comment> getComments(Critic critic);
 	
-//	/**
-//	 * 
-//	 * @param comment
-//	 * @return Score of given comment
-//	 */
-//	public int getScore(Comment comment);
+	/**
+	 * Method to count the number of comments that a critic has made by
+	 * selecting them from the DB and counting them individually.
+	 * @param critic - the critic to acquire the comment count for
+	 * @return the number of comments that the critic has made
+	 */
+	public int getCommentCount(Critic critic);
 }

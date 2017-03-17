@@ -109,6 +109,11 @@ public class CommentConnectorTest {
 		}
 	}
 	
+	@Test
+	public void testGetCommentCount() {
+		assertEquals(1, cc.getCommentCount(critic));
+	}
+	
 	@After
 	public void tearDown() {
 		cc.deleteComment(comment);
