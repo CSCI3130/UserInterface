@@ -8,6 +8,7 @@ env:
 - JDBC_DATABASE_URL=jdbc:postgresql://localhost:5432/postgres?user=postgres
 services:
 - postgresql
+script: "./.travis.sh"
 deploy:
   provider: heroku
   api_key:
