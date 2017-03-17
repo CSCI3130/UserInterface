@@ -141,7 +141,7 @@ public class VoteConnectorTest {
 	}
 	
 	@After
-	public void cleanUp() {
+	public void tearDown() {
 		try {
 			vc.deleteVote(vote);
 			cc.deleteComment(comment);
