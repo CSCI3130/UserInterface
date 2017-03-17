@@ -24,7 +24,7 @@ public class PostQuickView extends GridLayout {
 		setHeightUndefined();
 	}
 
-	public void func(List<Post> posts) {
+	public void initPosts(List<Post> posts) {
 		System.out.println("does this happen twice?");
 		Iterator<Post> it = posts.iterator();
 		for (int y = 0; y < 9; y++) {
