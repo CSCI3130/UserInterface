@@ -35,7 +35,7 @@ public class FeedbackService {
   	private static VoteConnector vc;
   	
   	//TODO possibly change these constants to an enum
-  	final private static int upperScoreLimit = 3;
+  	final private static int upperScoreLimit = 2;
   	final private static int lowerScoreLimit = -5;
   	final private static int repGain = 1;
   	final private static int repLoss = -1;
@@ -105,6 +105,15 @@ public class FeedbackService {
 			throw new CommentException("Error inserting comment.");
 		}
 		return inserted;
+	}
+	
+	/**
+	 * Deletes a comment from the database
+	 * @param comment - comment to delete from the database
+	 * @return true or false whether or not the comment was deleted
+	 */
+	public boolean deleteComment(Comment comment) throws CommentException {
+		return cc.deleteComment(comment);
 	}
 	
 	/**
@@ -205,16 +214,16 @@ public class FeedbackService {
 		return total;
 	}
 	
-	/**
-	 * 
-	 * @param critic - critic to calculate the total reputation for
-	 * @return the total calculated reputation for a user.
-	 */
-	public long calculateReputation(Critic critic) {
-		int commentRep = getCriticCommentReputation(critic);
-		
-		
-		return 0; 
-	}
+//	/**
+//	 * 
+//	 * @param critic - critic to calculate the total reputation for
+//	 * @return the total calculated reputation for a user.
+//	 */
+//	public long calculateReputation(Critic critic) {
+//		int commentRep = getCriticCommentReputation(critic);
+//		
+//		
+//		return 0; 
+//	}
 	
 }

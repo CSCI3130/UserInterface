@@ -6,6 +6,7 @@
 package com.piccritic.compute.feedback;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.sql.Date;
@@ -44,10 +45,12 @@ import com.piccritic.database.user.UserException;
 public class FeedbackServiceTest {
 
 	Critic critic = new Critic();
+	Critic voter = new Critic();
 	Album album = new Album();
 	Post post = new Post();
 	Comment comment = new Comment();
-	Vote vote = new Vote();
+	Vote vote1 = new Vote();
+	Vote vote2 = new Vote();
 	
 	private Date date = new Date(0);
 	
@@ -73,6 +76,14 @@ public class FeedbackServiceTest {
 		critic.setAlbums(albums);
 		critic.setComments(criticComments);
 		critic.setRatings(ratings);
+		
+		voter.setHandle("voter");
+		voter.setFirstName("firstName");
+		voter.setLastName("lastName");
+		voter.setJoinDate(date);
+		voter.setAlbums(null);
+		voter.setComments(null);
+		voter.setRatings(null);
 
 		albums.add(album);
 		album.setCreationDate(date);
@@ -91,20 +102,24 @@ public class FeedbackServiceTest {
 		comment.setCreationDate(date);
 		criticComments.add(comment);
 		comment.setReplies(new HashSet<Comment>());
-		comment.setScore(0); 
+		comment.setScore(0);
 		
-		vote.setRating(true);
+		vote1.setRating(true);
+		vote2.setRating(true);
 		
 		try {
 			critic = uc.insertCritic(critic, "hash");
+			voter = uc.insertCritic(voter, "hash");
 			album.setCritic(critic);
 			album = pc.insertAlbum(album);
 			post.setAlbum(album);
 			posts.add(post);
 			post = pc.insertPost(post);comment.setPost(post);
 			comment.setCritic(critic);
-			vote.setCritic(critic);
-			vote.setComment(comment);
+			vote1.setCritic(critic);
+			vote1.setComment(comment);
+			vote2.setCritic(voter);
+			vote2.setComment(comment);
 			comment = fs.insertComment(comment);
 		} catch (UserException | AlbumException | PostException | CommentException e) {
 			fail(e.getLocalizedMessage());
@@ -137,7 +152,7 @@ public class FeedbackServiceTest {
 	@Test
 	public void testGetVote() {
 		try {
-			Vote v = fs.insertVote(vote);
+			Vote v = fs.insertVote(vote1);
 			assertEquals(v, fs.getVote(critic, comment));
 			vc.deleteVote(v);
 		} catch (VoteException e) {
@@ -148,7 +163,7 @@ public class FeedbackServiceTest {
 	@Test
 	public void testInsertVote() {
 		try {
-			Vote v = fs.insertVote(vote);
+			Vote v = fs.insertVote(vote1);
 			assertEquals(v, vc.selectVote(v.getId()));
 			vc.deleteVote(v);
 		} catch (VoteException e) {
@@ -159,9 +174,9 @@ public class FeedbackServiceTest {
 	@Test
 	public void testUpdateVote() {
 		try {
-			Vote v = fs.insertVote(vote);
-			vote.setRating(false);
-			v = fs.insertVote(vote);
+			Vote v = fs.insertVote(vote1);
+			vote1.setRating(false);
+			v = fs.insertVote(vote1);
 			assertEquals(v, vc.selectVote(v.getId()));
 			vc.deleteVote(v);
 		} catch (VoteException e) {
@@ -172,7 +187,7 @@ public class FeedbackServiceTest {
 	@Test
 	public void testDeleteVote() {
 		try {
-			Vote v = fs.insertVote(vote);
+			Vote v = fs.insertVote(vote1);
 			assertEquals(true, vc.deleteVote(v));
 		} catch (VoteException e) {
 			fail(e.getLocalizedMessage());
@@ -182,8 +197,8 @@ public class FeedbackServiceTest {
 	@Test
 	public void testGetScore() {
 		try {
-			vote.setRating(true);
-			Vote v = fs.insertVote(vote);
+			vote1.setRating(true);
+			Vote v = fs.insertVote(vote1);
 			assertEquals(1, fs.getScore(comment));
 			fs.deleteVote(v);
 			assertEquals(0, fs.getScore(comment));
@@ -192,19 +207,20 @@ public class FeedbackServiceTest {
 		}
 	}
 	
-	//FIXME: some change caused the date to get messed up. investigate.
-//	@Test
-//	public void testGetCriticCommentReputation() {
-//		try {
-//			vote.setRating(true);
-//			Vote v = fs.insertVote(vote);
-//			assertEquals(1, fs.getCriticCommentReputation(critic));
-//			fs.deleteVote(v);
-//			assertEquals(0, fs.getCriticCommentReputation(critic));
-//		} catch (VoteException e) {
-//			fail(e.getLocalizedMessage());
-//		}
-//	}
+	@Test
+	public void testGetCriticCommentReputation() {
+		try {
+			//should have votes equal to upperscorelimit to properly reflect reputation gain
+			Vote v1 = fs.insertVote(vote1);
+			Vote v2 = fs.insertVote(vote2);
+			assertEquals(fs.getRepGain(), fs.getCriticCommentReputation(critic)); //gained rep
+			fs.deleteVote(v1);
+			fs.deleteVote(v2);
+			assertEquals(0, fs.getCriticCommentReputation(critic));
+		} catch (VoteException e) {
+			fail(e.getLocalizedMessage());
+		}
+	}
 	
 	@After
 	public void tearDown() {
