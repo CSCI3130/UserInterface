@@ -6,15 +6,14 @@ import java.util.Set;
 import com.piccritic.compute.post.PostService;
 import com.piccritic.database.post.Album;
 import com.piccritic.database.post.AlbumException;
-import com.piccritic.database.post.JPAPostConnector;
 import com.piccritic.database.post.Post;
 import com.piccritic.database.post.PostException;
+import com.piccritic.website.licence.LicenseChooser;
 import com.piccritic.website.login.LoginService;
 import com.vaadin.annotations.Theme;
 import com.vaadin.server.FileResource;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;
-import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Image;
@@ -41,7 +40,7 @@ public class CreatePost extends Window implements SucceededListener {
 	private static final long serialVersionUID = 8544572658091510439L;
 	private TextArea description = new TextArea("Post Description");
 	private TextField title = new TextField("Post Title");
-	private ComboBox license = new ComboBox("License");
+	private LicenseChooser license = new LicenseChooser();
 	private Upload upload;
 	private GridLayout tags = new GridLayout(2, 2);
 	private Post post = new Post();
@@ -81,7 +80,6 @@ public class CreatePost extends Window implements SucceededListener {
 		form.addComponent(description);
 		form.addComponent(tags);
 		form.addComponent(license);
-		form.addComponent(confirm);
 		form.getComponent(0);
 		title.setSizeFull();
 		description.setSizeFull();
@@ -107,15 +105,19 @@ public class CreatePost extends Window implements SucceededListener {
 			confirm.setEnabled(false);
 		});
 		form.addComponent(upload);
+		form.addComponent(confirm);
 	}
 	
 	public CreatePost(String handle, Post post) {
 		this(handle);
-		this.post = post;
 		if (post != null) {
+			this.post = post;
 			title.setValue(post.getTitle());
 			description.setValue(post.getDescription());
 			setupImagereceiver();
+			image.setSource(new FileResource(receiver.getFile()));
+			image.setVisible(true);
+			confirm.setEnabled(true);
 		}
 	}
 
@@ -142,12 +144,12 @@ public class CreatePost extends Window implements SucceededListener {
 			if (service != null) {
 				Album defaultAlbum = service.getDefaultAlbum(LoginService.getHandle());
 				post.setAlbum(defaultAlbum);
+				Post created = service.createPost(post);
+
 				Set<Post> posts = new HashSet<>();
 				posts.add(post);
 				defaultAlbum.setPosts(posts);
-				Post created = service.createPost(post);
-				JPAPostConnector pc = new JPAPostConnector();
-				pc.updateAlbum(defaultAlbum);
+				service.updateAlbum(post.getAlbum());
 
 				if (created != null) {
 					Notification.show("Post Uploaded", Type.TRAY_NOTIFICATION);

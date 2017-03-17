@@ -12,6 +12,7 @@ import java.util.Set;
 import org.hibernate.Hibernate;
 
 import com.piccritic.database.post.Album;
+import com.piccritic.database.post.AlbumException;
 import com.piccritic.database.post.JPAPostConnector;
 import com.piccritic.database.post.Post;
 import com.piccritic.database.post.PostConnector;
@@ -58,12 +59,19 @@ public class PostService implements PostServiceInterface {
 
 	}
 
-	public Post createPost(Post post) throws PostException{
+	public Post createPost(Post post) throws PostException, AlbumException{
 		
 		if (post.getUploadDate() == null) {
 			post.setUploadDate( new Date(Calendar.getInstance().getTime().getTime()) );
-			return pc.insertPost(post) ;
+
+			
+			if (post.getLicense() == null) {
+				post.setLicense(post.getAlbum().getCritic().getLicense());
+			}
+
+			return pc.insertPost(post);
 		}	
+
 		return pc.updatePost(post) ;
 	}
 
@@ -74,6 +82,11 @@ public class PostService implements PostServiceInterface {
 		File image = new File(post.getPath());
 		image.delete();
 		return pc.deletePost(post);		
+	}
+	
+	@Override
+	public Album updateAlbum(Album album) throws AlbumException {
+		return pc.updateAlbum(album);
 	}
 
 	@Override

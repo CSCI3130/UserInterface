@@ -29,6 +29,7 @@ public class ViewPost extends VerticalLayout implements View {
 	private Post post; // post object to view
 	private Image image = new Image();
 	private Label postDescription = new Label();
+	private Label license = new Label();
 
 	private Button delete = new Button("Delete post");
 
@@ -39,6 +40,7 @@ public class ViewPost extends VerticalLayout implements View {
 	public ViewPost() {
 		addComponent(image);
 		addComponent(postDescription);
+		addComponent(license);
 		setMargin(true);
 		setSpacing(true);
 	}
@@ -55,6 +57,7 @@ public class ViewPost extends VerticalLayout implements View {
 		image.setSource(new FileResource(new File(post.getPath())));
 		image.setSizeFull();
 		postDescription.setValue(post.getDescription());
+		license.setCaption(post.getLicense().getLicenseType());
 		if (event.getParameters().matches("users/" + LoginService.getHandle() + "/.*")) {
 			addComponent(delete);
 			delete.addClickListener(e -> {

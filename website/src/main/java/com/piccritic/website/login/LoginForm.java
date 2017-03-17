@@ -20,7 +20,7 @@ import com.vaadin.ui.Window;
  */
 public class LoginForm extends FormLayout {
 
-	private TextField handle = new TextField("Handle");
+	private TextField handle = new TextField("Username");
 	private PasswordField password = new PasswordField("Password");
 	private Button login = new Button("login", this::loginAction);
 	private Button cancel = new Button("Cancel", this::cancelAction);

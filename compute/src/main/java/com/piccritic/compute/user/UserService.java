@@ -26,10 +26,9 @@ import com.piccritic.database.user.UserException;
  * 
  * @author Ryan Lowe<br>Damien Robichaud
  */
-public class UserService {
-  	private static UserService instance;
+public class UserService implements UserServiceInterface {
+  	private static UserServiceInterface instance;
   	private static UserConnector connector;
-  	// private static Hasher hasher;
     private static String createSuccess = "Profile successfully created!";
     private static String updateSuccess = "Profile successfully updated!";
     private static String createFailure = "Profile could not be created.";
@@ -39,19 +38,22 @@ public class UserService {
   	
   	private UserService() {
       	connector = new JPAUserConnector();
-      	// hasher = new Hasher();
     }
   
-  	public static UserService createService() {
+  	public static UserServiceInterface createService() {
       	if (instance == null) {
-			final UserService service = new UserService();
+			final UserServiceInterface service = new UserService();
           	instance = service;
         }
       	
       	return instance;
     }
 
-  	public String create(Critic critic, String password) throws UserException {
+  	/* (non-Javadoc)
+	 * @see com.piccritic.compute.user.UserServiceInterface#create(com.piccritic.database.user.Critic, java.lang.String)
+	 */
+  	@Override
+	public String create(Critic critic, String password) throws UserException {
   		if (critic == null) {
   			throw new UserException(createFailure);
   		}
@@ -103,7 +105,11 @@ public class UserService {
       	return createSuccess;
     }
   
-  	public String update(Critic critic, String password) throws UserException {
+  	/* (non-Javadoc)
+	 * @see com.piccritic.compute.user.UserServiceInterface#update(com.piccritic.database.user.Critic, java.lang.String)
+	 */
+  	@Override
+	public String update(Critic critic, String password) throws UserException {
       	Critic selected = connector.selectCritic(critic.getHandle());
       	if (selected == null) {
         	throw new UserException(updateFailure);
@@ -138,7 +144,11 @@ public class UserService {
       	return updateSuccess;
     }
   	
-  	public Critic select(String handle) {
+  	/* (non-Javadoc)
+	 * @see com.piccritic.compute.user.UserServiceInterface#select(java.lang.String)
+	 */
+  	@Override
+	public Critic select(String handle) {
   		return connector.selectCritic(handle);
   	}
 }

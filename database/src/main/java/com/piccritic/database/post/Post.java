@@ -7,9 +7,12 @@ package com.piccritic.database.post;
 import java.sql.Date;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
+
+import com.piccritic.database.license.License;
 
 /**
  * this class is a Java bean that defines the database table
@@ -32,16 +35,10 @@ public class Post {
 	private String description;
 	private float rating;
 
+	@ManyToOne(optional=true, fetch=FetchType.EAGER)
+	private License license;
 	@ManyToOne(optional=false)
 	private Album album;
-
-	/*public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}*/
 
 	public String getPath() {
 		return path;
@@ -96,7 +93,15 @@ public class Post {
 	public void setAlbum(Album album) {
 		this.album = album;
 	}
+	
+	public License getLicense() {
+		return license;
+	}
 
+	public void setLicense(License license) {
+		this.license = license;
+	}
+	
 	public String toString() {
 		return String.format("Post{path=%s, uploadDate=%s, title=%s, description=%s, rating=%f, album.id=%d}", 
 				/*(id == null) ? null:id.longValue(),*/ path, (uploadDate == null) ? null :uploadDate.toString(),
