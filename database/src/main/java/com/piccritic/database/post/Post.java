@@ -50,14 +50,6 @@ public class Post {
 	@OneToMany(fetch=FetchType.EAGER, mappedBy="post")
 	private Set<Rating> ratings;
 
-	/*public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}*/
-
 	public String getPath() {
 		return path;
 	}
