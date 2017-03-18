@@ -51,7 +51,7 @@ public class VoteConnectorTest {
 	
 	@Before
 	public void init() {
-		critic.setHandle("tester");
+		critic.setHandle("testerVote");
 		critic.setFirstName("firstName");
 		critic.setLastName("lastName");
 		critic.setJoinDate(date);

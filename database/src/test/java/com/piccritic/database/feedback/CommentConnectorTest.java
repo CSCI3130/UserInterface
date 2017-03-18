@@ -51,7 +51,7 @@ public class CommentConnectorTest {
 	
 	@Before
 	public void init() {
-		critic.setHandle("tester");
+		critic.setHandle("testerComment");
 		critic.setFirstName("firstName");
 		critic.setLastName("lastName");
 		critic.setJoinDate(date);
