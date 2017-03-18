@@ -24,14 +24,14 @@ public interface RatingConnector {
 	 * @param rating the rating to insert
 	 * @return the same rating with an auto-generated ID
 	 */
-	public Rating insertRating(Rating rating);
+	public Rating insertRating(Rating rating) throws RatingException;
 	
 	/**
 	 * 
 	 * @param rating the rating to update
 	 * @return the updated rating
 	 */
-	public Rating updateRating(Rating rating);
+	public Rating updateRating(Rating rating) throws RatingException;
 	
 	/**
 	 * 
