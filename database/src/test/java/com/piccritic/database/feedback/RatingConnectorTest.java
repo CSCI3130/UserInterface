@@ -1,6 +1,6 @@
 package com.piccritic.database.feedback;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 import java.sql.Date;
 import java.util.HashSet;
@@ -20,7 +20,11 @@ import com.piccritic.database.user.Critic;
 import com.piccritic.database.user.JPAUserConnector;
 import com.piccritic.database.user.UserConnector;
 import com.piccritic.database.user.UserException;
-
+/**
+ * 
+ * @author Frank Bosse
+ *
+ */
 public class RatingConnectorTest {
 	Critic critic = new Critic();
 	Album album = new Album();
@@ -45,7 +49,7 @@ public class RatingConnectorTest {
 	
 	@Before
 	public void init() {
-		critic.setHandle("tester");
+		critic.setHandle("testerRating");
 		critic.setFirstName("firstName");
 		critic.setLastName("lastName");
 		critic.setJoinDate(date);
@@ -65,15 +69,11 @@ public class RatingConnectorTest {
 		post.setRatings(ratings);
 	
 		ratings.add(rating);
-		RatingAspects aspectRatings = new RatingAspects();
-		aspectRatings.setColor(1.0);
-		aspectRatings.setComposition(2.0);
-		aspectRatings.setExposure(3.0);
-		aspectRatings.setFocus(4.0);
-		aspectRatings.setLighting(5.0);
-		
-		rating.setRatings(aspectRatings);
-		
+		rating.setColor(1.0);
+		rating.setComposition(2.0);
+		rating.setExposure(3.0);
+		rating.setFocus(4.0);
+		rating.setLighting(5.0);
 		
 		try {
 			critic = uc.insertCritic(critic, "hash");
@@ -102,11 +102,32 @@ public class RatingConnectorTest {
 	
 	@Test
 	public void testUpdateRating() {
+		rating.setComposition(-1d);
 		try {
 			rc.updateRating(rating);
 			assertEquals( rating, rc.selectRating(rating.getId()));
 		} catch (RatingException e) {
 			e.getLocalizedMessage();
+		}
+	}
+	
+	@Test
+	public void testDeleteRating() {
+		Long id = rating.getId();
+		assertTrue(rc.deleteRating(rating));
+		rating.setId(null);
+		assertNull(rc.selectRating(id));
+		rating.setCritic(critic);
+		rating.setColor(1d);
+		rating.setComposition(1d);
+		rating.setExposure(1d);
+		rating.setFocus(1d);
+		rating.setLighting(1d);
+		
+		try {
+			rating = rc.insertRating(rating);
+		} catch (RatingException e) {
+			fail(e.getLocalizedMessage());
 		}
 	}
 	
