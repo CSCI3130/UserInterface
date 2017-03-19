@@ -1,6 +1,6 @@
 package com.piccritic.website.feedback;
 
-import com.piccritic.compute.feedback.FeedbackService;
+import com.piccritic.compute.feedback.FeedbackServiceInterface;
 import com.piccritic.compute.user.UserService;
 import com.piccritic.database.feedback.Comment;
 import com.piccritic.database.feedback.Vote;
@@ -17,7 +17,7 @@ import com.vaadin.ui.VerticalLayout;
 
 public class CommentComponent extends CustomComponent {
 	private Comment comment;
-	private FeedbackService fs;
+	private FeedbackServiceInterface fs;
 	private UserService us;
 	private LoginService.LoginStatus loginStatus;
 	private Critic critic;
@@ -26,7 +26,7 @@ public class CommentComponent extends CustomComponent {
 	private Button upvote;
 	private Button downvote;
 	
-	public CommentComponent(Comment comment, FeedbackService fs, UserService us) {
+	public CommentComponent(Comment comment, FeedbackServiceInterface fs, UserService us) {
         this.comment = comment;
         upvoted = false;
         downvoted = false;

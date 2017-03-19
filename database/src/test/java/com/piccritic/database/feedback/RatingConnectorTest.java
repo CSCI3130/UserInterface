@@ -61,6 +61,7 @@ public class RatingConnectorTest {
 		album.setCreationDate(date);
 		album.setName("albumName");
 		album.setPosts(posts);
+		
 		post.setComments(postComments);
 		post.setTitle("My photo");
 		post.setUploadDate(date);
@@ -117,12 +118,6 @@ public class RatingConnectorTest {
 		assertTrue(rc.deleteRating(rating));
 		rating.setId(null);
 		assertNull(rc.selectRating(id));
-		rating.setCritic(critic);
-		rating.setColor(1d);
-		rating.setComposition(1d);
-		rating.setExposure(1d);
-		rating.setFocus(1d);
-		rating.setLighting(1d);
 		
 		try {
 			rating = rc.insertRating(rating);

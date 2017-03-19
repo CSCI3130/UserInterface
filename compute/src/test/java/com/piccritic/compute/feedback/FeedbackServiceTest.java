@@ -21,8 +21,11 @@ import com.piccritic.database.feedback.Comment;
 import com.piccritic.database.feedback.CommentConnector;
 import com.piccritic.database.feedback.CommentException;
 import com.piccritic.database.feedback.JPACommentConnector;
+import com.piccritic.database.feedback.JPARatingConnector;
 import com.piccritic.database.feedback.JPAVoteConnector;
 import com.piccritic.database.feedback.Rating;
+import com.piccritic.database.feedback.RatingConnector;
+import com.piccritic.database.feedback.RatingException;
 import com.piccritic.database.feedback.Vote;
 import com.piccritic.database.feedback.VoteConnector;
 import com.piccritic.database.feedback.VoteException;
@@ -51,6 +54,8 @@ public class FeedbackServiceTest {
 	Comment comment = new Comment();
 	Vote vote1 = new Vote();
 	Vote vote2 = new Vote();
+	Rating rating1 = new Rating();
+	Rating rating2 = new Rating();
 	
 	private Date date = new Date(0);
 	
@@ -64,8 +69,9 @@ public class FeedbackServiceTest {
 	PostConnector pc = new JPAPostConnector();
 	CommentConnector cc = new JPACommentConnector();
 	VoteConnector vc = new JPAVoteConnector();
+	RatingConnector rc = new JPARatingConnector();
 	
-	FeedbackService fs = FeedbackService.createService();
+	FeedbackServiceInterface fs = FeedbackService.createService();
 	
 	@Before
 	public void init() {
@@ -81,9 +87,9 @@ public class FeedbackServiceTest {
 		voter.setFirstName("firstName");
 		voter.setLastName("lastName");
 		voter.setJoinDate(date);
-		voter.setAlbums(null);
-		voter.setComments(null);
-		voter.setRatings(null);
+		voter.setAlbums(albums);
+		voter.setComments(criticComments);
+		voter.setRatings(ratings);
 
 		albums.add(album);
 		album.setCreationDate(date);
@@ -107,23 +113,75 @@ public class FeedbackServiceTest {
 		vote1.setRating(true);
 		vote2.setRating(true);
 		
+		ratings.add(rating1);
+		rating1.setColor(1d);
+		rating1.setComposition(2d);
+		rating1.setExposure(3d);
+		rating1.setFocus(4d);
+		rating1.setLighting(5d);
+		
+		ratings.add(rating2);
+		rating2.setColor(1d);
+		rating2.setComposition(1d);
+		rating2.setExposure(1d);
+		rating2.setFocus(1d);
+		rating2.setLighting(1d);
+		
 		try {
 			critic = uc.insertCritic(critic, "hash");
 			voter = uc.insertCritic(voter, "hash");
+
 			album.setCritic(critic);
 			album = pc.insertAlbum(album);
+			
 			post.setAlbum(album);
 			posts.add(post);
 			post = pc.insertPost(post);comment.setPost(post);
 			comment.setCritic(critic);
+			
 			vote1.setCritic(critic);
 			vote1.setComment(comment);
 			vote2.setCritic(voter);
 			vote2.setComment(comment);
 			comment = fs.insertComment(comment);
-		} catch (UserException | AlbumException | PostException | CommentException e) {
+			
+			rating1.setCritic(critic);
+			rating1.setPost(post);
+			rating1 = rc.insertRating(rating1);
+			
+			rating2.setCritic(critic);
+			rating2.setPost(post);
+			rating2 = rc.insertRating(rating2);
+			post.setRatings(ratings);
+			
+		} catch (UserException | AlbumException | PostException | CommentException | RatingException e) {
 			fail(e.getLocalizedMessage());
 		}
+	}
+	
+
+	@Test
+	public void testInsertRating() {
+		try {
+			rc.deleteRating(rating1);
+			rating1 = fs.insertRating(rating1);
+			assertEquals(rating1, rc.selectRating(rating1.getId()));
+		} catch (RatingException e){
+			fail(e.getLocalizedMessage());
+		}
+	}
+	
+	@Test
+	public void testDeleteRating() throws RatingException {
+		assertTrue(fs.deleteRating(rating1));
+		fs.insertRating(rating1);
+	}
+	
+	@Test
+	public void testUpdateRating() throws RatingException {
+		rating1.setColor(-1d);
+		fs.updateRating(rating1);
+		assertEquals(rating1, fs.selectRating(rating1.getId()));
 	}
 	
 	@Test
@@ -224,6 +282,8 @@ public class FeedbackServiceTest {
 	
 	@After
 	public void tearDown() {
+		rc.deleteRating(rating1);
+		rc.deleteRating(rating2);
 		try {
 			cc.deleteComment(comment);
 			pc.deletePost(post);

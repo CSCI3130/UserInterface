@@ -120,8 +120,8 @@ public class Rating {
 	
 	public String toString() {
 		return String.format("Rating{ Color=%s, Composition=%s, Exposure=%s,"
-				+ " Focus=%s, Lighting=%s, id=%s, post=%s, Critic=%s }",
-				color, composition, exposure, focus, lighting, id, post, critic);
+				+ " Focus=%s, Lighting=%s, id=%s }",
+				color, composition, exposure, focus, lighting, id);
 	}
 	
 	public boolean equals(Object o) {

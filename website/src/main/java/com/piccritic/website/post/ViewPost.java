@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.List;
 
 import com.piccritic.compute.feedback.FeedbackService;
+import com.piccritic.compute.feedback.FeedbackServiceInterface;
 import com.piccritic.compute.post.PostService;
 import com.piccritic.compute.user.UserService;
 import com.piccritic.database.feedback.Comment;
@@ -40,7 +41,7 @@ public class ViewPost extends VerticalLayout implements View {
 	private RatingComponent ratings = new RatingComponent();
 	private List<Comment> comments;
 	private UserService us = UserService.createService();
-	private FeedbackService fs = FeedbackService.createService();
+	private FeedbackServiceInterface fs = FeedbackService.createService();
 	private CommentForm commentForm = new CommentForm(fs);
 
 	private Button delete = new Button("Delete post");

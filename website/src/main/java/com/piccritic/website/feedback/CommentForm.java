@@ -1,6 +1,6 @@
 package com.piccritic.website.feedback;
 
-import com.piccritic.compute.feedback.FeedbackService;
+import com.piccritic.compute.feedback.FeedbackServiceInterface;
 import com.piccritic.compute.user.UserService;
 import com.piccritic.database.feedback.Comment;
 import com.piccritic.database.feedback.CommentException;
@@ -27,9 +27,9 @@ public class CommentForm extends FormLayout {
 	});
 	private Post post;
 	private UserService us = UserService.createService();
-	private FeedbackService fs;
+	private FeedbackServiceInterface fs;
 
-	public CommentForm(FeedbackService fs) {
+	public CommentForm(FeedbackServiceInterface fs) {
 		this.fs = fs;
 		commentContent.setRequired(true);
 		commentContent.setColumns(30);
