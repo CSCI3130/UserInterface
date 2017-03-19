@@ -28,6 +28,11 @@ import com.vaadin.testbench.elements.WindowElement;
  */
 public class ViewPostIT extends PicCriticIT {
 
+	@Before
+	public void init() throws Exception {
+		super.init();
+	}
+
     /**
      * Opens the URL where the application is deployed.
      */
@@ -64,6 +69,5 @@ public class ViewPostIT extends PicCriticIT {
 
     @After
     public void tearDown() {
-
     }
 }

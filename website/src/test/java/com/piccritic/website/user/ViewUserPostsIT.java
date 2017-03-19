@@ -19,6 +19,8 @@ import static org.junit.Assert.fail;
 import java.sql.Date;
 import java.util.HashSet;
 import java.util.Set;
+import java.io.File;
+import java.io.IOException;
 
 import org.junit.After;
 import org.junit.Before;
@@ -45,8 +47,9 @@ public class ViewUserPostsIT extends PicCriticIT {
 	private String hash = "hash";
 	private String albumName = "album";
 	private String postTitle = "title";
-	private String path = "/path";
+	private String path = "path";
 	private Date date = new Date(0);
+	private File image = new File(path);
 	
 	private Set<Post> postSet = new HashSet<Post>();
 	private Set<Album> albumSet = new HashSet<Album>();
@@ -75,14 +78,16 @@ public class ViewUserPostsIT extends PicCriticIT {
 		post.setUploadDate(date);
 		post.setTitle(postTitle);
 		post.setDescription("description");
+
 		try {
+			image.createNewFile();
 			uc.insertCritic(critic, hash);
 			album.setCritic(critic);
 			pc.insertAlbum(album);
 			post.setPath(path);
 			post.setAlbum(album);
 			pc.insertPost(post);
-		} catch (UserException|PostException|AlbumException e) {
+		} catch (UserException|PostException|AlbumException|IOException e) {
 			fail(e.getMessage());
 		}
 	}
@@ -99,6 +104,7 @@ public class ViewUserPostsIT extends PicCriticIT {
 	@After
 	public void tearDown() {
 		try {
+			image.delete();
 			pc.deletePost(post);
 			pc.deleteAlbum(album);
 		} catch (Exception e) {
