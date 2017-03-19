@@ -1,6 +1,7 @@
 package com.piccritic.compute.post;
 
 import java.io.File;
+import java.util.List;
 
 import com.piccritic.database.post.Album;
 import com.piccritic.database.post.AlbumException;
@@ -10,7 +11,8 @@ import com.piccritic.database.post.PostException;
 /**
  * 
  * @author Damien Robichaud <br>
- *         Francis Bosse
+ *         Francis Bosse <br>
+ *         ian-dawson
  *
  */
 public interface PostServiceInterface {
@@ -55,12 +57,27 @@ public interface PostServiceInterface {
 	public Album getDefaultAlbum(String handle);
 	
 	/**
-	 * Returns a post from it's handle
+	 * Returns a post from its handle
 	 * 
 	 * @param post path
 	 * @return Post matching
 	 */
 	public Post getPost(String path);
 
+	/**
+	 * Updates and returns an album
+	 *
+	 * @param album (updated)
+	 * @return Album selected by id in the DB
+	 */
 	public Album updateAlbum(Album album) throws AlbumException;
+	
+	/**
+	 * Returns a list of posts from the database
+	 * 
+	 * @param number of posts to get
+	 * @return List of posts
+	 * @throws PostException
+	 */
+	public List<Post> getPosts(int number) throws PostException;
 }

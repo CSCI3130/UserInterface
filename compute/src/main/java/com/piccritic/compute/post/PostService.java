@@ -6,6 +6,7 @@ import java.nio.file.Paths;
 import java.sql.Date;
 import java.util.Base64;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
@@ -24,6 +25,7 @@ import com.piccritic.database.user.JPAUserConnector;
  * 
  * @author Amir Abbasnejad 
  * @author Rhianna Goguen
+ * @author ian-dawson
  */
 public class PostService implements PostServiceInterface {
 	
@@ -111,6 +113,11 @@ public class PostService implements PostServiceInterface {
 	@Override
 	public Post getPost(String path) {
 		return pc.selectPost(path);
+	}
+	
+	@Override
+	public List<Post> getPosts(int number) throws PostException {
+		return pc.getPosts(number);
 	}
 	
 }
