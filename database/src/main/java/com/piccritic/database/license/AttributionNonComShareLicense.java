@@ -11,8 +11,8 @@ import javax.persistence.Entity;
  * teaswirll
  */
 @Entity
-public class AttributionNonComShareLicence extends License {
-	public AttributionNonComShareLicence() {
+public class AttributionNonComShareLicense extends License {
+	public AttributionNonComShareLicense() {
 		licenseType = ATTRIBUTION_NON_COMMERCIAL_SHAREALIKE;
 		description = DATTRIBUTION_NON_COMMERCIAL_SHAREALIKE;
 	}

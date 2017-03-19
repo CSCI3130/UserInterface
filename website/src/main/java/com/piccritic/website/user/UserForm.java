@@ -7,7 +7,7 @@ package com.piccritic.website.user;
 import com.piccritic.database.user.Critic;
 import com.piccritic.database.user.UserException;
 import com.piccritic.website.PicCritic;
-import com.piccritic.website.licence.LicenseChooser;
+import com.piccritic.website.license.LicenseChooser;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.HorizontalLayout;

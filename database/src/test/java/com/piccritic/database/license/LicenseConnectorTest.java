@@ -10,7 +10,7 @@ public class LicenseConnectorTest {
 	License attrShare = new AttributionShareAlikeLicense();
 	License attrNoDerivs = new AttributionNoDerivsLicense();
 	License attrNonCom = new AttributionNonCommercialLicense();
-	License attrNonComShare = new AttributionNonComShareLicence();
+	License attrNonComShare = new AttributionNonComShareLicense();
 	License attrNonComNoDerivs = new AttributionNonComNDerivsLicense();
 	LicenseConnector connector = new JPALicenseConnector();
 

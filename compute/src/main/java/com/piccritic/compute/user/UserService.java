@@ -98,7 +98,7 @@ public class UserService implements UserServiceInterface {
 		
 		Path usersPath = Paths.get("users", critic.getHandle());
 		File users = usersPath.toFile();
-		if (!users.mkdirs()) {
+		if (!users.exists() && !users.mkdirs()) {
 			throw new UserException("Could not create image storage");
 		}
 

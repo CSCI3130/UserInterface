@@ -4,7 +4,7 @@ import static com.piccritic.website.login.LoginService.getHandle;
 import static com.piccritic.website.login.LoginService.getLoginStatus;
 import static com.piccritic.website.login.LoginService.logoutUser;
 
-import com.piccritic.website.licence.LicenseView;
+import com.piccritic.website.license.LicenseView;
 import com.piccritic.website.login.LoginService.LoginStatus;
 import com.piccritic.website.login.LoginWindow;
 import com.piccritic.website.post.CreatePost;

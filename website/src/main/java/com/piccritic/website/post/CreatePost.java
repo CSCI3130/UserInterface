@@ -8,7 +8,7 @@ import com.piccritic.database.post.Album;
 import com.piccritic.database.post.AlbumException;
 import com.piccritic.database.post.Post;
 import com.piccritic.database.post.PostException;
-import com.piccritic.website.licence.LicenseChooser;
+import com.piccritic.website.license.LicenseChooser;
 import com.piccritic.website.login.LoginService;
 import com.vaadin.annotations.Theme;
 import com.vaadin.server.FileResource;

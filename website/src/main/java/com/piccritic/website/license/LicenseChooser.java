@@ -1,4 +1,4 @@
-package com.piccritic.website.licence;
+package com.piccritic.website.license;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -6,14 +6,14 @@ import java.util.Collection;
 import com.piccritic.database.license.AttributionLicense;
 import com.piccritic.database.license.AttributionNoDerivsLicense;
 import com.piccritic.database.license.AttributionNonComNDerivsLicense;
-import com.piccritic.database.license.AttributionNonComShareLicence;
+import com.piccritic.database.license.AttributionNonComShareLicense;
 import com.piccritic.database.license.AttributionNonCommercialLicense;
 import com.piccritic.database.license.AttributionShareAlikeLicense;
 import com.piccritic.database.license.License;
 import com.vaadin.ui.ComboBox;
 
 public class LicenseChooser extends ComboBox {
-	static String caption = "Licence";
+	static String caption = "License";
 	static Collection<License> licenses;
 
 	static {
@@ -22,7 +22,7 @@ public class LicenseChooser extends ComboBox {
 		licenses.add(new AttributionShareAlikeLicense());
 		licenses.add(new AttributionNoDerivsLicense());
 		licenses.add(new AttributionNonCommercialLicense());
-		licenses.add(new AttributionNonComShareLicence());
+		licenses.add(new AttributionNonComShareLicense());
 		licenses.add(new AttributionNonComNDerivsLicense());
 	}
 

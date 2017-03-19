@@ -27,7 +27,7 @@ public class JPALicenseConnector extends JPAConnector implements LicenseConnecto
 			licenses.addEntity(new AttributionNonCommercialLicense());
 		}
 		if (!exists(License.ATTRIBUTION_NON_COMMERCIAL_SHAREALIKE)) {
-			licenses.addEntity(new AttributionNonComShareLicence());
+			licenses.addEntity(new AttributionNonComShareLicense());
 		}
 		if (!exists(License.ATTRIBUTION_NON_COMMERCIAL_NO_DERIVS)) {
 			licenses.addEntity(new AttributionNonComNDerivsLicense());

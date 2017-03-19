@@ -3,7 +3,7 @@ package com.piccritic.compute.license;
 import com.piccritic.database.license.AttributionLicense;
 import com.piccritic.database.license.AttributionNoDerivsLicense;
 import com.piccritic.database.license.AttributionNonComNDerivsLicense;
-import com.piccritic.database.license.AttributionNonComShareLicence;
+import com.piccritic.database.license.AttributionNonComShareLicense;
 import com.piccritic.database.license.AttributionNonCommercialLicense;
 import com.piccritic.database.license.AttributionShareAlikeLicense;
 import com.piccritic.database.license.JPALicenseConnector;
@@ -35,8 +35,8 @@ public class LicenseService implements LicenseServiceInterface {
 	}
 
 	@Override
-	public AttributionNonComShareLicence makeAttributionNonComShare() {
-		return (AttributionNonComShareLicence) lc.selectLicense(License.ATTRIBUTION_NON_COMMERCIAL_SHAREALIKE);
+	public AttributionNonComShareLicense makeAttributionNonComShare() {
+		return (AttributionNonComShareLicense) lc.selectLicense(License.ATTRIBUTION_NON_COMMERCIAL_SHAREALIKE);
 	}
 
 	@Override

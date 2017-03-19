@@ -1,4 +1,4 @@
-package com.piccritic.website.licence;
+package com.piccritic.website.license;
 
 import com.piccritic.database.license.License;
 import com.vaadin.navigator.View;
