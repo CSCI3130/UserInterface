@@ -37,8 +37,13 @@ public class PostService implements PostServiceInterface {
 		Path p0 = Paths.get(USERS_DIR, handle);
 		File directory = p0.toFile();
 		File[] flist = directory.listFiles();
-
 		String newFileName="";
+
+		if (flist == null) {
+			newFileName = getRandomName();
+			return Paths.get(USERS_DIR, handle, newFileName).toFile();
+		}
+
 		boolean used = true;
 		while(used) {
 			newFileName = getRandomName();

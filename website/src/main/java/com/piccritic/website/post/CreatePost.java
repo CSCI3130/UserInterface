@@ -24,6 +24,7 @@ import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.Upload;
+import com.vaadin.ui.Upload.ChangeListener;
 import com.vaadin.ui.Upload.SucceededEvent;
 import com.vaadin.ui.Upload.SucceededListener;
 import com.vaadin.ui.Window;
@@ -101,9 +102,18 @@ public class CreatePost extends Window implements SucceededListener {
 		receiver = new ImageReceiver(handle, post);
 		upload = new Upload("Upload Image Here", receiver);
 		upload.addSucceededListener(this);
+
 		upload.addStartedListener(e -> {
 			confirm.setEnabled(false);
 		});
+
+		upload.setButtonCaption(null);
+		upload.addChangeListener(e -> {
+			if (e.getFilename() != null) {
+				upload.setButtonCaption("Upload");
+			}
+		});
+
 		form.addComponent(upload);
 		form.addComponent(confirm);
 	}
@@ -128,6 +138,7 @@ public class CreatePost extends Window implements SucceededListener {
 		image.setVisible(true);
 		image.setSource(new FileResource(receiver.getFile()));
 		Notification.show("Image Saved", Type.TRAY_NOTIFICATION);
+		upload.setButtonCaption(null);
 	}
 
 	/**
