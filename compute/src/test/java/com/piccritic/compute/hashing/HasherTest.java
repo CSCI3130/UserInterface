@@ -21,6 +21,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.piccritic.database.license.AttributionNoDerivsLicense;
 import com.piccritic.database.user.Critic;
 import com.piccritic.database.user.JPAUserConnector;
 import com.piccritic.database.user.UserConnector;
@@ -55,11 +56,13 @@ public class HasherTest {
 		user1.setHandle(handle1);
 		user1.setFirstName(firstName1);
 		user1.setLastName(lastName1);
+		user1.setLicense(new AttributionNoDerivsLicense());
 		user1.setJoinDate(joinDate1);
 		inserted1 = con.insertCritic(user1, hasher.generateHash(password1));
 		user2.setHandle(handle2);
 		user2.setFirstName(firstName2);
 		user2.setLastName(lastName2);
+		user2.setLicense(new AttributionNoDerivsLicense());
 		user2.setJoinDate(joinDate2);
 		inserted2 = con.insertCritic(user2, hasher.generateHash(password2));
 	}

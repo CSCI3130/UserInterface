@@ -13,9 +13,9 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.piccritic.database.post.Album;
+import com.piccritic.database.license.AttributionLicense;
+import com.piccritic.database.license.JPALicenseConnector;
 import com.piccritic.database.post.AlbumException;
-import com.piccritic.database.post.JPAPostConnector;
 
 /**
  * This class uses JUnit to test the methods
@@ -38,13 +38,14 @@ public class UserConnectorTest {
 
 	@Before
 	public void init() {
+		new JPALicenseConnector();
 		critic = new Critic();
 
 		critic.setHandle(handle);
 		critic.setFirstName(firstName);
 		critic.setLastName(lastName);
 		critic.setJoinDate(new Date(0));
-		critic.setLicenseID(0);
+		critic.setLicense(new AttributionLicense());
 		critic.setBio(bio);
 		try {
 			inserted = con.insertCritic(critic, hash);

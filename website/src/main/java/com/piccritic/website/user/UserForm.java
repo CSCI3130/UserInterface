@@ -4,15 +4,11 @@
  */
 package com.piccritic.website.user;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
-
 import com.piccritic.database.user.Critic;
 import com.piccritic.database.user.UserException;
 import com.piccritic.website.PicCritic;
+import com.piccritic.website.license.LicenseChooser;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Notification;
@@ -40,16 +36,14 @@ public class UserForm extends FormLayout {
 	private static final String passwordMatch = "Passwords do not match";
 	private static final String passwordLength = "Password must be at least 8 characters";
 
-	private Map<String, Integer> licenses = new HashMap<String, Integer>();
-
 	private Button save = new Button("Save", this::save);
 	private Button cancel = new Button("Cancel", this::cancel);
-	private TextField handle = new TextField("Handle");
+	private TextField handle = new TextField("Username");
 	private TextField firstName = new TextField("First name");
 	private TextField lastName = new TextField("Last name");
 
 	private TextArea bio = new TextArea("Bio");
-	private ComboBox license = new ComboBox("License");
+	private LicenseChooser license = new LicenseChooser();
 
 	private PasswordField password = new PasswordField("Password");
 	private PasswordField confirmPass = new PasswordField("Confirm password");
@@ -65,7 +59,6 @@ public class UserForm extends FormLayout {
 			firstName.setValue(critic.getFirstName());
 			lastName.setValue(critic.getLastName());
 			bio.setValue(critic.getBio());
-			license.setValue(critic.getLicenseID());
 		} else {
 			critic = new Critic();
 			handle.setRequired(true);
@@ -75,17 +68,6 @@ public class UserForm extends FormLayout {
 			confirmPass.setRequired(true);
 		}
 		handle.setEnabled(newProfile);
-
-		licenses.put("License 1", new Integer(1));
-		licenses.put("License 2", new Integer(2));
-		licenses.put("License 3", new Integer(3));
-		licenses.put("License 4", new Integer(4));
-		licenses.put("License 5", new Integer(5));
-		licenses.put("License 6", new Integer(6));
-		licenses.put("License 7", new Integer(7));
-		for (Entry<String, Integer> e : licenses.entrySet()) {
-			license.setItemCaption(e.getValue(), e.getKey());
-		}
 
 		configureComponents();
 		buildLayout();
@@ -100,7 +82,6 @@ public class UserForm extends FormLayout {
 		setMargin(true);
 		HorizontalLayout buttons = new HorizontalLayout(save, cancel);
 		buttons.setSpacing(true);
-
 		addComponents(handle, firstName, lastName, bio, password, confirmPass, license, buttons);
 	}
 
@@ -138,8 +119,9 @@ public class UserForm extends FormLayout {
 		critic.setFirstName(firstName.getValue());
 		critic.setLastName(lastName.getValue());
 		critic.setBio(bio.getValue());
-		// TODO fix
-		// critic.setLicenseID((Integer) license.getData());
+		if (license.getValue() != null) {
+			critic.setLicense(license.getValue());
+		}
 	}
 
 	public void cancel(Button.ClickEvent e) {

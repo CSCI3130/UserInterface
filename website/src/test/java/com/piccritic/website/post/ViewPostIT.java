@@ -43,7 +43,7 @@ public class ViewPostIT extends PicCriticIT {
 	@Test
 	public void CreatePost() throws UserException {
 		openTestUrl();
-		String user = "damien";
+		String user = "Username";
 
 		if (userService.select(user) == null) {
 			createUserUI(user);
@@ -59,15 +59,4 @@ public class ViewPostIT extends PicCriticIT {
 		 */
 		$(WindowElement.class).first().close();
 	}
-
-
-    @Test
-    public void testAddComment() throws Exception {
-		openTestUrl();
-        assertEquals(1,1);
-    }
-
-    @After
-    public void tearDown() {
-    }
 }
