@@ -80,8 +80,11 @@ public class PostService implements PostServiceInterface {
 			throw new PostException("Cannot delete null post");
 		}
 		File image = new File(post.getPath());
-		image.delete();
-		return pc.deletePost(post);		
+		if (image.exists()) {
+			image.delete();
+		}
+
+		return pc.deletePost(post);
 	}
 	
 	@Override
