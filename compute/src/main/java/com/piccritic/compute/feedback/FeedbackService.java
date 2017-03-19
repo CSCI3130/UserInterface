@@ -245,6 +245,8 @@ public class FeedbackService implements FeedbackServiceInterface {
 	 */
 	public int getCriticPostReputation(Critic critic) {
 		int total = 0;
+		//TODO unsure if the following line has consequences, but it seemed necessary. maybe add a fs.refresh method?
+		pc = new JPAPostConnector(); //refreshes DB connection
 		List<Post> posts = pc.getPosts(critic);
 		for(Post post : posts) {
 			Rating avg = getAvgRatings(post);

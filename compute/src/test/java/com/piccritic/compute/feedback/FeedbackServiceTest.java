@@ -280,39 +280,31 @@ public class FeedbackServiceTest {
 		}
 	}
 	
-//	@Test
-//	public void testGetCriticPostReputation() {
-//		double avg = 9999d;
-//		try {
-//			//FIXME rating average not updating when calling update function
-//			rating2.setColor(5d);
-//			rating2.setComposition(5d);
-//			rating2.setExposure(5d);
-//			rating2.setFocus(5d);
-//			rating2.setLighting(5d);
-//			rating2 = fs.updateRating(rating2);
-//			assertEquals(fs.getRepGain(), fs.getCriticPostReputation(critic)); //current average is above 2.5
-//			
-//			//reset to previous
-//			rating2.setColor(1d);
-//			rating2.setComposition(1d);
-//			rating2.setExposure(1d);
-//			rating2.setFocus(1d);
-//			rating2.setLighting(1d);
-//			rating2 = fs.updateRating(rating2);
-//			avg = fs.selectRating(rating2.getId()).getAverage();
-//			assertEquals(fs.getRepLoss(), fs.getCriticPostReputation(critic)); //should drop below 2.5
-//		} catch (RatingException|AssertionError e) {
-//			fail(e.getLocalizedMessage() + " Average value after first update is " + avg);
-//		}
-//	}
+	@Test
+	public void testGetCriticPostReputation() {
+		try {
+			assertEquals(fs.getRepLoss(), fs.getCriticPostReputation(critic)); //current average is below 2.5
+			rc.deleteRating(rating2);
+			assertEquals(fs.getRepGain(), fs.getCriticPostReputation(critic)); //should go above 2.5
+			rc.insertRating(rating2);
+		} catch (RatingException e) {
+			fail(e.getLocalizedMessage());
+		}
+	}
 	
-//	@Test
-//	public void testCalculateReputation() {
-//		try {
-//			
-//		} catch ()
-//	}
+	@Test
+	public void testCalculateReputation() {
+		try {
+			Vote v1 = fs.insertVote(vote1);
+			Vote v2 = fs.insertVote(vote2);
+			assertEquals(fs.getRepGain() + fs.getRepLoss()*fs.getRatingWeight(), fs.calculateReputation(critic)); //rep gain from votes
+			fs.deleteVote(v1);
+			fs.deleteVote(v2);
+			assertEquals(fs.getRepLoss()*fs.getRatingWeight(), fs.calculateReputation(critic)); //only rep loss from rating remain
+		} catch (VoteException e) {
+			fail(e.getLocalizedMessage());
+		}
+	}
 	
 	@After
 	public void tearDown() {
