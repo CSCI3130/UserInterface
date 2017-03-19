@@ -173,17 +173,20 @@ public class JPAPostConnector implements PostConnector {
 	 * @see com.piccritic.database.post.PostConnector#getPosts(com.piccritic.database.user.Critic)
 	 */
 	public List<Post> getPosts(Critic critic){
-//		String query = "SELECT a FROM Album a WHERE a.critic = :crit ORDER BY a.creationDate";
-//		TypedQuery<Album> q = albums.getEntityProvider().getEntityManager().createQuery(query, Album.class)
-//				.setParameter("crit", critic);
-		//q.getResultList();
-
-		List<Post> posts = new ArrayList<Post>();
-		Set<Album> albums = critic.getAlbums();
+		critic.getAlbums();
+		String query1 = "SELECT a FROM Album a WHERE a.critic = :crit ORDER BY a.creationDate";
+		TypedQuery<Album> q = albums.getEntityProvider().getEntityManager().createQuery(query1, Album.class)
+				.setParameter("crit", critic);
+		List<Post> postList = new ArrayList<Post>();
+		List<Album> albums = q.getResultList();
+		
 		for(Album album: albums){
-			posts.addAll(album.getPosts());
+			String query2 = "SELECT p FROM Post p WHERE p.album = :album";
+			TypedQuery<Post> q2 = posts.getEntityProvider().getEntityManager().createQuery(query2, Post.class)
+					.setParameter("album", album);
+			postList.addAll(q2.getResultList());
 		}
-		return posts;
+		return postList;
 	}
 
 }

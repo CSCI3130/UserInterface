@@ -146,10 +146,10 @@ public class PostConnectorTest {
 	@Test
 	public void testGetPosts() {
 		try {
+			assertEquals(1, pc.getPosts(critic).size());
 			pc.deletePost(post);
 			assertEquals(0, pc.getPosts(critic).size());
 			pc.insertPost(post);
-			assertEquals(1, pc.getPosts(critic).size());
 		} catch (Exception e) {
 			fail(e.getLocalizedMessage());
 		}
