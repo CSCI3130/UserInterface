@@ -37,12 +37,6 @@ public class LoginForm extends FormLayout {
 	}
 
 	public void loginAction(Button.ClickEvent event) {
-		try {
-			handle.validate();
-			password.validate();
-		} catch (EmptyValueException e) {
-			Notification.show(e.getLocalizedMessage(), Type.WARNING_MESSAGE);
-		}
 		String userHandle = handle.getValue();
 		String userPassword = password.getValue();
 		switch (LoginService.loginUser(userHandle, userPassword)) {

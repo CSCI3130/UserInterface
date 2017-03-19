@@ -39,7 +39,7 @@ public class PicCriticIT extends TestBenchTestCase {
 	public void hasUserException() throws UserException {
 		if ($(NotificationElement.class).exists()) {
 			NotificationElement msg = $(NotificationElement.class).first();
-			if (msg.getType().equals("warning")) {
+			if (msg.getType().equals("warning") && !msg.getCaption().isEmpty()) {
 				throw new UserException(msg.getCaption());
 			}
 		}
