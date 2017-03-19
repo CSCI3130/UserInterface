@@ -1,10 +1,15 @@
 package com.piccritic.website;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.piccritic.database.post.Post;
+import com.piccritic.database.post.PostException;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
-import com.vaadin.ui.Label;
-import com.vaadin.ui.Panel;
+import com.vaadin.ui.Notification;
+import com.vaadin.ui.Notification.Type;
 
 /**
  * This class implements the home page for the PicCritic App
@@ -12,14 +17,26 @@ import com.vaadin.ui.Panel;
  * @author Damien Robichaud <br> Francis Bosse
  *
  */
-public class DefaultView extends Panel implements View {
+public class DefaultView extends PostQuickView implements View {
+	List<Post> posts = new ArrayList<>();
+	
+	 public DefaultView(){
+		try {
+			posts.addAll(PicCritic.postService.getPosts(9));
+		} catch (PostException e) {
+			Notification.show(e.getLocalizedMessage(), Type.WARNING_MESSAGE);
+			e.printStackTrace();
+		}
+		initPosts(posts);
+	 }
+	
 	
 	public static final String NAME = "home";
+	
 
 	@Override
 	public void enter(ViewChangeEvent event) {
-		setSizeFull();
-		setContent(new Label("Welcome to Pic Critic!!"));
+		//addComponent(new Label("Welcome to Pic Critic!!"));
 	}
 
 }

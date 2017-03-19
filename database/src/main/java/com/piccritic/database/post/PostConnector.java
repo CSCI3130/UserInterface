@@ -4,11 +4,15 @@
  */
 package com.piccritic.database.post;
 
+import java.util.List;
+
 /**
  * This interface provides methods that read from and write to the database
  * with regard to the {@link Album} and {@link Post} classes.
  * 
- * @author Ryan Lowe<br>Jonathan Ignacio
+ * @author Ryan Lowe<br>
+ * 			Jonathan Ignacio<br>
+ * 			ian-dawson
  */
 public interface PostConnector {
 	
@@ -81,5 +85,13 @@ public interface PostConnector {
 	 * @throws AlbumException if the post validation fails
 	 */
 	public boolean deletePost(Post post) throws PostException;
+	
+	/**
+	 * Gets a specified number of posts from the database.
+	 * @param number of posts to get.
+	 * @return list of posts from the database.
+	 * @throws PostException
+	 */
+	public List<Post> getPosts(int number) throws PostException;
 	
 }
