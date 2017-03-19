@@ -20,7 +20,9 @@ import com.piccritic.database.feedback.RatingException;
 import com.piccritic.database.feedback.Vote;
 import com.piccritic.database.feedback.VoteConnector;
 import com.piccritic.database.feedback.VoteException;
+import com.piccritic.database.post.JPAPostConnector;
 import com.piccritic.database.post.Post;
+import com.piccritic.database.post.PostConnector;
 import com.piccritic.database.post.PostException;
 import com.piccritic.database.user.Critic;
 
@@ -35,9 +37,11 @@ public class FeedbackService implements FeedbackServiceInterface {
   	private static CommentConnector cc;
   	private static VoteConnector vc;
   	private static RatingConnector rc;
+  	private static PostConnector pc;
   	
   	final private static int upperScoreLimit = 2;
   	final private static int lowerScoreLimit = -5;
+  	final private static int ratingWeight = 2; 
   	final private static int repGain = 1;
   	final private static int repLoss = -1;
   	
@@ -45,6 +49,7 @@ public class FeedbackService implements FeedbackServiceInterface {
       	cc = new JPACommentConnector();
       	vc = new JPAVoteConnector();
       	rc = new JPARatingConnector();
+      	pc = new JPAPostConnector();
     }
   	
   	/* (non-Javadoc)
@@ -78,6 +83,14 @@ public class FeedbackService implements FeedbackServiceInterface {
 	public int getRepLoss() {
   		return repLoss;
   	}
+  	
+  	/*
+  	 * (non-Javadoc)
+  	 * @see com.piccritic.compute.feedback.FeedbackServiceInterface#getRatingWeight()
+  	 */
+	public int getRatingWeight(){
+		return ratingWeight;
+	}
   
   	public static FeedbackServiceInterface createService() {
       	if (instance == null) {
@@ -205,7 +218,9 @@ public class FeedbackService implements FeedbackServiceInterface {
 		return vc.getScore(comment);
 	}
 	
-	/* (non-Javadoc)
+	
+	/*
+	 * (non-Javadoc)
 	 * @see com.piccritic.compute.feedback.FeedbackServiceInterface#getCriticCommentReputation(com.piccritic.database.user.Critic)
 	 */
 	@Override
@@ -222,6 +237,36 @@ public class FeedbackService implements FeedbackServiceInterface {
 			}
 		}
 		return total;
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see com.piccritic.compute.feedback.FeedbackServiceInterface#getCriticPostReputation(com.piccritic.database.user.Critic)
+	 */
+	public int getCriticPostReputation(Critic critic) {
+		int total = 0;
+		List<Post> posts = pc.getPosts(critic);
+		for(Post post : posts) {
+			Rating avg = getAvgRatings(post);
+			if(avg.getAverage() >= 2.5){
+				total += repGain;
+			}
+			else if(avg.getAverage() < 2.5){
+				total += repLoss;
+			}
+		}
+		return total;
+	}
+	
+	/* (non-Javadoc)
+	 * @see com.piccritic.compute.feedback.FeedbackServiceInterface#calculateReputation(com.piccritic.database.user.Critic)
+	 */
+	public long calculateReputation(Critic critic) {
+		int commentRep = getCriticCommentReputation(critic);
+		int ratingRep = getCriticPostReputation(critic);
+		int totalRep = commentRep + ratingRep*ratingWeight;
+		
+		return totalRep; 
 	}
 
 	@Override
@@ -251,17 +296,4 @@ public class FeedbackService implements FeedbackServiceInterface {
 	public Rating selectRating(Long id) {
 		return rc.selectRating(id);
 	}
-	
-//	/**
-//	 * 
-//	 * @param critic - critic to calculate the total reputation for
-//	 * @return the total calculated reputation for a user.
-//	 */
-//	public long calculateReputation(Critic critic) {
-//		int commentRep = getCriticCommentReputation(critic);
-//		
-//		
-//		return 0; 
-//	}
-	
 }

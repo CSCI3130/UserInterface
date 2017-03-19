@@ -4,6 +4,10 @@
  */
 package com.piccritic.database.feedback;
 
+import java.util.List;
+
+import com.piccritic.database.user.Critic;
+
 /**
  * This interface provides methods that read to and write from the database
  * with regard to {@link Rating} objects.

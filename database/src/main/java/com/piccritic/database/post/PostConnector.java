@@ -4,6 +4,12 @@
  */
 package com.piccritic.database.post;
 
+import java.util.List;
+
+import com.piccritic.database.feedback.Comment;
+import com.piccritic.database.feedback.Rating;
+import com.piccritic.database.user.Critic;
+
 /**
  * This interface provides methods that read from and write to the database
  * with regard to the {@link Album} and {@link Post} classes.
@@ -81,5 +87,13 @@ public interface PostConnector {
 	 * @throws AlbumException if the post validation fails
 	 */
 	public boolean deletePost(Post post) throws PostException;
+	
+	/**
+	 * 
+	 * @param critic - the critic to retrieve the posts from
+	 * @return a list of all posts from the user.
+	 * @throws Exception 
+	 */
+	public List<Post> getPosts(Critic critic);
 	
 }

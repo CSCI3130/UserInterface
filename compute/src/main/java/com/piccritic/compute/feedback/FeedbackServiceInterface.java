@@ -29,6 +29,12 @@ public interface FeedbackServiceInterface {
 	 * @return the current reputation loss for negative contributions.
 	 */
 	int getRepLoss();
+	
+	/**
+	 * 
+	 * @return multiplier for how much more rep users gain for post ratings.
+	 */
+	int getRatingWeight();
 
 	/**
 	 * Gets all comments associated with the post
@@ -37,7 +43,7 @@ public interface FeedbackServiceInterface {
 	 * @throws PostException 
 	 */
 	List<Comment> getComments(Post post) throws PostException;
-
+	
 	/**
 	 * Adds a comment to the database
 	 * @param comment
@@ -98,6 +104,21 @@ public interface FeedbackServiceInterface {
 	 */
 	int getCriticCommentReputation(Critic critic);
 	
+	/**
+	 * Method to calculate total reputation given by ratings on posts for a user 
+	 * (across all of their posts)
+	 * @param critic - User to evaluate total post rating for
+	 * @return total comment score
+	 */
+	public int getCriticPostReputation(Critic critic);
+	
+	/**
+	 * 
+	 * @param critic - critic to calculate the total reputation for
+	 * @return the total calculated reputation for a user.
+	 */
+	public long calculateReputation(Critic critic);
+	
 	Rating insertRating(Rating rating) throws RatingException;
 
 	boolean deleteRating(Rating rating);
@@ -105,4 +126,6 @@ public interface FeedbackServiceInterface {
 	Rating updateRating(Rating rating) throws RatingException;
 
 	Rating selectRating(Long id);
+
+
 }

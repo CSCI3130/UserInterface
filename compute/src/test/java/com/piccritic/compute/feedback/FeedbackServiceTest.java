@@ -147,11 +147,11 @@ public class FeedbackServiceTest {
 			
 			rating1.setCritic(critic);
 			rating1.setPost(post);
-			rating1 = rc.insertRating(rating1);
+			rating1 = fs.insertRating(rating1);
 			
-			rating2.setCritic(critic);
+			rating2.setCritic(voter);
 			rating2.setPost(post);
-			rating2 = rc.insertRating(rating2);
+			rating2 = fs.insertRating(rating2);
 			post.setRatings(ratings);
 			
 		} catch (UserException | AlbumException | PostException | CommentException | RatingException e) {
@@ -280,6 +280,40 @@ public class FeedbackServiceTest {
 		}
 	}
 	
+//	@Test
+//	public void testGetCriticPostReputation() {
+//		double avg = 9999d;
+//		try {
+//			//FIXME rating average not updating when calling update function
+//			rating2.setColor(5d);
+//			rating2.setComposition(5d);
+//			rating2.setExposure(5d);
+//			rating2.setFocus(5d);
+//			rating2.setLighting(5d);
+//			rating2 = fs.updateRating(rating2);
+//			assertEquals(fs.getRepGain(), fs.getCriticPostReputation(critic)); //current average is above 2.5
+//			
+//			//reset to previous
+//			rating2.setColor(1d);
+//			rating2.setComposition(1d);
+//			rating2.setExposure(1d);
+//			rating2.setFocus(1d);
+//			rating2.setLighting(1d);
+//			rating2 = fs.updateRating(rating2);
+//			avg = fs.selectRating(rating2.getId()).getAverage();
+//			assertEquals(fs.getRepLoss(), fs.getCriticPostReputation(critic)); //should drop below 2.5
+//		} catch (RatingException|AssertionError e) {
+//			fail(e.getLocalizedMessage() + " Average value after first update is " + avg);
+//		}
+//	}
+	
+//	@Test
+//	public void testCalculateReputation() {
+//		try {
+//			
+//		} catch ()
+//	}
+	
 	@After
 	public void tearDown() {
 		rc.deleteRating(rating1);
@@ -292,5 +326,6 @@ public class FeedbackServiceTest {
 			e.getLocalizedMessage();
 		}
 		uc.deleteCritic(critic);
+		uc.deleteCritic(voter);
 	}
 }
