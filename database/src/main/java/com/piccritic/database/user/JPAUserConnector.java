@@ -142,4 +142,5 @@ public class JPAUserConnector extends JPAConnector implements UserConnector {
 			throw new UserException(violation.getPropertyPath() + " " + violation.getMessage());
 		}
 	}
+	
 }

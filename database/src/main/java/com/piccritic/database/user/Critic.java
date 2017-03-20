@@ -15,6 +15,9 @@ import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import com.piccritic.database.feedback.Comment;
+import com.piccritic.database.feedback.Rating;
+import com.piccritic.database.feedback.Vote;
 import com.piccritic.database.license.License;
 import com.piccritic.database.post.Album;
 
@@ -43,6 +46,15 @@ public class Critic {
 	
 	@OneToMany(fetch=FetchType.EAGER, mappedBy="critic") 
 	private Set<Album> albums; 
+	
+	@OneToMany(fetch=FetchType.EAGER, mappedBy="critic") 
+	private Set<Comment> comments;
+	
+	@OneToMany(fetch=FetchType.EAGER, mappedBy="critic")
+	private Set<Rating> ratings;
+	
+	@OneToMany(fetch=FetchType.EAGER, mappedBy="critic")
+	private Set<Vote> votes;
 
 	/**
 	 * @return the handle of this Critic
@@ -140,6 +152,30 @@ public class Critic {
 	 */
 	public void setAlbums(Set<Album> albums) {
 		this.albums = albums;
+	}
+
+	public Set<Comment> getComments() {
+		return comments;
+	}
+
+	public void setComments(Set<Comment> comments) {
+		this.comments = comments;
+	}
+
+	public Set<Rating> getRatings() {
+		return ratings;
+	}
+
+	public void setRatings(Set<Rating> ratings) {
+		this.ratings = ratings;
+	}
+	
+	public Set<Vote> getVotes() {
+		return votes;
+	}
+
+	public void setVotes(Set<Vote> votes) {
+		this.votes = votes;
 	}
 
 	/**

@@ -21,6 +21,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.piccritic.database.license.JPALicenseConnector;
 import com.piccritic.database.license.AttributionNoDerivsLicense;
 import com.piccritic.database.user.Critic;
 import com.piccritic.database.user.JPAUserConnector;
@@ -45,6 +46,7 @@ public class HasherTest {
 	private String firstName2 = "Amelia";
 	private String lastName2 = "Stead";
 	private Date joinDate2 = new Date(0);
+	JPALicenseConnector lc = new JPALicenseConnector();
 
 	@Before
 	public void init() throws SQLException, UserException {

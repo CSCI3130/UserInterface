@@ -100,6 +100,7 @@ public class UserConnectorTest {
 		String storedHash = con.getUserHash(handle);
 		assertEquals(storedHash, hash);
 	}
+	
 
 	@After
 	public void clearUsers() throws AlbumException {

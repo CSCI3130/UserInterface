@@ -17,12 +17,15 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.piccritic.database.feedback.Comment;
 import com.piccritic.database.license.AttributionNonCommercialLicense;
 import com.piccritic.database.license.JPALicenseConnector;
 import com.piccritic.database.user.Critic;
 import com.piccritic.database.user.JPAUserConnector;
 import com.piccritic.database.user.UserConnector;
 import com.piccritic.database.user.UserException;
+import com.piccritic.database.feedback.CommentException;
+import com.piccritic.database.feedback.Rating;
 
 /**
  * This class uses JUnit to test the functionality
@@ -57,6 +60,8 @@ public class PostConnectorTest {
 
 	private Set<Post> postSet = new HashSet<Post>();
 	private Set<Album> albumSet = new HashSet<Album>();
+	private Set<Comment> commentSet = new HashSet<Comment>();
+	private Set<Rating> ratingSet = new HashSet<Rating>();
 
 	PostConnector pc = new JPAPostConnector();
 	UserConnector uc = new JPAUserConnector();
@@ -76,6 +81,7 @@ public class PostConnectorTest {
 		critic.setLicense(new AttributionNonCommercialLicense());
 		critic.setLastName(lastName);
 		critic.setAlbums(albumSet);
+		critic.setComments(commentSet);
 		
 		album.setCreationDate(date);
 		album.setPosts(postSet);
@@ -84,6 +90,9 @@ public class PostConnectorTest {
 		post.setUploadDate(date);
 		post.setTitle(postTitle);
 		post.setDescription("description");
+		post.setComments(commentSet);
+		post.setRatings(ratingSet);
+
 		post1.setUploadDate(date);
 		post1.setTitle(postTitle);
 		post1.setDescription("description");
@@ -133,7 +142,6 @@ public class PostConnectorTest {
 	public void testUpdatePost() {
 		post.setTitle("Better title");
 		post.setDescription("Really cool");
-		post.setRating(5.0f);
 		try {
 			assertEquals(post, pc.updatePost(post));
 		} catch (PostException e) {
@@ -188,9 +196,20 @@ public class PostConnectorTest {
 		}
 	}
 	
+	@Test
+	public void testGetPostsFromAlbum() {
+		try {
+			assertEquals(5, pc.getPosts(critic).size());
+			pc.deletePost(post);
+			assertEquals(4, pc.getPosts(critic).size());
+			pc.insertPost(post);
+		} catch (Exception e) {
+			fail(e.getLocalizedMessage());
+		}
+	}
 	
 	@Test
-	public void testGetPosts() {
+	public void testGetPostNumber() {
 		try {
 			assertEquals(1, pc.getPosts(1).size());
 			assertEquals(5, pc.getPosts(5).size());

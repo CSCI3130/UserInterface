@@ -8,7 +8,7 @@ import javax.persistence.Persistence;
 
 public abstract class JPAConnector {
 	
-	protected static EntityManager entity;
+	protected EntityManager entity;
 	
 	public JPAConnector() {
 		Map<String, Object> configOverrides = new HashMap<String, Object>();

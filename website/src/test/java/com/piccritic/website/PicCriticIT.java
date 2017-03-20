@@ -4,6 +4,8 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.openqa.selenium.phantomjs.PhantomJSDriver;
 
+import com.piccritic.database.license.AttributionLicense;
+import com.piccritic.database.license.JPALicenseConnector;
 import com.piccritic.compute.user.UserService;
 import com.piccritic.compute.user.UserServiceInterface;
 import com.piccritic.database.user.UserException;
@@ -22,6 +24,7 @@ import com.vaadin.testbench.elements.NotificationElement;
  */
 public class PicCriticIT extends TestBenchTestCase {
 	public UserServiceInterface userService = UserService.createService();
+	public JPALicenseConnector lc = new JPALicenseConnector();
 
 	@Rule
 	public ScreenshotOnFailureRule screenshotOnFailureRule =

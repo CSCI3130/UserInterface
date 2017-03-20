@@ -3,9 +3,12 @@ compute/target
 database/target
 
 .project
+.setting
 */.project
+*/.setting
 */.classpath
 website/users
+/bin/
 website/phantomjsdriver.log
 website/error-screenshots
 website/reference-screenshots

@@ -54,7 +54,7 @@ public class ViewPostIT extends PicCriticIT {
 		$(ButtonElement.class).caption("Create Post").first().click();
 		$(TextFieldElement.class).caption("Post Title").first().setValue("title");
 		$(TextAreaElement.class).caption("Post Description").first().setValue("D");
-		/* there's no way we can select a file tp upload from a headless
+		/* there's no way we can select a file to upload from a headless
 		 * machine
 		 */
 		$(WindowElement.class).first().close();

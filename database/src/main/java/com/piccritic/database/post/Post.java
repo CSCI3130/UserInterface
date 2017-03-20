@@ -5,13 +5,20 @@
 package com.piccritic.database.post;
 
 import java.sql.Date;
+import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
+import com.piccritic.database.feedback.Comment;
+import com.piccritic.database.feedback.Rating;
 import com.piccritic.database.license.License;
 
 /**
@@ -33,12 +40,18 @@ public class Post {
 	private Date uploadDate;
 	private String title;
 	private String description;
-	private float rating;
 
 	@ManyToOne(optional=true, fetch=FetchType.EAGER)
 	private License license;
 	@ManyToOne(optional=false)
 	private Album album;
+	
+	@OneToMany(fetch=FetchType.EAGER, mappedBy="post") 
+	@Fetch(FetchMode.SUBSELECT)
+	private Set<Comment> comments;
+	
+	@OneToMany(fetch=FetchType.EAGER, mappedBy="post")
+	private Set<Rating> ratings;
 
 	public String getPath() {
 		return path;
@@ -78,14 +91,6 @@ public class Post {
 		this.description = description;
 	}
 
-	public float getRating() {
-		return rating;
-	}
-
-	public void setRating(float rating) {
-		this.rating = rating;
-	}
-
 	public Album getAlbum() {
 		return album;
 	}
@@ -98,14 +103,30 @@ public class Post {
 		return license;
 	}
 
+	public Set<Comment> getComments() {
+		return comments;
+	}
+
+	public void setComments(Set<Comment> comments) {
+		this.comments = comments;
+	}
+
+	public Set<Rating> getRatings() {
+		return ratings;
+	}
+
+	public void setRatings(Set<Rating> ratings) {
+		this.ratings = ratings;
+	}
+
 	public void setLicense(License license) {
 		this.license = license;
 	}
 	
 	public String toString() {
-		return String.format("Post{path=%s, uploadDate=%s, title=%s, description=%s, rating=%f, album.id=%d}", 
+		return String.format("Post{path=%s, uploadDate=%s, title=%s, description=%s, album.id=%d}", 
 				/*(id == null) ? null:id.longValue(),*/ path, (uploadDate == null) ? null :uploadDate.toString(),
-				title, description, rating, (album == null) ? null : album.getId());
+				title, description, (album == null) ? null : album.getId());
 	}
 	
 	/**
