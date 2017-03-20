@@ -147,11 +147,11 @@ public class FeedbackServiceTest {
 			
 			rating1.setCritic(critic);
 			rating1.setPost(post);
-			rating1 = rc.insertRating(rating1);
+			rating1 = fs.insertRating(rating1);
 			
-			rating2.setCritic(critic);
+			rating2.setCritic(voter);
 			rating2.setPost(post);
-			rating2 = rc.insertRating(rating2);
+			rating2 = fs.insertRating(rating2);
 			post.setRatings(ratings);
 			
 		} catch (UserException | AlbumException | PostException | CommentException | RatingException e) {
@@ -275,6 +275,32 @@ public class FeedbackServiceTest {
 			fs.deleteVote(v1);
 			fs.deleteVote(v2);
 			assertEquals(0, fs.getCriticCommentReputation(critic));
+		} catch (VoteException e) {
+			fail(e.getLocalizedMessage());
+		}
+	}
+	
+	@Test
+	public void testGetCriticPostReputation() {
+		try {
+			assertEquals(fs.getRepLoss(), fs.getCriticPostReputation(critic)); //current average is below 2.5
+			rc.deleteRating(rating2);
+			assertEquals(fs.getRepGain(), fs.getCriticPostReputation(critic)); //should go above 2.5
+			rc.insertRating(rating2);
+		} catch (RatingException e) {
+			fail(e.getLocalizedMessage());
+		}
+	}
+	
+	@Test
+	public void testCalculateReputation() {
+		try {
+			Vote v1 = fs.insertVote(vote1);
+			Vote v2 = fs.insertVote(vote2);
+			assertEquals(fs.getRepGain() + fs.getRepLoss()*fs.getRatingWeight(), fs.calculateReputation(critic)); //rep gain from votes
+			fs.deleteVote(v1);
+			fs.deleteVote(v2);
+			assertEquals(fs.getRepLoss()*fs.getRatingWeight(), fs.calculateReputation(critic)); //only rep loss from rating remain
 		} catch (VoteException e) {
 			fail(e.getLocalizedMessage());
 		}

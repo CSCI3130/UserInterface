@@ -4,15 +4,22 @@
  */
 package com.piccritic.database.post;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Persistence;
+import javax.persistence.TypedQuery;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 
+import com.piccritic.database.feedback.Comment;
+import com.piccritic.database.feedback.Rating;
+import com.piccritic.database.user.Critic;
 import com.vaadin.addon.jpacontainer.EntityItem;
 import com.vaadin.addon.jpacontainer.JPAContainer;
 import com.vaadin.addon.jpacontainer.JPAContainerFactory;
@@ -160,4 +167,26 @@ public class JPAPostConnector implements PostConnector {
 			throw new PostException(violation.getMessage());
 		}
 	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see com.piccritic.database.post.PostConnector#getPosts(com.piccritic.database.user.Critic)
+	 */
+	public List<Post> getPosts(Critic critic){
+		critic.getAlbums();
+		String query1 = "SELECT a FROM Album a WHERE a.critic = :crit ORDER BY a.creationDate";
+		TypedQuery<Album> q = albums.getEntityProvider().getEntityManager().createQuery(query1, Album.class)
+				.setParameter("crit", critic);
+		List<Post> postList = new ArrayList<Post>();
+		List<Album> albums = q.getResultList();
+		
+		for(Album album: albums){
+			String query2 = "SELECT p FROM Post p WHERE p.album = :album";
+			TypedQuery<Post> q2 = posts.getEntityProvider().getEntityManager().createQuery(query2, Post.class)
+					.setParameter("album", album);
+			postList.addAll(q2.getResultList());
+		}
+		return postList;
+	}
+
 }

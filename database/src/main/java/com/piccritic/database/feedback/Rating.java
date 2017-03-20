@@ -5,6 +5,7 @@
 package com.piccritic.database.feedback;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -28,11 +29,11 @@ public class Rating {
 	private Long id;
 	
 	@NotNull
-	@ManyToOne
+	@ManyToOne(fetch=FetchType.EAGER)
 	private Post post;
 	
 	@NotNull
-	@ManyToOne
+	@ManyToOne(fetch=FetchType.EAGER)
 	private Critic critic;
 	
 	@NotNull
