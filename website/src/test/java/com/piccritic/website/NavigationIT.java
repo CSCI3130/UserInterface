@@ -26,15 +26,18 @@ import com.vaadin.testbench.elements.ButtonElement;
  */
 public class NavigationIT extends PicCriticIT {
 
+	@Before
+	public void init() throws Exception {
+		super.init();
+	}
+
 	@Test
-	public void simpleSelection() {
+	public void testNavigation() {
 		goHome();
 
 		assertTrue($(ButtonElement.class).caption("Home").exists());
 		assertTrue($(ButtonElement.class).caption("Login").exists());
 		assertTrue($(ButtonElement.class).caption("CreateUser").exists());
 		$(ButtonElement.class).caption("Home").first().click();
-		
-		assertEquals("Welcome to Pic Critic!!", $(LabelElement.class).first().getText());
 	}
 }

@@ -13,6 +13,7 @@ import java.util.Set;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Persistence;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
@@ -189,4 +190,20 @@ public class JPAPostConnector implements PostConnector {
 		return postList;
 	}
 
+	/**
+	 * Gets a specified number of posts from the database.
+	 * @param number of posts to get.
+	 * @return list of posts from the database.
+	 * @throws PostException
+	 */
+	public List<Post> getPosts(int number) throws PostException {	
+		try {
+			TypedQuery<Post> q = posts.getEntityProvider().getEntityManager().createQuery("SELECT c from Post c", Post.class);
+			q.setMaxResults(number);
+			return q.getResultList();
+		} catch (Exception e) {
+			System.out.println(e.toString());
+			return null;
+		}
+	}
 }
