@@ -12,6 +12,11 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.piccritic.compute.feedback.FeedbackService;
+import com.piccritic.compute.feedback.FeedbackServiceInterface;
+import com.piccritic.database.feedback.Comment;
+import com.piccritic.database.feedback.CommentException;
+import com.piccritic.database.feedback.VoteException;
 import com.piccritic.database.license.AttributionLicense;
 import com.piccritic.database.post.Album;
 import com.piccritic.database.post.AlbumException;
@@ -33,9 +38,13 @@ public class PostServiceTest {
 	private Set<Post> postSet; 
 	private Critic critic;
 	private Set<Album> albumSet;
+	private Comment comment;
+	private Set<Comment> criticComments = new HashSet<Comment>();
+	private Set<Comment> postComments = new HashSet<Comment>();
 	private JPAUserConnector uc = new JPAUserConnector();
 	private JPAPostConnector pc = new JPAPostConnector();
 	private PostService ps = new PostService();
+	private FeedbackServiceInterface fs = FeedbackService.createService();
 	
 	@Before
 	public void setup() throws Exception{
@@ -45,12 +54,14 @@ public class PostServiceTest {
 		postSet.add(post);
 		critic = new Critic();
 		albumSet = new HashSet<Album>();
+		comment = new Comment();
 		
 		critic.setFirstName("firstName");
 		critic.setLastName("lastName");
 		critic.setJoinDate(new Date(0));
 		critic.setLicense(new AttributionLicense());
 		critic.setHandle("handle");
+		critic.setComments(criticComments);
 		albumSet.add(album);
 
 		album.setName("albumName");
@@ -63,8 +74,16 @@ public class PostServiceTest {
 		post.setUploadDate(null);
 		post.setLicense(new AttributionLicense());
 		post.setAlbum(album);
+		post.setComments(postComments);
 		
-		uc.insertCritic(critic, "hash");
+		postComments.add(comment);
+		comment.setContent("this is a comment");
+		comment.setCreationDate(new Date(0));
+		criticComments.add(comment);
+		comment.setReplies(new HashSet<Comment>());
+		comment.setScore(0);
+		
+		critic = uc.insertCritic(critic, "hash");
 		pc.insertAlbum(album);
 		post.setPath("path");
 	}
@@ -99,9 +118,13 @@ public class PostServiceTest {
 	public void testDeletePost(){
 		try{
 			Post created = ps.createPost(post);
+			comment.setPost(created);
+			comment.setCritic(critic);
+			comment = fs.insertComment(comment);
 			ps.deletePost(created);
+			post.setComments(new HashSet<Comment>());
 			pc.insertPost(post);
-		} catch(PostException | AlbumException e){
+		} catch(PostException | AlbumException | CommentException | VoteException e) {
 			e.printStackTrace();
 			fail(e.getLocalizedMessage());
 		}

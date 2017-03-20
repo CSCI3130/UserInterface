@@ -12,6 +12,12 @@ import java.util.Set;
 
 import org.hibernate.Hibernate;
 
+import com.piccritic.compute.feedback.FeedbackService;
+import com.piccritic.compute.feedback.FeedbackServiceInterface;
+import com.piccritic.database.feedback.Comment;
+import com.piccritic.database.feedback.CommentException;
+import com.piccritic.database.feedback.Vote;
+import com.piccritic.database.feedback.VoteException;
 import com.piccritic.database.post.Album;
 import com.piccritic.database.post.AlbumException;
 import com.piccritic.database.post.JPAPostConnector;
@@ -32,6 +38,7 @@ public class PostService implements PostServiceInterface {
 	public static final String USERS_DIR = "users";
 
 	static PostConnector pc = new JPAPostConnector();
+	private FeedbackServiceInterface fs = FeedbackService.createService();
 	
 	public File getImageFile(String handle) {
 		Path p0 = Paths.get(USERS_DIR, handle);
@@ -82,15 +89,25 @@ public class PostService implements PostServiceInterface {
 		return pc.updatePost(post) ;
 	}
 
-	public boolean deletePost(Post post) throws PostException{
+	public boolean deletePost(Post post) throws PostException, CommentException, VoteException {
 		if (post == null) {
 			throw new PostException("Cannot delete null post");
 		}
+		
+		List<Comment> comments = fs.getComments(post);
+		for (Comment comment : comments) {
+			List<Vote> votes = fs.getVotes(comment);
+			for (Vote vote : votes) {
+				fs.deleteVote(vote);
+			}
+			fs.deleteComment(comment);
+		}
+		
 		File image = new File(post.getPath());
 		if (image.exists()) {
 			image.delete();
 		}
-
+		
 		return pc.deletePost(post);
 	}
 	

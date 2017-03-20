@@ -5,6 +5,8 @@
 
 package com.piccritic.database.feedback;
 
+import java.util.List;
+
 import com.piccritic.database.user.Critic;
 
 /**
@@ -56,4 +58,11 @@ public interface VoteConnector {
 	 * @return
 	 */
 	public int getScore(Comment comment);
+	
+	/**
+	 * Returns the votes associated with the comment
+	 * @param comment
+	 * @return
+	 */
+	public List<Vote> getVotes(Comment comment);
 }
