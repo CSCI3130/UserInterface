@@ -292,5 +292,6 @@ public class FeedbackServiceTest {
 			e.getLocalizedMessage();
 		}
 		uc.deleteCritic(critic);
+		uc.deleteCritic(voter);
 	}
 }
