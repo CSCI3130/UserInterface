@@ -9,6 +9,8 @@ import com.piccritic.compute.post.PostService;
 import com.piccritic.compute.user.UserService;
 import com.piccritic.compute.user.UserServiceInterface;
 import com.piccritic.database.feedback.Comment;
+import com.piccritic.database.feedback.CommentException;
+import com.piccritic.database.feedback.VoteException;
 import com.piccritic.database.post.Post;
 import com.piccritic.database.post.PostException;
 import com.piccritic.website.feedback.CommentComponent;
@@ -81,7 +83,7 @@ public class ViewPost extends VerticalLayout implements View {
 				try {
 					service.deletePost(post);
 					Notification.show("Post deleted successfuly", Type.TRAY_NOTIFICATION);
-				} catch (PostException e1) {
+				} catch (PostException | CommentException | VoteException e1) {
 					Notification.show(e1.getLocalizedMessage(), Type.WARNING_MESSAGE);
 				}
 			});

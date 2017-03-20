@@ -298,4 +298,9 @@ public class FeedbackService implements FeedbackServiceInterface {
 	public Rating selectRating(Long id) {
 		return rc.selectRating(id);
 	}
+
+	@Override
+	public List<Vote> getVotes(Comment comment) {
+		return vc.getVotes(comment);
+	}
 }
