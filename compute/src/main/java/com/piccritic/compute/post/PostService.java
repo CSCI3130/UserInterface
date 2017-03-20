@@ -6,12 +6,14 @@ import java.nio.file.Paths;
 import java.sql.Date;
 import java.util.Base64;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
 import org.hibernate.Hibernate;
 
 import com.piccritic.database.post.Album;
+import com.piccritic.database.post.AlbumException;
 import com.piccritic.database.post.JPAPostConnector;
 import com.piccritic.database.post.Post;
 import com.piccritic.database.post.PostConnector;
@@ -23,6 +25,7 @@ import com.piccritic.database.user.JPAUserConnector;
  * 
  * @author Amir Abbasnejad 
  * @author Rhianna Goguen
+ * @author ian-dawson
  */
 public class PostService implements PostServiceInterface {
 	
@@ -34,8 +37,13 @@ public class PostService implements PostServiceInterface {
 		Path p0 = Paths.get(USERS_DIR, handle);
 		File directory = p0.toFile();
 		File[] flist = directory.listFiles();
-
 		String newFileName="";
+
+		if (flist == null) {
+			newFileName = getRandomName();
+			return Paths.get(USERS_DIR, handle, newFileName).toFile();
+		}
+
 		boolean used = true;
 		while(used) {
 			newFileName = getRandomName();
@@ -58,12 +66,19 @@ public class PostService implements PostServiceInterface {
 
 	}
 
-	public Post createPost(Post post) throws PostException{
+	public Post createPost(Post post) throws PostException, AlbumException{
 		
 		if (post.getUploadDate() == null) {
 			post.setUploadDate( new Date(Calendar.getInstance().getTime().getTime()) );
-			return pc.insertPost(post) ;
+
+			
+			if (post.getLicense() == null) {
+				post.setLicense(post.getAlbum().getCritic().getLicense());
+			}
+
+			return pc.insertPost(post);
 		}	
+
 		return pc.updatePost(post) ;
 	}
 
@@ -72,11 +87,18 @@ public class PostService implements PostServiceInterface {
 			throw new PostException("Cannot delete null post");
 		}
 		File image = new File(post.getPath());
-		image.delete();
-		return pc.deletePost(post);		
+		if (image.exists()) {
+			image.delete();
+		}
+
+		return pc.deletePost(post);
+	}
+	
+	@Override
+	public Album updateAlbum(Album album) throws AlbumException {
+		return pc.updateAlbum(album);
 	}
 
-	@Override
 	public Album getDefaultAlbum(String handle) {
 		JPAUserConnector uc = new JPAUserConnector();
 		Critic user = uc.selectCritic(handle);
@@ -92,9 +114,13 @@ public class PostService implements PostServiceInterface {
 		return defaultAlbum;
 	}
 
-	@Override
 	public Post getPost(String path) {
 		return pc.selectPost(path);
+	}
+	
+	@Override
+	public List<Post> getPosts(int number) throws PostException {
+		return pc.getPosts(number);
 	}
 	
 }

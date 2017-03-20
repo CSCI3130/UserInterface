@@ -4,11 +4,13 @@ import static com.piccritic.website.login.LoginService.getHandle;
 import static com.piccritic.website.login.LoginService.getLoginStatus;
 import static com.piccritic.website.login.LoginService.logoutUser;
 
+import com.piccritic.website.license.LicenseView;
 import com.piccritic.website.login.LoginService.LoginStatus;
 import com.piccritic.website.login.LoginWindow;
 import com.piccritic.website.post.CreatePost;
 import com.piccritic.website.post.ViewPost;
 import com.piccritic.website.user.UserForm;
+import com.piccritic.website.user.UserView;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.server.Page;
 import com.vaadin.ui.Button;
@@ -40,8 +42,11 @@ public class Home extends HorizontalSplitPanel {
 		
 		navigator.addView(ViewPost.NAME, ViewPost.class);
 		navigator.addView(DefaultView.NAME, DefaultView.class);
+		navigator.addView(LicenseView.NAME, LicenseView.class);
+		navigator.addView(UserView.NAME, UserView.class);
 		if (navigator.getState().isEmpty()) {
 			navigator.navigateTo(DefaultView.NAME);
+			System.out.println(navigator.getState());
 		} else {
 			navigator.navigateTo(navigator.getState());
 		}

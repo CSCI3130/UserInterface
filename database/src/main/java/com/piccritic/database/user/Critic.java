@@ -10,10 +10,15 @@ import java.util.Set;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import com.piccritic.database.feedback.Comment;
+import com.piccritic.database.feedback.Rating;
+import com.piccritic.database.feedback.Vote;
+import com.piccritic.database.license.License;
 import com.piccritic.database.post.Album;
 
 /**
@@ -34,12 +39,22 @@ public class Critic {
 	private String lastName;
 	@NotNull
 	private Date joinDate;
-	private int licenseID;
 	@Size(max=200)
 	private String bio;
+	@NotNull @ManyToOne(optional=true)
+	private License license;
 	
 	@OneToMany(fetch=FetchType.EAGER, mappedBy="critic") 
 	private Set<Album> albums; 
+	
+	@OneToMany(fetch=FetchType.EAGER, mappedBy="critic") 
+	private Set<Comment> comments;
+	
+	@OneToMany(fetch=FetchType.EAGER, mappedBy="critic")
+	private Set<Rating> ratings;
+	
+	@OneToMany(fetch=FetchType.EAGER, mappedBy="critic")
+	private Set<Vote> votes;
 
 	/**
 	 * @return the handle of this Critic
@@ -100,15 +115,15 @@ public class Critic {
 	/**
 	 * @return the licenseID of this Critic
 	 */
-	public int getLicenseID() {
-		return licenseID;
+	public License getLicense() {
+		return license;
 	}
 
 	/**
 	 * @param licenseID the licenseID to set
 	 */
-	public void setLicenseID(int licenseID) {
-		this.licenseID = licenseID;
+	public void setLicense(License license) {
+		this.license = license;
 	}
 
 	/**
@@ -139,6 +154,30 @@ public class Critic {
 		this.albums = albums;
 	}
 
+	public Set<Comment> getComments() {
+		return comments;
+	}
+
+	public void setComments(Set<Comment> comments) {
+		this.comments = comments;
+	}
+
+	public Set<Rating> getRatings() {
+		return ratings;
+	}
+
+	public void setRatings(Set<Rating> ratings) {
+		this.ratings = ratings;
+	}
+	
+	public Set<Vote> getVotes() {
+		return votes;
+	}
+
+	public void setVotes(Set<Vote> votes) {
+		this.votes = votes;
+	}
+
 	/**
 	 * Compares this Critic to another object.
 	 * Returns true if both string representations are equal.
@@ -160,7 +199,7 @@ public class Critic {
 	public String toString() {
 		return "Critic{" + "handle=" + handle + ", firstName=" + firstName
 			+ ", lastName=" + lastName + ", joinDate=" + joinDate.toString()
- 			+ ", licenseID=" + licenseID + ", bio=" + bio + "}";
+ 			+ ", license=" + license + ", bio=" + bio + "}";
 	}
 
 }

@@ -4,15 +4,24 @@
  */
 package com.piccritic.database.post;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Persistence;
+import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 
+import com.piccritic.database.feedback.Comment;
+import com.piccritic.database.feedback.Rating;
+import com.piccritic.database.user.Critic;
+import com.piccritic.database.JPAConnector;
 import com.vaadin.addon.jpacontainer.EntityItem;
 import com.vaadin.addon.jpacontainer.JPAContainer;
 import com.vaadin.addon.jpacontainer.JPAContainerFactory;
@@ -23,7 +32,7 @@ import com.vaadin.addon.jpacontainer.JPAContainerFactory;
  * 
  * @author Ryan Lowe<br>Jonathan Ignacio<br>Damien Robichaud
  */
-public class JPAPostConnector implements PostConnector {
+public class JPAPostConnector extends JPAConnector implements PostConnector {
 	
 	private JPAContainer<Album> albums;
 	private JPAContainer<Post> posts;
@@ -32,13 +41,8 @@ public class JPAPostConnector implements PostConnector {
 	 * Initializes the JPAContainers for this PostConnector.
 	 */
 	public JPAPostConnector() {
-		Map<String, Object> configOverrides = new HashMap<String, Object>();
-		configOverrides.put("hibernate.connection.url", System.getenv("JDBC_DATABASE_URL"));
-
-		EntityManager manager = Persistence.createEntityManagerFactory("postgres", configOverrides).createEntityManager();
-		
-		albums = JPAContainerFactory.make(Album.class, manager);
-		posts = JPAContainerFactory.make(Post.class, manager);
+		albums = JPAContainerFactory.make(Album.class, entity);
+		posts = JPAContainerFactory.make(Post.class, entity);
 	}
 	
 	/* (non-Javadoc)
@@ -60,7 +64,6 @@ public class JPAPostConnector implements PostConnector {
 		
 		validate(album);
 		albumItem.getItemProperty("name").setValue(album.getName());
-		albumItem.getItemProperty("posts").setValue(album.getPosts());
 		albumItem.commit();
 		
 		return selectAlbum(album.getId());
@@ -108,7 +111,6 @@ public class JPAPostConnector implements PostConnector {
 		}
 		postItem.getItemProperty("title").setValue(post.getTitle());
 		postItem.getItemProperty("description").setValue(post.getDescription());
-		postItem.getItemProperty("rating").setValue(post.getRating());
 		postItem.getItemProperty("album").setValue(post.getAlbum());
 		postItem.commit();
 		return selectPost(post.getPath());
@@ -160,6 +162,44 @@ public class JPAPostConnector implements PostConnector {
 		Set<ConstraintViolation<Post>> violations = Validation.buildDefaultValidatorFactory().getValidator().validate(post);
 		for (ConstraintViolation<Post> violation : violations) {
 			throw new PostException(violation.getMessage());
+		}
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see com.piccritic.database.post.PostConnector#getPosts(com.piccritic.database.user.Critic)
+	 */
+	public List<Post> getPosts(Critic critic){
+		critic.getAlbums();
+		String query1 = "SELECT a FROM Album a WHERE a.critic = :crit ORDER BY a.creationDate";
+		TypedQuery<Album> q = albums.getEntityProvider().getEntityManager().createQuery(query1, Album.class)
+				.setParameter("crit", critic);
+		List<Post> postList = new ArrayList<Post>();
+		List<Album> albums = q.getResultList();
+		
+		for(Album album: albums){
+			String query2 = "SELECT p FROM Post p WHERE p.album = :album";
+			TypedQuery<Post> q2 = posts.getEntityProvider().getEntityManager().createQuery(query2, Post.class)
+					.setParameter("album", album);
+			postList.addAll(q2.getResultList());
+		}
+		return postList;
+	}
+
+	/**
+	 * Gets a specified number of posts from the database.
+	 * @param number of posts to get.
+	 * @return list of posts from the database.
+	 * @throws PostException
+	 */
+	public List<Post> getPosts(int number) throws PostException {	
+		try {
+			TypedQuery<Post> q = posts.getEntityProvider().getEntityManager().createQuery("SELECT c from Post c", Post.class);
+			q.setMaxResults(number);
+			return q.getResultList();
+		} catch (Exception e) {
+			System.out.println(e.toString());
+			return null;
 		}
 	}
 }

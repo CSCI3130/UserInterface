@@ -12,6 +12,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.piccritic.database.license.AttributionLicense;
 import com.piccritic.database.post.Album;
 import com.piccritic.database.post.AlbumException;
 import com.piccritic.database.post.JPAPostConnector;
@@ -19,7 +20,12 @@ import com.piccritic.database.post.Post;
 import com.piccritic.database.post.PostException;
 import com.piccritic.database.user.Critic;
 import com.piccritic.database.user.JPAUserConnector;
+import com.piccritic.database.user.UserException;
 
+/**
+ * 
+ * @author Ryan Lowe <br>Damian Robichaud<br>Jonathan Ignacio
+ */
 public class PostServiceTest {
 	
 	private Post post;
@@ -43,6 +49,7 @@ public class PostServiceTest {
 		critic.setFirstName("firstName");
 		critic.setLastName("lastName");
 		critic.setJoinDate(new Date(0));
+		critic.setLicense(new AttributionLicense());
 		critic.setHandle("handle");
 		albumSet.add(album);
 
@@ -54,6 +61,7 @@ public class PostServiceTest {
 		post.setDescription("Description");
 		post.setTitle("Title");
 		post.setUploadDate(null);
+		post.setLicense(new AttributionLicense());
 		post.setAlbum(album);
 		
 		uc.insertCritic(critic, "hash");
@@ -67,7 +75,7 @@ public class PostServiceTest {
 			Post created = ps.createPost(post);
 			assertNotNull( created );
 			assertNotNull( created.getUploadDate());
-		} catch(PostException e){
+		} catch(PostException | AlbumException e){
 			fail(e.getLocalizedMessage());
 		}		
 	}
@@ -81,7 +89,7 @@ public class PostServiceTest {
 			Post edited = ps.createPost(post);
 			assertEquals("different", edited.getDescription());
 			
-		} catch(PostException e){
+		} catch(PostException | AlbumException e){
 			fail(e.getLocalizedMessage());
 		}
 		
@@ -91,9 +99,9 @@ public class PostServiceTest {
 	public void testDeletePost(){
 		try{
 			Post created = ps.createPost(post);
-			ps.deletePost(created);			
+			ps.deletePost(created);
 			pc.insertPost(post);
-		} catch(PostException e){
+		} catch(PostException | AlbumException e){
 			e.printStackTrace();
 			fail(e.getLocalizedMessage());
 		}
@@ -104,7 +112,8 @@ public class PostServiceTest {
 		//TODO test later...
 		try {
 			ps.createPost(post);
-		} catch (PostException e) {
+		} catch (PostException | AlbumException e) {
+			fail(e.getLocalizedMessage());
 		}
 	}
 		
@@ -112,9 +121,15 @@ public class PostServiceTest {
 	public void tearDown() {
 		try {
 			pc.deletePost(post);
+			album.setPosts(null);
+			pc.updateAlbum(album);
 			pc.deleteAlbum(album);
+			critic.setAlbums(null);
+			uc.updateCritic(critic);
 			uc.deleteCritic(critic);
-		} catch (PostException|AlbumException e) {
+		} catch (PostException|AlbumException|UserException e) {
+			e.printStackTrace();
+			fail(e.getLocalizedMessage());
 		}
 	}
 }

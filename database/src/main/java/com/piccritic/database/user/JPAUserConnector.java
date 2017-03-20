@@ -4,15 +4,12 @@
  */
 package com.piccritic.database.user;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Set;
 
-import javax.persistence.EntityManager;
-import javax.persistence.Persistence;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 
+import com.piccritic.database.JPAConnector;
 import com.vaadin.addon.jpacontainer.EntityItem;
 import com.vaadin.addon.jpacontainer.JPAContainer;
 import com.vaadin.addon.jpacontainer.JPAContainerFactory;
@@ -24,17 +21,12 @@ import com.vaadin.addon.jpacontainer.JPAContainerFactory;
  * @author Ryan Lowe<br>
  *         Damien Robichaud
  */
-public class JPAUserConnector implements UserConnector {
+public class JPAUserConnector extends JPAConnector implements UserConnector {
 
 	private JPAContainer<Critic> critics;
 	private JPAContainer<UserLogin> logins;
 
 	public JPAUserConnector() {
-		Map<String, Object> configOverrides = new HashMap<String, Object>();
-		configOverrides.put("hibernate.connection.url", System.getenv("JDBC_DATABASE_URL"));
-
-		EntityManager entity = Persistence.createEntityManagerFactory("postgres", configOverrides).createEntityManager();
-
 		critics = JPAContainerFactory.make(Critic.class, entity);
 		logins = JPAContainerFactory.make(UserLogin.class, entity);
 	}
@@ -98,7 +90,7 @@ public class JPAUserConnector implements UserConnector {
 		validate(critic);
 		criticItem.getItemProperty("firstName").setValue(critic.getFirstName());
 		criticItem.getItemProperty("lastName").setValue(critic.getLastName());
-		criticItem.getItemProperty("licenseID").setValue(critic.getLicenseID());
+		criticItem.getItemProperty("license").setValue(critic.getLicense());
 		criticItem.getItemProperty("bio").setValue(critic.getBio());
 		criticItem.commit();
 
@@ -150,4 +142,5 @@ public class JPAUserConnector implements UserConnector {
 			throw new UserException(violation.getPropertyPath() + " " + violation.getMessage());
 		}
 	}
+	
 }
