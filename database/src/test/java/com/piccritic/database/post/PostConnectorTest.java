@@ -18,6 +18,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.piccritic.database.feedback.Comment;
+import com.piccritic.database.license.AttributionNonCommercialLicense;
+import com.piccritic.database.license.JPALicenseConnector;
 import com.piccritic.database.user.Critic;
 import com.piccritic.database.user.JPAUserConnector;
 import com.piccritic.database.user.UserConnector;
@@ -66,6 +68,7 @@ public class PostConnectorTest {
 
 	@Before
 	public void init() {
+		new JPALicenseConnector();
 		postSet.add(post);
 		postSet.add(post1);
 		postSet.add(post2);
@@ -75,6 +78,7 @@ public class PostConnectorTest {
 		critic.setHandle(handle);
 		critic.setJoinDate(date);
 		critic.setFirstName(firstName);
+		critic.setLicense(new AttributionNonCommercialLicense());
 		critic.setLastName(lastName);
 		critic.setAlbums(albumSet);
 		critic.setComments(commentSet);
@@ -109,6 +113,7 @@ public class PostConnectorTest {
 			album.setCritic(critic);
 			pc.insertAlbum(album);
 			post.setPath(path);
+			post.setLicense(new AttributionNonCommercialLicense());
 			post1.setPath(path1);
 			post2.setPath(path2);
 			post3.setPath(path3);

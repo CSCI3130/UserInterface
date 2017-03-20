@@ -21,6 +21,7 @@ import javax.validation.Validation;
 import com.piccritic.database.feedback.Comment;
 import com.piccritic.database.feedback.Rating;
 import com.piccritic.database.user.Critic;
+import com.piccritic.database.JPAConnector;
 import com.vaadin.addon.jpacontainer.EntityItem;
 import com.vaadin.addon.jpacontainer.JPAContainer;
 import com.vaadin.addon.jpacontainer.JPAContainerFactory;
@@ -31,7 +32,7 @@ import com.vaadin.addon.jpacontainer.JPAContainerFactory;
  * 
  * @author Ryan Lowe<br>Jonathan Ignacio<br>Damien Robichaud
  */
-public class JPAPostConnector implements PostConnector {
+public class JPAPostConnector extends JPAConnector implements PostConnector {
 	
 	private JPAContainer<Album> albums;
 	private JPAContainer<Post> posts;
@@ -40,13 +41,8 @@ public class JPAPostConnector implements PostConnector {
 	 * Initializes the JPAContainers for this PostConnector.
 	 */
 	public JPAPostConnector() {
-		Map<String, Object> configOverrides = new HashMap<String, Object>();
-		configOverrides.put("hibernate.connection.url", System.getenv("JDBC_DATABASE_URL"));
-
-		EntityManager manager = Persistence.createEntityManagerFactory("postgres", configOverrides).createEntityManager();
-		
-		albums = JPAContainerFactory.make(Album.class, manager);
-		posts = JPAContainerFactory.make(Post.class, manager);
+		albums = JPAContainerFactory.make(Album.class, entity);
+		posts = JPAContainerFactory.make(Post.class, entity);
 	}
 	
 	/* (non-Javadoc)

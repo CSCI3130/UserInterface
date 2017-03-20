@@ -7,6 +7,7 @@ import com.piccritic.compute.feedback.FeedbackService;
 import com.piccritic.compute.feedback.FeedbackServiceInterface;
 import com.piccritic.compute.post.PostService;
 import com.piccritic.compute.user.UserService;
+import com.piccritic.compute.user.UserServiceInterface;
 import com.piccritic.database.feedback.Comment;
 import com.piccritic.database.post.Post;
 import com.piccritic.database.post.PostException;
@@ -40,9 +41,10 @@ public class ViewPost extends VerticalLayout implements View {
 	private Label postDescription = new Label();
 	private RatingComponent ratings = new RatingComponent();
 	private List<Comment> comments;
-	private UserService us = UserService.createService();
+	private UserServiceInterface us = UserService.createService();
 	private FeedbackServiceInterface fs = FeedbackService.createService();
 	private CommentForm commentForm = new CommentForm(fs);
+	private Label license = new Label();
 
 	private Button delete = new Button("Delete post");
 
@@ -54,7 +56,7 @@ public class ViewPost extends VerticalLayout implements View {
 		addComponent(image);
 		addComponent(postDescription);
 		addComponent(ratings);
-		
+		addComponent(license);
 		setMargin(true);
 		setSpacing(true);
 	}
@@ -72,6 +74,7 @@ public class ViewPost extends VerticalLayout implements View {
 		image.setSource(new FileResource(new File(post.getPath())));
 		image.setSizeFull();
 		postDescription.setValue(post.getDescription());
+		license.setCaption(post.getLicense().getLicenseType());
 		if (event.getParameters().matches("users/" + LoginService.getHandle() + "/.*")) {
 			addComponent(delete);
 			delete.addClickListener(e -> {

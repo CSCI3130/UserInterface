@@ -2,6 +2,7 @@ package com.piccritic.website.feedback;
 
 import com.piccritic.compute.feedback.FeedbackServiceInterface;
 import com.piccritic.compute.user.UserService;
+import com.piccritic.compute.user.UserServiceInterface;
 import com.piccritic.database.feedback.Comment;
 import com.piccritic.database.feedback.Vote;
 import com.piccritic.database.feedback.VoteException;
@@ -26,7 +27,7 @@ public class CommentComponent extends CustomComponent {
 	private Button upvote;
 	private Button downvote;
 	
-	public CommentComponent(Comment comment, FeedbackServiceInterface fs, UserService us) {
+	public CommentComponent(Comment comment, FeedbackServiceInterface fs, UserServiceInterface us) {
         this.comment = comment;
         upvoted = false;
         downvoted = false;

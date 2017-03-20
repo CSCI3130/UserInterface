@@ -9,3 +9,9 @@ database/target
 */.classpath
 website/users
 /bin/
+website/phantomjsdriver.log
+website/error-screenshots
+website/reference-screenshots
+
+tags
+users

@@ -12,6 +12,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.piccritic.database.license.AttributionLicense;
+import com.piccritic.database.license.JPALicenseConnector;
 import com.piccritic.database.feedback.Comment;
 import com.piccritic.database.feedback.CommentConnector;
 import com.piccritic.database.feedback.JPACommentConnector;
@@ -56,8 +58,10 @@ public class AddPostComponentsIT extends PicCriticIT {
 	private Set<Album> albumSet = new HashSet<Album>();
 	private Set<Rating> ratingSet = new HashSet<Rating>();
 	private Set<Comment> commentSet = new HashSet<Comment>();
+	private AttributionLicense license = new AttributionLicense();
 	//private Set<Vote> voteSet = new HashSet<Vote>();
 	
+	JPALicenseConnector lc = new JPALicenseConnector();
 	PostConnector pc = new JPAPostConnector();
 	UserConnector uc = new JPAUserConnector();
 //	RatingConnector rc = new JPARatingConnector();
@@ -82,6 +86,7 @@ public class AddPostComponentsIT extends PicCriticIT {
 		critic.setHandle(handle);
 		critic.setJoinDate(date);
 		critic.setAlbums(albumSet);
+		critic.setLicense(license);
 	
 		albumSet.add(album);
 		album.setCreationDate(date);
@@ -94,6 +99,7 @@ public class AddPostComponentsIT extends PicCriticIT {
 		post.setDescription("description");
 		post.setRatings(ratingSet);
 		post.setComments(commentSet);
+		post.setLicense(license);
 		
 		/*ratingSet.add(rating);
 		rating.setColor(1d);

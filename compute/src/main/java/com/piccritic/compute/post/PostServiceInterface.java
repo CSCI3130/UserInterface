@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.List;
 
 import com.piccritic.database.post.Album;
+import com.piccritic.database.post.AlbumException;
 import com.piccritic.database.post.Post;
 import com.piccritic.database.post.PostException;
 
@@ -33,8 +34,10 @@ public interface PostServiceInterface {
 	 * @param post
 	 *            to store
 	 * @return Post Object created
+	 * @throws PostException
+	 * @throws AlbumException 
 	 */
-	public Post createPost(Post post) throws PostException;
+	public Post createPost(Post post) throws PostException, AlbumException;
 
 	/**
 	 * Deletes a post from the database, returns null if not found
@@ -60,6 +63,14 @@ public interface PostServiceInterface {
 	 * @return Post matching
 	 */
 	public Post getPost(String path);
+
+	/**
+	 * Updates and returns an album
+	 *
+	 * @param album (updated)
+	 * @return Album selected by id in the DB
+	 */
+	public Album updateAlbum(Album album) throws AlbumException;
 	
 	/**
 	 * Returns a list of posts from the database

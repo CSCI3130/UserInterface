@@ -17,6 +17,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.piccritic.database.license.AttributionLicense;
+import com.piccritic.database.license.JPALicenseConnector;
 import com.piccritic.database.feedback.Comment;
 import com.piccritic.database.feedback.CommentConnector;
 import com.piccritic.database.feedback.CommentException;
@@ -64,7 +66,9 @@ public class FeedbackServiceTest {
 	private Set<Comment> criticComments = new HashSet<Comment>();
 	private Set<Comment> postComments = new HashSet<Comment>();
 	private Set<Rating> ratings = new HashSet<Rating>();
+	private AttributionLicense license = new AttributionLicense();
 	
+	JPALicenseConnector lc = new JPALicenseConnector();
 	UserConnector uc = new JPAUserConnector();
 	PostConnector pc = new JPAPostConnector();
 	CommentConnector cc = new JPACommentConnector();
@@ -81,6 +85,7 @@ public class FeedbackServiceTest {
 		critic.setJoinDate(date);
 		critic.setAlbums(albums);
 		critic.setComments(criticComments);
+		critic.setLicense(license);
 		critic.setRatings(ratings);
 		
 		voter.setHandle("voter");
@@ -90,6 +95,7 @@ public class FeedbackServiceTest {
 		voter.setAlbums(albums);
 		voter.setComments(criticComments);
 		voter.setRatings(ratings);
+		voter.setLicense(license);
 
 		albums.add(album);
 		album.setCreationDate(date);
@@ -102,6 +108,7 @@ public class FeedbackServiceTest {
 		post.setDescription("description");
 		post.setPath("/path");
 		post.setRatings(ratings);
+		post.setLicense(license);
 		
 		postComments.add(comment);
 		comment.setContent("this is a comment");

@@ -10,6 +10,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.piccritic.database.license.AttributionLicense;
+import com.piccritic.database.license.JPALicenseConnector;
 import com.piccritic.database.post.Album;
 import com.piccritic.database.post.AlbumException;
 import com.piccritic.database.post.JPAPostConnector;
@@ -40,7 +42,9 @@ public class RatingConnectorTest {
 	private Set<Comment> criticComments = new HashSet<Comment>();
 	private Set<Comment> postComments = new HashSet<Comment>();
 	private Set<Rating> ratings = new HashSet<Rating>();
+	private AttributionLicense license = new AttributionLicense();
 	
+	JPALicenseConnector lc = new JPALicenseConnector();
 	UserConnector uc = new JPAUserConnector();
 	PostConnector pc = new JPAPostConnector();
 	CommentConnector cc = new JPACommentConnector();
@@ -55,6 +59,7 @@ public class RatingConnectorTest {
 		critic.setJoinDate(date);
 		critic.setAlbums(albums);
 		critic.setComments(criticComments);
+		critic.setLicense(license);
 		critic.setRatings(ratings);
 
 		albums.add(album);
@@ -68,6 +73,7 @@ public class RatingConnectorTest {
 		post.setDescription("description");
 		post.setPath("/path");
 		post.setRatings(ratings);
+		post.setLicense(license);
 	
 		ratings.add(rating);
 		rating.setColor(1.0);

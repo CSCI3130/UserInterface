@@ -1,6 +1,7 @@
 package com.piccritic.website.user;
 
 import com.piccritic.compute.user.UserService;
+import com.piccritic.compute.user.UserServiceInterface;
 import com.piccritic.database.post.Album;
 import com.piccritic.database.post.Post;
 import com.piccritic.database.user.Critic;
@@ -30,7 +31,7 @@ public class UserView extends PostQuickView implements View {
 	@Override
 	public void enter(ViewChangeEvent event) {
 		if (event.getParameters() != null && event.getParameters() != "") {
-			UserService service = UserService.createService();
+			UserServiceInterface service = UserService.createService();
 			Critic critic = service.select(event.getParameters());
 			if (critic != null) {
 				Iterator<Album> i = critic.getAlbums().iterator();

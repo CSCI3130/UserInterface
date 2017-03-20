@@ -19,6 +19,7 @@ import org.hibernate.annotations.FetchMode;
 
 import com.piccritic.database.feedback.Comment;
 import com.piccritic.database.feedback.Rating;
+import com.piccritic.database.license.License;
 
 /**
  * this class is a Java bean that defines the database table
@@ -40,6 +41,8 @@ public class Post {
 	private String title;
 	private String description;
 
+	@ManyToOne(optional=true, fetch=FetchType.EAGER)
+	private License license;
 	@ManyToOne(optional=false)
 	private Album album;
 	
@@ -95,6 +98,10 @@ public class Post {
 	public void setAlbum(Album album) {
 		this.album = album;
 	}
+	
+	public License getLicense() {
+		return license;
+	}
 
 	public Set<Comment> getComments() {
 		return comments;
@@ -112,6 +119,10 @@ public class Post {
 		this.ratings = ratings;
 	}
 
+	public void setLicense(License license) {
+		this.license = license;
+	}
+	
 	public String toString() {
 		return String.format("Post{path=%s, uploadDate=%s, title=%s, description=%s, album.id=%d}", 
 				/*(id == null) ? null:id.longValue(),*/ path, (uploadDate == null) ? null :uploadDate.toString(),

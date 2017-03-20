@@ -1,5 +1,7 @@
 package com.piccritic.website.user;
 
+import com.piccritic.database.license.AttributionLicense;
+import com.piccritic.database.license.JPALicenseConnector;
 import com.piccritic.database.post.Album;
 import com.piccritic.database.post.AlbumException;
 import com.piccritic.database.post.JPAPostConnector;
@@ -54,6 +56,7 @@ public class ViewUserPostsIT extends PicCriticIT {
 	private Set<Post> postSet = new HashSet<Post>();
 	private Set<Album> albumSet = new HashSet<Album>();
 	
+	JPALicenseConnector lc = new JPALicenseConnector();
 	PostConnector pc = new JPAPostConnector();
 	UserConnector uc = new JPAUserConnector();
 	
@@ -70,6 +73,7 @@ public class ViewUserPostsIT extends PicCriticIT {
 		critic.setFirstName(firstName);
 		critic.setLastName(lastName);
 		critic.setAlbums(albumSet);
+		critic.setLicense(new AttributionLicense());
 		
 		album.setCreationDate(date);
 		album.setPosts(postSet);
@@ -78,6 +82,7 @@ public class ViewUserPostsIT extends PicCriticIT {
 		post.setUploadDate(date);
 		post.setTitle(postTitle);
 		post.setDescription("description");
+		post.setLicense(new AttributionLicense());
 
 		try {
 			image.createNewFile();

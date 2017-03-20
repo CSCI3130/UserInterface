@@ -2,8 +2,12 @@ package com.piccritic.website;
 
 import javax.servlet.annotation.WebServlet;
 
+import com.piccritic.compute.license.LicenseService;
+import com.piccritic.compute.license.LicenseServiceInterface;
 import com.piccritic.compute.post.PostService;
+import com.piccritic.compute.post.PostServiceInterface;
 import com.piccritic.compute.user.UserService;
+import com.piccritic.compute.user.UserServiceInterface;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.server.VaadinRequest;
@@ -23,8 +27,9 @@ import com.vaadin.ui.UI;
 public class PicCritic extends UI {
 
 	private static final long serialVersionUID = 1L;
-	public static PostService postService = new PostService();
-	public static UserService userService = UserService.createService();
+	public static LicenseServiceInterface license = new LicenseService();
+	public static PostServiceInterface postService = new PostService();
+	public static UserServiceInterface userService = UserService.createService();
 
 	@Override
 	protected void init(VaadinRequest vaadinRequest) {
