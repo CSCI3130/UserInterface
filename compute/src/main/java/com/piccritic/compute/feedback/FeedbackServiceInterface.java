@@ -39,7 +39,7 @@ public interface FeedbackServiceInterface {
 	/**
 	 * Gets all comments associated with the post
 	 * @param post
-	 * @return An ArrayList of comments for the given post
+	 * @return An List of comments for the given post
 	 * @throws PostException 
 	 */
 	List<Comment> getComments(Post post) throws PostException;
@@ -95,6 +95,13 @@ public interface FeedbackServiceInterface {
 	 * @return score of given comment
 	 */
 	int getScore(Comment comment);
+	
+	/**
+	 * Returns all votes associated with comment
+	 * @param comment
+	 * @return
+	 */
+	List<Vote> getVotes(Comment comment);
 
 	/**
 	 * Method to calculate total reputation given by comments for a user 

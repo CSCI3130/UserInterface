@@ -172,4 +172,12 @@ public class JPAVoteConnector implements VoteConnector{
 		}
 		return score;
 	}
+	
+	@Override
+	public List<Vote> getVotes(Comment comment) {
+		String query = "SELECT v FROM Vote v WHERE v.comment = :comment";
+		TypedQuery<Vote> q = votes.getEntityProvider().getEntityManager().createQuery(query, Vote.class)
+				.setParameter("comment", comment);
+		return q.getResultList();
+	}
 }

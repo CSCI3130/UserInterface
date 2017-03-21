@@ -3,6 +3,8 @@ package com.piccritic.compute.post;
 import java.io.File;
 import java.util.List;
 
+import com.piccritic.database.feedback.CommentException;
+import com.piccritic.database.feedback.VoteException;
 import com.piccritic.database.post.Album;
 import com.piccritic.database.post.AlbumException;
 import com.piccritic.database.post.Post;
@@ -45,8 +47,10 @@ public interface PostServiceInterface {
 	 * @param post
 	 *            to delete
 	 * @return Post object deleted
+	 * @throws CommentException 
+	 * @throws VoteException 
 	 */
-	public boolean deletePost(Post post) throws PostException;
+	public boolean deletePost(Post post) throws PostException, CommentException, VoteException;
 
 	/**
 	 * Returns a user's default album
