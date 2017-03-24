@@ -29,7 +29,7 @@ import com.piccritic.database.license.License;
  * The primary key is the post's id (Long) defined by the database.
  * It is assigned to an {@link Album} object.
  *
- * @author Ryan Lowe<br>Johnathan Ignacio
+ * @author Ryan Lowe<br>Jonathan Ignacio
  */
 @Entity
 public class Post {

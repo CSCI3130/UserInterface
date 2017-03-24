@@ -5,42 +5,39 @@ package com.piccritic.database.license;
 
 import com.piccritic.database.JPAConnector;
 import com.vaadin.addon.jpacontainer.EntityItem;
-import com.vaadin.addon.jpacontainer.JPAContainer;
-import com.vaadin.addon.jpacontainer.JPAContainerFactory;
 
-public class JPALicenseConnector extends JPAConnector implements LicenseConnector {
+public class JPALicenseConnector extends JPAConnector<License> implements LicenseConnector {
 	
-	private static JPAContainer<License> licenses;
 
 	public JPALicenseConnector() {
-		licenses = JPAContainerFactory.make(License.class, entity);
+		super(License.class);
 		if (!exists(License.ATTRIBUTION)) {
-			licenses.addEntity(new AttributionLicense());
+			container.addEntity(new AttributionLicense());
 		}
 		if (!exists(License.ATTRIBUTION_SHAREALIKE)) {
-			licenses.addEntity(new AttributionShareAlikeLicense());
+			container.addEntity(new AttributionShareAlikeLicense());
 		}
 		if (!exists(License.ATTRIBUTION_NO_DERIVS)) {
-			licenses.addEntity(new AttributionNoDerivsLicense());
+			container.addEntity(new AttributionNoDerivsLicense());
 		}
 		if (!exists(License.ATTRIBUTION_NON_COMMERCIAL)) {
-			licenses.addEntity(new AttributionNonCommercialLicense());
+			container.addEntity(new AttributionNonCommercialLicense());
 		}
 		if (!exists(License.ATTRIBUTION_NON_COMMERCIAL_SHAREALIKE)) {
-			licenses.addEntity(new AttributionNonComShareLicense());
+			container.addEntity(new AttributionNonComShareLicense());
 		}
 		if (!exists(License.ATTRIBUTION_NON_COMMERCIAL_NO_DERIVS)) {
-			licenses.addEntity(new AttributionNonComNDerivsLicense());
+			container.addEntity(new AttributionNonComNDerivsLicense());
 		}
 	}
 	
-	private static boolean exists(String licenseType) {
-		EntityItem<License> licenseItem = licenses.getItem(licenseType);
+	private boolean exists(String licenseType) {
+		EntityItem<License> licenseItem = container.getItem(licenseType);
 		return licenseItem != null;
 	}
 	
 	public License selectLicense(String licenseType) {
-		EntityItem<License> licenseItem = licenses.getItem(licenseType);
+		EntityItem<License> licenseItem = container.getItem(licenseType);
 		return (licenseItem != null) ? licenseItem.getEntity() : null;
 	}
 }
