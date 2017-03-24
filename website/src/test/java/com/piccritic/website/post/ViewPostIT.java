@@ -1,17 +1,10 @@
 package com.piccritic.website.post;
 
-import static org.junit.Assert.assertEquals;
-
-import org.junit.After;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.openqa.selenium.phantomjs.PhantomJSDriver;
 
-import com.piccritic.website.PicCriticIT;
 import com.piccritic.database.user.UserException;
-import com.vaadin.testbench.ScreenshotOnFailureRule;
-import com.vaadin.testbench.TestBenchTestCase;
+import com.piccritic.website.PicCriticIT;
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.TextAreaElement;
 import com.vaadin.testbench.elements.TextFieldElement;

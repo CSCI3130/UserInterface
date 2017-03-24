@@ -19,7 +19,9 @@ import com.piccritic.database.feedback.CommentException;
 import com.piccritic.database.feedback.Vote;
 import com.piccritic.database.feedback.VoteException;
 import com.piccritic.database.post.Album;
+import com.piccritic.database.post.AlbumConnector;
 import com.piccritic.database.post.AlbumException;
+import com.piccritic.database.post.JPAAlbumConnector;
 import com.piccritic.database.post.JPAPostConnector;
 import com.piccritic.database.post.Post;
 import com.piccritic.database.post.PostConnector;
@@ -38,6 +40,7 @@ public class PostService implements PostServiceInterface {
 	public static final String USERS_DIR = "users";
 
 	static PostConnector pc = new JPAPostConnector();
+	static AlbumConnector ac = new JPAAlbumConnector();
 	private FeedbackServiceInterface fs = FeedbackService.createService();
 	
 	public File getImageFile(String handle) {
@@ -113,7 +116,7 @@ public class PostService implements PostServiceInterface {
 	
 	@Override
 	public Album updateAlbum(Album album) throws AlbumException {
-		return pc.updateAlbum(album);
+		return ac.updateAlbum(album);
 	}
 
 	public Album getDefaultAlbum(String handle) {

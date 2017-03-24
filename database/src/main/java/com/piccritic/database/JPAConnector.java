@@ -49,11 +49,3 @@ public abstract class JPAConnector<T> {
 	}
 }
 
-//TODO Comment - Test
-//TODO Rating - Test
-//TODO Vote - Test
-//TODO License - Test
-//TODO Album - Test
-//TODO Post - Test
-//TODO User - Test
-

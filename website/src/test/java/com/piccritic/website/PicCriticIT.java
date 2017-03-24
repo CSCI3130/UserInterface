@@ -4,20 +4,18 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.openqa.selenium.phantomjs.PhantomJSDriver;
 
-import com.piccritic.database.license.AttributionLicense;
-import com.piccritic.database.license.JPALicenseConnector;
 import com.piccritic.compute.user.UserService;
 import com.piccritic.compute.user.UserServiceInterface;
-import com.piccritic.database.user.UserException;
 import com.piccritic.database.license.AttributionLicense;
-import com.vaadin.testbench.TestBenchTestCase;
+import com.piccritic.database.license.JPALicenseConnector;
+import com.piccritic.database.user.UserException;
 import com.vaadin.testbench.ScreenshotOnFailureRule;
+import com.vaadin.testbench.TestBenchTestCase;
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.ComboBoxElement;
-import com.vaadin.testbench.elements.LabelElement;
-import com.vaadin.testbench.elements.TextFieldElement;
-import com.vaadin.testbench.elements.PasswordFieldElement;
 import com.vaadin.testbench.elements.NotificationElement;
+import com.vaadin.testbench.elements.PasswordFieldElement;
+import com.vaadin.testbench.elements.TextFieldElement;
 
 /**
  * @author Damien <br> Francis bosse

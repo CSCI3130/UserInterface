@@ -19,12 +19,16 @@ import com.piccritic.database.feedback.CommentException;
 import com.piccritic.database.feedback.VoteException;
 import com.piccritic.database.license.AttributionLicense;
 import com.piccritic.database.post.Album;
+import com.piccritic.database.post.AlbumConnector;
 import com.piccritic.database.post.AlbumException;
+import com.piccritic.database.post.JPAAlbumConnector;
 import com.piccritic.database.post.JPAPostConnector;
 import com.piccritic.database.post.Post;
+import com.piccritic.database.post.PostConnector;
 import com.piccritic.database.post.PostException;
 import com.piccritic.database.user.Critic;
 import com.piccritic.database.user.JPAUserConnector;
+import com.piccritic.database.user.UserConnector;
 import com.piccritic.database.user.UserException;
 
 /**
@@ -41,8 +45,11 @@ public class PostServiceTest {
 	private Comment comment;
 	private Set<Comment> criticComments = new HashSet<Comment>();
 	private Set<Comment> postComments = new HashSet<Comment>();
-	private JPAUserConnector uc = new JPAUserConnector();
-	private JPAPostConnector pc = new JPAPostConnector();
+	
+	private UserConnector uc = new JPAUserConnector();
+	private PostConnector pc = new JPAPostConnector();
+	private AlbumConnector ac = new JPAAlbumConnector();
+	
 	private PostService ps = new PostService();
 	private FeedbackServiceInterface fs = FeedbackService.createService();
 	
@@ -84,7 +91,7 @@ public class PostServiceTest {
 		comment.setScore(0);
 		
 		critic = uc.insertCritic(critic, "hash");
-		pc.insertAlbum(album);
+		ac.insertAlbum(album);
 		post.setPath("path");
 	}
 	
@@ -145,8 +152,8 @@ public class PostServiceTest {
 		try {
 			pc.deletePost(post);
 			album.setPosts(null);
-			pc.updateAlbum(album);
-			pc.deleteAlbum(album);
+			ac.updateAlbum(album);
+			ac.deleteAlbum(album);
 			critic.setAlbums(null);
 			uc.updateCritic(critic);
 			uc.deleteCritic(critic);

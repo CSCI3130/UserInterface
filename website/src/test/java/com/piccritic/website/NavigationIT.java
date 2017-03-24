@@ -1,18 +1,10 @@
 package com.piccritic.website;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
-import org.junit.After;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.openqa.selenium.phantomjs.PhantomJSDriver;
 
-import com.vaadin.testbench.ScreenshotOnFailureRule;
-import com.vaadin.testbench.TestBenchTestCase;
-import com.vaadin.testbench.elements.ComboBoxElement;
-import com.vaadin.testbench.elements.LabelElement;
-import com.vaadin.testbench.elements.PanelElement;
 import com.vaadin.testbench.elements.ButtonElement;
 
 /**
