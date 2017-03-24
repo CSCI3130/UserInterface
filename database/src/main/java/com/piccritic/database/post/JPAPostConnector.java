@@ -14,15 +14,14 @@ import com.piccritic.database.user.Critic;
 import com.vaadin.addon.jpacontainer.EntityItem;
 
 /**
- * This class implements {@link PostConnector} using
- * Vaadin JPAContainers.
- * 
+ * This class enables a connection to the database using JPAContainers. It has a number of methods for 
+ * performing post-related operations on the database. Implements {@link PostConnector}. Extends {@link JPAConnector}.
  * @author Ryan Lowe<br>Jonathan Ignacio<br>Damien Robichaud
  */
 public class JPAPostConnector extends JPAConnector<Post> implements PostConnector {
 	
 	/**
-	 * Initializes the JPAContainers for this PostConnector.
+	 * Initializes the JPAContainer for this PostConnector.
 	 */
 	public JPAPostConnector() {
 		super(Post.class);
@@ -75,12 +74,9 @@ public class JPAPostConnector extends JPAConnector<Post> implements PostConnecto
 		return !container.containsId(post.getPath());
 	}
 	
-	/**
-	 * Validates the fields and throws exceptions when the fields
-	 * do not currently abide by the rules defined in the post class
-	 * 
-	 * @param post
-	 * @throws PostException Message for the UI portion of the code.
+	/*
+	 * (non-Javadoc)
+	 * @see com.piccritic.database.JPAConnector#validate(java.lang.Object)
 	 */
 	protected void validate(Post post) throws PostException {
 		try {

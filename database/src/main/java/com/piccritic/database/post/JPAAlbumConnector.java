@@ -3,10 +3,15 @@ package com.piccritic.database.post;
 import com.piccritic.database.JPAConnector;
 import com.vaadin.addon.jpacontainer.EntityItem;
 
+/**
+ * This class enables a connection to the database using JPAContainers. It has a number of methods for 
+ * performing album-related operations on the database. Implements {@link AlbumConnector}. Extends {@link JPAConnector}.
+ * @author Ryan Lowe<br>Jonathan Ignacio<br>Damien Robichaud
+ */
 public class JPAAlbumConnector extends JPAConnector<Album> implements AlbumConnector{
 	
 	/**
-	 * Initializes the JPAContainers for this PostConnector.
+	 * Initializes the JPAContainer for this AlbumConnector.
 	 */
 	public JPAAlbumConnector() {
 		super(Album.class);
@@ -57,12 +62,9 @@ public class JPAAlbumConnector extends JPAConnector<Album> implements AlbumConne
 		
 	}
 	
-	/**
-	 * Validates the fields and throws exceptions when the fields
-	 * do not currently abide by the rules defined in the album class
-	 * 
-	 * @param album
-	 * @throws AlbumException Message for the UI portion of the code.
+	/*
+	 * (non-Javadoc)
+	 * @see com.piccritic.database.JPAConnector#validate(java.lang.Object)
 	 */
 	protected void validate(Album album) throws AlbumException {
 		try{

@@ -14,12 +14,15 @@ import com.piccritic.database.user.Critic;
 import com.vaadin.addon.jpacontainer.EntityItem;
 
 /**
- * This class implements {@link VoteConnector} using Vaadin JPAContainers.
- * 
- * @author Jonathan Ignacio and Frank Bosse
+ * This class enables a connection to the database using JPAContainers. It has a number of methods for 
+ * performing vote-related operations on the database. Implements {@link VoteConnector}. Extends {@link JPAConnector}.
+ * @author Jonathan Ignacio<br>Frank Bosse
  */
 public class JPAVoteConnector extends JPAConnector<Vote> implements VoteConnector{
 	
+	/**
+	 * Initializes the JPAContainer for this VoteConnector.
+	 */
 	public JPAVoteConnector(){
 		super(Vote.class);
 	}
@@ -30,25 +33,6 @@ public class JPAVoteConnector extends JPAConnector<Vote> implements VoteConnecto
 	public Vote selectVote(Long id) {
 		EntityItem<Vote> voteItem = container.getItem(id);
 		return (voteItem != null) ? voteItem.getEntity() : null;
-	}
-
-	/* (non-Javadoc)
-	 * @see com.piccritic.database.feedback.VoteConnector#getVoteId(com.piccritic.database.user.Critic, com.piccritic.database.feedback.Comment)
-	 */
-	public Long getVoteId(Critic critic, Comment comment) {
-		if (critic == null || comment == null) {
-			return null;
-		}
-		String query = "SELECT v from Vote v WHERE v.critic = :cr AND v.comment = :co";
-		TypedQuery<Vote> v = container.getEntityProvider().getEntityManager().createQuery(query, Vote.class)
-				.setParameter("cr", critic)
-				.setParameter("co", comment);
-		List<Vote> votes = v.getResultList();
-		if (votes != null && votes.size() >= 1) {
-			return v.getResultList().get(0).getId();
-		} else {
-			return null;
-		}
 	}
 	
 	/* (non-Javadoc)
@@ -128,6 +112,10 @@ public class JPAVoteConnector extends JPAConnector<Vote> implements VoteConnecto
 		return !container.containsId(vote.getId());
 	}
 	
+	/*
+	 * (non-Javadoc)
+	 * @see com.piccritic.database.JPAConnector#validate(java.lang.Object)
+	 */
 	protected void validate(Vote vote) throws VoteException {
 		try{
 			super.validate(vote);
@@ -136,10 +124,33 @@ public class JPAVoteConnector extends JPAConnector<Vote> implements VoteConnecto
 		}
 	}
 	
+	/* (non-Javadoc)
+	 * @see com.piccritic.database.feedback.VoteConnector#getVoteId(com.piccritic.database.user.Critic, com.piccritic.database.feedback.Comment)
+	 */
+	public Long getVoteId(Critic critic, Comment comment) {
+		if (critic == null || comment == null) {
+			return null;
+		}
+		String query = "SELECT v from Vote v WHERE v.critic = :cr AND v.comment = :co";
+		TypedQuery<Vote> v = entity.createQuery(query, Vote.class)
+				.setParameter("cr", critic)
+				.setParameter("co", comment);
+		List<Vote> votes = v.getResultList();
+		if (votes != null && votes.size() >= 1) {
+			return v.getResultList().get(0).getId();
+		} else {
+			return null;
+		}
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see com.piccritic.database.feedback.VoteConnector#getScore(com.piccritic.database.feedback.Comment)
+	 */
 	@Override
 	public int getScore(Comment comment) {
 		String query = "SELECT v FROM Vote v WHERE v.comment = :comment";
-		TypedQuery<Vote> q = container.getEntityProvider().getEntityManager().createQuery(query, Vote.class)
+		TypedQuery<Vote> q = entity.createQuery(query, Vote.class)
 				.setParameter("comment", comment);
 		List<Vote> voteList = q.getResultList();
 		
@@ -154,10 +165,14 @@ public class JPAVoteConnector extends JPAConnector<Vote> implements VoteConnecto
 		return score;
 	}
 	
+	/*
+	 * (non-Javadoc)
+	 * @see com.piccritic.database.feedback.VoteConnector#getVotes(com.piccritic.database.feedback.Comment)
+	 */
 	@Override
 	public List<Vote> getVotes(Comment comment) {
 		String query = "SELECT v FROM Vote v WHERE v.comment = :comment";
-		TypedQuery<Vote> q = container.getEntityProvider().getEntityManager().createQuery(query, Vote.class)
+		TypedQuery<Vote> q = entity.createQuery(query, Vote.class)
 				.setParameter("comment", comment);
 		return q.getResultList();
 	}
