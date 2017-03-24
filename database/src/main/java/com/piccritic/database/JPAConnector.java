@@ -28,11 +28,11 @@ public abstract class JPAConnector<T> {
 	 * @param c - The class of the inherited JPAConnector, necessary to create a JPAContainer of a particular type.
 	 */
 	public JPAConnector(Class<T> c) {
-		container = JPAContainerFactory.make(c, entity);
 		Map<String, Object> configOverrides = new HashMap<String, Object>();
 		configOverrides.put("hibernate.connection.url", System.getenv("JDBC_DATABASE_URL"));
 
 		entity = Persistence.createEntityManagerFactory("postgres", configOverrides).createEntityManager();
+		container = JPAContainerFactory.make(c, entity);
 	}
 	
 	/**
