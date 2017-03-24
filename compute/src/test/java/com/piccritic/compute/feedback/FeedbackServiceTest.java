@@ -17,8 +17,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.piccritic.database.license.AttributionLicense;
-import com.piccritic.database.license.JPALicenseConnector;
 import com.piccritic.database.feedback.Comment;
 import com.piccritic.database.feedback.CommentConnector;
 import com.piccritic.database.feedback.CommentException;
@@ -31,8 +29,11 @@ import com.piccritic.database.feedback.RatingException;
 import com.piccritic.database.feedback.Vote;
 import com.piccritic.database.feedback.VoteConnector;
 import com.piccritic.database.feedback.VoteException;
+import com.piccritic.database.license.AttributionLicense;
 import com.piccritic.database.post.Album;
+import com.piccritic.database.post.AlbumConnector;
 import com.piccritic.database.post.AlbumException;
+import com.piccritic.database.post.JPAAlbumConnector;
 import com.piccritic.database.post.JPAPostConnector;
 import com.piccritic.database.post.Post;
 import com.piccritic.database.post.PostConnector;
@@ -68,14 +69,15 @@ public class FeedbackServiceTest {
 	private Set<Rating> ratings = new HashSet<Rating>();
 	private AttributionLicense license = new AttributionLicense();
 	
-	JPALicenseConnector lc = new JPALicenseConnector();
-	UserConnector uc = new JPAUserConnector();
-	PostConnector pc = new JPAPostConnector();
-	CommentConnector cc = new JPACommentConnector();
-	VoteConnector vc = new JPAVoteConnector();
-	RatingConnector rc = new JPARatingConnector();
+	//private JPALicenseConnector lc = new JPALicenseConnector(); //commented out because unused
+	private UserConnector uc = new JPAUserConnector();
+	private PostConnector pc = new JPAPostConnector();
+	private AlbumConnector ac = new JPAAlbumConnector();
+	private CommentConnector cc = new JPACommentConnector();
+	private VoteConnector vc = new JPAVoteConnector();
+	private RatingConnector rc = new JPARatingConnector();
 	
-	FeedbackServiceInterface fs = FeedbackService.createService();
+	private FeedbackServiceInterface fs = FeedbackService.createService();
 	
 	@Before
 	public void init() {
@@ -139,7 +141,7 @@ public class FeedbackServiceTest {
 			voter = uc.insertCritic(voter, "hash");
 
 			album.setCritic(critic);
-			album = pc.insertAlbum(album);
+			album = ac.insertAlbum(album);
 			
 			post.setAlbum(album);
 			posts.add(post);
@@ -320,7 +322,7 @@ public class FeedbackServiceTest {
 		try {
 			cc.deleteComment(comment);
 			pc.deletePost(post);
-			pc.deleteAlbum(album);
+			ac.deleteAlbum(album);
 		} catch (PostException | AlbumException e) {
 			e.getLocalizedMessage();
 		}

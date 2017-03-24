@@ -18,14 +18,13 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.piccritic.database.feedback.Comment;
+import com.piccritic.database.feedback.Rating;
 import com.piccritic.database.license.AttributionNonCommercialLicense;
 import com.piccritic.database.license.JPALicenseConnector;
 import com.piccritic.database.user.Critic;
 import com.piccritic.database.user.JPAUserConnector;
 import com.piccritic.database.user.UserConnector;
 import com.piccritic.database.user.UserException;
-import com.piccritic.database.feedback.CommentException;
-import com.piccritic.database.feedback.Rating;
 
 /**
  * This class uses JUnit to test the functionality
@@ -64,6 +63,7 @@ public class PostConnectorTest {
 	private Set<Rating> ratingSet = new HashSet<Rating>();
 
 	PostConnector pc = new JPAPostConnector();
+	AlbumConnector ac = new JPAAlbumConnector();
 	UserConnector uc = new JPAUserConnector();
 
 	@Before
@@ -111,7 +111,7 @@ public class PostConnectorTest {
 		try {
 			uc.insertCritic(critic, hash);
 			album.setCritic(critic);
-			pc.insertAlbum(album);
+			ac.insertAlbum(album);
 			post.setPath(path);
 			post.setLicense(new AttributionNonCommercialLicense());
 			post1.setPath(path1);
@@ -162,14 +162,14 @@ public class PostConnectorTest {
 
 	@Test
 	public void testSelectAlbum() {
-		assertEquals(album, pc.selectAlbum(album.getId()));
+		assertEquals(album, ac.selectAlbum(album.getId()));
 	}
 	
 	@Test
 	public void testUpdateAlbum() {
 		album.setName("new name");
 		try {
-			assertEquals(album, pc.updateAlbum(album));
+			assertEquals(album, ac.updateAlbum(album));
 		} catch (AlbumException e) {
 			fail(e.getMessage());
 		}
@@ -183,9 +183,9 @@ public class PostConnectorTest {
 			pc.deletePost(post2);
 			pc.deletePost(post3);
 			pc.deletePost(post4);
-			assertTrue(pc.deleteAlbum(album));
-			assertNull(pc.selectAlbum(album.getId()));
-			pc.insertAlbum(album);
+			assertTrue(ac.deleteAlbum(album));
+			assertNull(ac.selectAlbum(album.getId()));
+			ac.insertAlbum(album);
 			pc.insertPost(post);
 			pc.insertPost(post1);
 			pc.insertPost(post2);
@@ -228,7 +228,7 @@ public class PostConnectorTest {
 			pc.deletePost(post2);
 			pc.deletePost(post3);
 			pc.deletePost(post4);
-			pc.deleteAlbum(album);
+			ac.deleteAlbum(album);
 		} catch (Exception e) {
 			e.getLocalizedMessage();
 		}

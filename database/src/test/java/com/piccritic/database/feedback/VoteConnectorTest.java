@@ -1,5 +1,6 @@
 package com.piccritic.database.feedback;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import java.sql.Date;
 import java.util.HashSet;
@@ -12,7 +13,9 @@ import org.junit.Test;
 import com.piccritic.database.license.AttributionLicense;
 import com.piccritic.database.license.JPALicenseConnector;
 import com.piccritic.database.post.Album;
+import com.piccritic.database.post.AlbumConnector;
 import com.piccritic.database.post.AlbumException;
+import com.piccritic.database.post.JPAAlbumConnector;
 import com.piccritic.database.post.JPAPostConnector;
 import com.piccritic.database.post.Post;
 import com.piccritic.database.post.PostConnector;
@@ -21,7 +24,6 @@ import com.piccritic.database.user.Critic;
 import com.piccritic.database.user.JPAUserConnector;
 import com.piccritic.database.user.UserConnector;
 import com.piccritic.database.user.UserException;
-import com.piccritic.database.feedback.JPAVoteConnector;
 
 
 /**
@@ -50,6 +52,7 @@ public class VoteConnectorTest {
 	JPALicenseConnector lc = new JPALicenseConnector();
 	UserConnector uc = new JPAUserConnector();
 	PostConnector pc = new JPAPostConnector();
+	AlbumConnector ac = new JPAAlbumConnector();
 	CommentConnector cc = new JPACommentConnector();
 	VoteConnector vc = new JPAVoteConnector();
 	
@@ -92,7 +95,7 @@ public class VoteConnectorTest {
 		try {
 			critic = uc.insertCritic(critic, "hash");
 			album.setCritic(critic);
-			album = pc.insertAlbum(album);
+			album = ac.insertAlbum(album);
 			
 			post.setAlbum(album);
 			posts.add(post);
@@ -152,7 +155,7 @@ public class VoteConnectorTest {
 			vc.deleteVote(vote);
 			cc.deleteComment(comment);
 			pc.deletePost(post);
-			pc.deleteAlbum(album);
+			ac.deleteAlbum(album);
 		} catch (PostException | AlbumException | VoteException e) {
 			e.getLocalizedMessage();
 		}

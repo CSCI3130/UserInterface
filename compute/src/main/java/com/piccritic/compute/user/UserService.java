@@ -15,8 +15,9 @@ import java.util.Set;
 
 import com.piccritic.compute.hashing.Hasher;
 import com.piccritic.database.post.Album;
+import com.piccritic.database.post.AlbumConnector;
 import com.piccritic.database.post.AlbumException;
-import com.piccritic.database.post.JPAPostConnector;
+import com.piccritic.database.post.JPAAlbumConnector;
 import com.piccritic.database.user.Critic;
 import com.piccritic.database.user.JPAUserConnector;
 import com.piccritic.database.user.UserConnector;
@@ -28,7 +29,7 @@ import com.piccritic.database.user.UserException;
  */
 public class UserService implements UserServiceInterface {
   	private static UserServiceInterface instance;
-  	private static UserConnector connector;
+  	private static UserConnector uc;
     private static String createSuccess = "Profile successfully created!";
     private static String updateSuccess = "Profile successfully updated!";
     private static String createFailure = "Profile could not be created.";
@@ -37,7 +38,8 @@ public class UserService implements UserServiceInterface {
     private static String handleInUse = "Handle already in use.";
   	
   	private UserService() {
-      	connector = new JPAUserConnector();
+      	uc = new JPAUserConnector();
+      	
     }
   
   	public static UserServiceInterface createService() {
@@ -63,7 +65,7 @@ public class UserService implements UserServiceInterface {
   		}
 
 		critic.setJoinDate(new Date(Calendar.getInstance().getTime().getTime()));
-      	Critic selected = connector.selectCritic(critic.getHandle());
+      	Critic selected = uc.selectCritic(critic.getHandle());
       	if (selected != null) {
           	throw new UserException(handleInUse);
         }
@@ -71,7 +73,7 @@ public class UserService implements UserServiceInterface {
 		try {
 			Hasher hasher = new Hasher();
 			String hash = hasher.generateHash(password);
-			Critic inserted = connector.insertCritic(critic, hash);
+			Critic inserted = uc.insertCritic(critic, hash);
 			if (inserted == null) {
 				throw new UserException(createFailure);
 			}
@@ -89,8 +91,8 @@ public class UserService implements UserServiceInterface {
 		critic.setAlbums(albums);
 
 		try {
-			JPAPostConnector pc = new JPAPostConnector();
-			pc.insertAlbum(defaultAlbum);
+			AlbumConnector ac = new JPAAlbumConnector();
+			ac.insertAlbum(defaultAlbum);
 		} catch (AlbumException e) {
 			e.printStackTrace();
 			throw new UserException(e.getLocalizedMessage());
@@ -110,14 +112,14 @@ public class UserService implements UserServiceInterface {
 	 */
   	@Override
 	public String update(Critic critic, String password) throws UserException {
-      	Critic selected = connector.selectCritic(critic.getHandle());
+      	Critic selected = uc.selectCritic(critic.getHandle());
       	if (selected == null) {
         	throw new UserException(updateFailure);
         }
       
       	Critic updated;
       	if (password.isEmpty()) {
-          	updated = connector.updateCritic(critic);
+          	updated = uc.updateCritic(critic);
           	if (updated == null) {
               	throw new UserException(updateFailure);
             }
@@ -126,7 +128,7 @@ public class UserService implements UserServiceInterface {
 			try {
 				Hasher hasher = new Hasher();
 				String hash = hasher.generateHash(password);
-				Critic inserted = connector.insertCritic(critic, hash);
+				Critic inserted = uc.insertCritic(critic, hash);
 				if (inserted == null) {
 					throw new UserException(createFailure);
 				}
@@ -136,7 +138,7 @@ public class UserService implements UserServiceInterface {
 			}
         }
       
-      	String hash = connector.getUserHash(critic.getHandle());
+      	String hash = uc.getUserHash(critic.getHandle());
       	if (hash == null) {
         	throw new UserException(updateFailure);
         }
@@ -149,6 +151,6 @@ public class UserService implements UserServiceInterface {
 	 */
   	@Override
 	public Critic select(String handle) {
-  		return connector.selectCritic(handle);
+  		return uc.selectCritic(handle);
   	}
 }

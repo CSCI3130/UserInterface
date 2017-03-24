@@ -1,6 +1,7 @@
 package com.piccritic.database.feedback;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import java.sql.Date;
 import java.util.HashSet;
@@ -12,8 +13,11 @@ import org.junit.Test;
 
 import com.piccritic.database.license.AttributionLicense;
 import com.piccritic.database.license.JPALicenseConnector;
+import com.piccritic.database.license.LicenseConnector;
 import com.piccritic.database.post.Album;
+import com.piccritic.database.post.AlbumConnector;
 import com.piccritic.database.post.AlbumException;
+import com.piccritic.database.post.JPAAlbumConnector;
 import com.piccritic.database.post.JPAPostConnector;
 import com.piccritic.database.post.Post;
 import com.piccritic.database.post.PostConnector;
@@ -48,8 +52,9 @@ public class CommentConnectorTest {
 	private Set<Rating> ratings = new HashSet<Rating>();
 	private AttributionLicense license = new AttributionLicense();
 	
-	JPALicenseConnector lc = new JPALicenseConnector();
+	LicenseConnector lc = new JPALicenseConnector();
 	UserConnector uc = new JPAUserConnector();
+	AlbumConnector ac = new JPAAlbumConnector();
 	PostConnector pc = new JPAPostConnector();
 	CommentConnector cc = new JPACommentConnector();
 	
@@ -87,7 +92,7 @@ public class CommentConnectorTest {
 		try {
 			critic = uc.insertCritic(critic, "hash");
 			album.setCritic(critic);
-			album = pc.insertAlbum(album);
+			album = ac.insertAlbum(album);
 			post.setAlbum(album);
 			posts.add(post);
 			post = pc.insertPost(post);
@@ -125,7 +130,7 @@ public class CommentConnectorTest {
 		cc.deleteComment(comment);
 		try {
 			pc.deletePost(post);
-			pc.deleteAlbum(album);
+			ac.deleteAlbum(album);
 		} catch (PostException | AlbumException e) {
 			e.getLocalizedMessage();
 		}
