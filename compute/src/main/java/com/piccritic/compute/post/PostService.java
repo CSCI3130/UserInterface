@@ -12,6 +12,7 @@ import java.util.Set;
 
 import org.hibernate.Hibernate;
 
+import com.piccritic.compute.MasterConnector;
 import com.piccritic.compute.feedback.FeedbackService;
 import com.piccritic.compute.feedback.FeedbackServiceInterface;
 import com.piccritic.database.feedback.Comment;
@@ -21,13 +22,12 @@ import com.piccritic.database.feedback.VoteException;
 import com.piccritic.database.post.Album;
 import com.piccritic.database.post.AlbumConnector;
 import com.piccritic.database.post.AlbumException;
-import com.piccritic.database.post.JPAAlbumConnector;
-import com.piccritic.database.post.JPAPostConnector;
 import com.piccritic.database.post.Post;
 import com.piccritic.database.post.PostConnector;
 import com.piccritic.database.post.PostException;
 import com.piccritic.database.user.Critic;
-import com.piccritic.database.user.JPAUserConnector;	
+import com.piccritic.database.user.JPAUserConnector;
+import com.piccritic.database.user.UserConnector;	
 /**
  * This class implements the PostServiceInterface.
  * 
@@ -39,9 +39,17 @@ public class PostService implements PostServiceInterface {
 	
 	public static final String USERS_DIR = "users";
 
-	static PostConnector pc = new JPAPostConnector();
-	static AlbumConnector ac = new JPAAlbumConnector();
+	static PostConnector pc;
+	static AlbumConnector ac;
+	static UserConnector uc;
 	private FeedbackServiceInterface fs = FeedbackService.createService();
+	
+	public PostService() {
+		MasterConnector.init();
+		pc = MasterConnector.postConnector;
+		ac = MasterConnector.albumConnector;
+		uc = MasterConnector.userConnector;
+	}
 	
 	public File getImageFile(String handle) {
 		Path p0 = Paths.get(USERS_DIR, handle);
@@ -120,7 +128,7 @@ public class PostService implements PostServiceInterface {
 	}
 
 	public Album getDefaultAlbum(String handle) {
-		JPAUserConnector uc = new JPAUserConnector();
+		uc = new JPAUserConnector();
 		Critic user = uc.selectCritic(handle);
 		Set<Album> albums = user.getAlbums();
 		Hibernate.initialize(albums);

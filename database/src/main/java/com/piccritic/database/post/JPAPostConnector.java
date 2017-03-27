@@ -82,7 +82,7 @@ public class JPAPostConnector extends JPAConnector<Post> implements PostConnecto
 		try {
 			super.validate(post);
 		} catch(Exception e) {
-			throw new PostException(e.getMessage());
+			throw new PostException(e.getLocalizedMessage());
 		}
 	}
 	

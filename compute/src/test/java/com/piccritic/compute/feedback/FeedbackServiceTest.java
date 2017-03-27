@@ -17,6 +17,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.piccritic.compute.MasterConnector;
 import com.piccritic.database.feedback.Comment;
 import com.piccritic.database.feedback.CommentConnector;
 import com.piccritic.database.feedback.CommentException;
@@ -70,17 +71,25 @@ public class FeedbackServiceTest {
 	private AttributionLicense license = new AttributionLicense();
 	
 	//private JPALicenseConnector lc = new JPALicenseConnector(); //commented out because unused
-	private UserConnector uc = new JPAUserConnector();
-	private PostConnector pc = new JPAPostConnector();
-	private AlbumConnector ac = new JPAAlbumConnector();
-	private CommentConnector cc = new JPACommentConnector();
-	private VoteConnector vc = new JPAVoteConnector();
-	private RatingConnector rc = new JPARatingConnector();
+	private UserConnector uc;
+	private PostConnector pc;
+	private AlbumConnector ac;
+	private CommentConnector cc;
+	private VoteConnector vc;
+	private RatingConnector rc;
 	
 	private FeedbackServiceInterface fs = FeedbackService.createService();
 	
 	@Before
 	public void init() {
+		MasterConnector.init();
+		uc = MasterConnector.userConnector;
+		pc = MasterConnector.postConnector;
+		ac = MasterConnector.albumConnector;
+		cc = MasterConnector.commentConnector;
+		vc = MasterConnector.voteConnector;
+		rc = MasterConnector.ratingConnector;
+		
 		critic.setHandle("tester");
 		critic.setFirstName("firstName");
 		critic.setLastName("lastName");

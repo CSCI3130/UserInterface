@@ -13,6 +13,7 @@ import java.util.Calendar;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.piccritic.compute.MasterConnector;
 import com.piccritic.compute.hashing.Hasher;
 import com.piccritic.database.post.Album;
 import com.piccritic.database.post.AlbumConnector;
@@ -30,6 +31,7 @@ import com.piccritic.database.user.UserException;
 public class UserService implements UserServiceInterface {
   	private static UserServiceInterface instance;
   	private static UserConnector uc;
+  	private static AlbumConnector ac;
     private static String createSuccess = "Profile successfully created!";
     private static String updateSuccess = "Profile successfully updated!";
     private static String createFailure = "Profile could not be created.";
@@ -38,7 +40,9 @@ public class UserService implements UserServiceInterface {
     private static String handleInUse = "Handle already in use.";
   	
   	private UserService() {
-      	uc = new JPAUserConnector();
+      	MasterConnector.init();
+  		uc = MasterConnector.userConnector;
+  		ac = MasterConnector.albumConnector;
       	
     }
   
@@ -91,7 +95,7 @@ public class UserService implements UserServiceInterface {
 		critic.setAlbums(albums);
 
 		try {
-			AlbumConnector ac = new JPAAlbumConnector();
+			ac = new JPAAlbumConnector();
 			ac.insertAlbum(defaultAlbum);
 		} catch (AlbumException e) {
 			e.printStackTrace();

@@ -46,7 +46,7 @@ public class ViewUserPostsIT extends PicCriticIT {
 	Critic critic = new Critic();
 	
 	private String firstName = "firstName";
-	private String handle = "handle";
+	private String handle = "handleVUPIT";
 	private String lastName = "lastName";
 	private String hash = "hash";
 	private String albumName = "album";

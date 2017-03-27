@@ -4,10 +4,11 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.openqa.selenium.phantomjs.PhantomJSDriver;
 
-import com.piccritic.compute.user.UserService;
+import com.piccritic.compute.MasterConnector;
+import com.piccritic.compute.MasterService;
 import com.piccritic.compute.user.UserServiceInterface;
 import com.piccritic.database.license.AttributionLicense;
-import com.piccritic.database.license.JPALicenseConnector;
+import com.piccritic.database.license.LicenseConnector;
 import com.piccritic.database.user.UserException;
 import com.vaadin.testbench.ScreenshotOnFailureRule;
 import com.vaadin.testbench.TestBenchTestCase;
@@ -21,8 +22,8 @@ import com.vaadin.testbench.elements.TextFieldElement;
  * @author Damien <br> Francis bosse
  */
 public class PicCriticIT extends TestBenchTestCase {
-	public UserServiceInterface userService = UserService.createService();
-	public JPALicenseConnector lc = new JPALicenseConnector();
+	public UserServiceInterface userService = MasterService.userService;
+	public LicenseConnector lc = MasterConnector.licenseConnector;
 
 	@Rule
 	public ScreenshotOnFailureRule screenshotOnFailureRule =

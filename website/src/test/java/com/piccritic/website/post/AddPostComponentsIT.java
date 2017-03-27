@@ -47,7 +47,7 @@ public class AddPostComponentsIT extends PicCriticIT {
 	Vote vote = new Vote();
 	
 	private String firstName = "firstName";
-	private String handle = "handle";
+	private String handle = "handleAPCIT";
 	private String lastName = "lastName";
 	private String hash = "hash";
 	private String albumName = "album";
