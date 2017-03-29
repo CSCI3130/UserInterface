@@ -4,8 +4,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
-import java.net.MalformedURLException;
 
+import com.piccritic.compute.MasterService;
 import com.piccritic.database.post.Post;
 import com.piccritic.website.PicCritic;
 import com.vaadin.ui.Notification;
@@ -52,10 +52,6 @@ class ImageReceiver implements Receiver {
 		if (ui == null) {
 			return null;
 		}
-
-		if (ui.postService == null) {
-			return null;
-		}
 		
 		if (filename == null || filename.equals("")) {
 			return null;
@@ -63,7 +59,7 @@ class ImageReceiver implements Receiver {
 
 		System.out.println(post.getPath());
 		if (post == null || post.getPath() == null) {
-			file = ui.postService.getImageFile(handle);
+			file = MasterService.postService.getImageFile(handle);
 			post.setPath(file.getPath().replaceAll("\\\\", "/"));
 		}
 		FileOutputStream fos;

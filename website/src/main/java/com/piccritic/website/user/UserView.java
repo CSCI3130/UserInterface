@@ -1,6 +1,10 @@
 package com.piccritic.website.user;
 
-import com.piccritic.compute.user.UserService;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+import com.piccritic.compute.MasterService;
 import com.piccritic.compute.user.UserServiceInterface;
 import com.piccritic.database.post.Album;
 import com.piccritic.database.post.Post;
@@ -10,10 +14,6 @@ import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Notification.Type;
-
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 
 /**
  * This class implements the users posts page
@@ -31,7 +31,7 @@ public class UserView extends PostQuickView implements View {
 	@Override
 	public void enter(ViewChangeEvent event) {
 		if (event.getParameters() != null && event.getParameters() != "") {
-			UserServiceInterface service = UserService.createService();
+			UserServiceInterface service = MasterService.userService;
 			Critic critic = service.select(event.getParameters());
 			if (critic != null) {
 				Iterator<Album> i = critic.getAlbums().iterator();

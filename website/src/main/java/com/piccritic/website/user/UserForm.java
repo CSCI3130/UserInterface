@@ -4,6 +4,7 @@
  */
 package com.piccritic.website.user;
 
+import com.piccritic.compute.MasterService;
 import com.piccritic.database.user.Critic;
 import com.piccritic.database.user.UserException;
 import com.piccritic.website.PicCritic;
@@ -54,7 +55,7 @@ public class UserForm extends FormLayout {
 	public UserForm(String userHandle) {
 		newProfile = (userHandle == null);
 		handle.setValue((userHandle == null) ? "" : userHandle);
-		critic = PicCritic.userService.select(userHandle);
+		critic = MasterService.userService.select(userHandle);
 		if (critic != null) {
 			firstName.setValue(critic.getFirstName());
 			lastName.setValue(critic.getLastName());
@@ -101,9 +102,9 @@ public class UserForm extends FormLayout {
 
 		try {
 			if (newProfile) {
-				status = PicCritic.userService.create(critic, password.getValue());
+				status = MasterService.userService.create(critic, password.getValue());
 			} else {
-				status = PicCritic.userService.update(critic, password.getValue());
+				status = MasterService.userService.update(critic, password.getValue());
 			}
 		} catch (UserException ue) {
 			Notification.show(ue.getLocalizedMessage(), Type.WARNING_MESSAGE);

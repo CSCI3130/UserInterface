@@ -1,5 +1,6 @@
 package com.piccritic.compute.license;
 
+import com.piccritic.compute.MasterConnector;
 import com.piccritic.database.license.AttributionLicense;
 import com.piccritic.database.license.AttributionNoDerivsLicense;
 import com.piccritic.database.license.AttributionNonComNDerivsLicense;
@@ -12,8 +13,13 @@ import com.piccritic.database.license.LicenseConnector;
 
 public class LicenseService implements LicenseServiceInterface {
 
-	public LicenseConnector lc = new JPALicenseConnector();
+	public LicenseConnector lc;
 
+	public LicenseService() {
+		MasterConnector.init();
+		lc = MasterConnector.licenseConnector;
+	}
+	
 	@Override
 	public AttributionLicense makeAttribution() {
 		return (AttributionLicense) lc.selectLicense(License.ATTRIBUTION);

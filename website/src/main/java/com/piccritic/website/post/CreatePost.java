@@ -3,7 +3,9 @@ package com.piccritic.website.post;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.piccritic.compute.MasterService;
 import com.piccritic.compute.post.PostService;
+import com.piccritic.compute.post.PostServiceInterface;
 import com.piccritic.database.post.Album;
 import com.piccritic.database.post.AlbumException;
 import com.piccritic.database.post.Post;
@@ -24,7 +26,6 @@ import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.Upload;
-import com.vaadin.ui.Upload.ChangeListener;
 import com.vaadin.ui.Upload.SucceededEvent;
 import com.vaadin.ui.Upload.SucceededListener;
 import com.vaadin.ui.Window;
@@ -48,7 +49,7 @@ public class CreatePost extends Window implements SucceededListener {
 	private ImageReceiver receiver;
 	private Image image = new Image("Uploaded Image");
 	private Button confirm = new Button("Confirm", this::confirmUpload);
-	private PostService service = new PostService();
+	private PostServiceInterface service = MasterService.postService;
 	private String handle;
 	private FormLayout form = new FormLayout();
 

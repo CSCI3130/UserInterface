@@ -8,6 +8,7 @@ import java.sql.Date;
 import java.util.Calendar;
 import java.util.List;
 
+import com.piccritic.compute.MasterConnector;
 import com.piccritic.database.feedback.Comment;
 import com.piccritic.database.feedback.CommentConnector;
 import com.piccritic.database.feedback.CommentException;
@@ -46,10 +47,20 @@ public class FeedbackService implements FeedbackServiceInterface {
   	final private static int repLoss = -1;
   	
   	private FeedbackService() {
-      	cc = new JPACommentConnector();
-      	vc = new JPAVoteConnector();
-      	rc = new JPARatingConnector();
-      	pc = new JPAPostConnector();
+      	MasterConnector.init();
+  		cc = MasterConnector.commentConnector;
+      	vc = MasterConnector.voteConnector;
+      	rc = MasterConnector.ratingConnector;
+      	pc = MasterConnector.postConnector;
+    }
+  	
+  	public static FeedbackServiceInterface createService() {
+      	if (instance == null) {
+			final FeedbackServiceInterface service = new FeedbackService();
+          	instance = service;
+        }
+      	
+      	return instance;
     }
   	
   	/* (non-Javadoc)
@@ -92,14 +103,6 @@ public class FeedbackService implements FeedbackServiceInterface {
 		return ratingWeight;
 	}
   
-  	public static FeedbackServiceInterface createService() {
-      	if (instance == null) {
-			final FeedbackServiceInterface service = new FeedbackService();
-          	instance = service;
-        }
-      	
-      	return instance;
-    }
   	
   	/* (non-Javadoc)
 	 * @see com.piccritic.compute.feedback.FeedbackServiceInterface#getComments(com.piccritic.database.post.Post)
