@@ -153,6 +153,7 @@ public class CreatePost extends Window implements SucceededListener {
 			description.validate();
 			post.setDescription(description.getValue());
 			post.setTitle(title.getValue());
+			post.setLicense(license.getValue());
 			if (service != null) {
 				Album defaultAlbum = service.getDefaultAlbum(LoginService.getHandle());
 				post.setAlbum(defaultAlbum);
