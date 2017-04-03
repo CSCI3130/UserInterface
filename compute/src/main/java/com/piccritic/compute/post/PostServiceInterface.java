@@ -9,6 +9,7 @@ import com.piccritic.database.post.Album;
 import com.piccritic.database.post.AlbumException;
 import com.piccritic.database.post.Post;
 import com.piccritic.database.post.PostException;
+import com.piccritic.database.post.PostConnector.PostSortOption;
 
 /**
  * 
@@ -18,7 +19,7 @@ import com.piccritic.database.post.PostException;
  *
  */
 public interface PostServiceInterface {
-
+	
 	/**
 	 * Returns a FileOutputStream where the current file should be stored. Used
 	 * by the front-end to store an Image object.
@@ -84,4 +85,13 @@ public interface PostServiceInterface {
 	 * @throws PostException
 	 */
 	public List<Post> getPosts(int number) throws PostException;
+	
+	/**
+	 * Gets a specified number of posts from the database, sorted by option.
+	 * @param number of posts to get.
+	 * @param option to sort posts by.
+	 * @return sorted list of posts from the database.
+	 * @throws PostException
+	 */
+	public List<Post> getPosts(int number, PostSortOption option) throws PostException;
 }

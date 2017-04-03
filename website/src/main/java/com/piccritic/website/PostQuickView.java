@@ -1,12 +1,16 @@
 package com.piccritic.website;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 import com.piccritic.database.post.Post;
+import com.vaadin.data.Property.ValueChangeEvent;
+import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.server.FileResource;
 import com.vaadin.ui.Alignment;
+import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Image;
 import com.vaadin.ui.Label;
@@ -19,13 +23,40 @@ public class PostQuickView extends GridLayout {
 	Image image;
 
 	public PostQuickView() {
-		super(3, 3);
+		super(4, 3);
 		setSizeFull();
 		setHeightUndefined();
 	}
 
 	public void initPosts(List<Post> posts) {
+		this.removeAllComponents();
+		
 		System.out.println("does this happen twice?");
+		
+		//add sorting options combo box
+		List<String> sortOptions = new ArrayList<>();
+		sortOptions.add("Title");
+		sortOptions.add("Upload Date");
+		
+		ComboBox select = new ComboBox("Select sorting option");
+		select.addItems(sortOptions);
+		
+		ValueChangeListener listener = new ValueChangeListener() {
+
+			@Override
+			public void valueChange(ValueChangeEvent event) {
+				String option = (String) event.getProperty().getValue();
+				option = option.replaceAll(" ", "");
+				UI.getCurrent().getPage().setLocation("#!home/" + option);
+				UI.getCurrent().getPage().reload();
+			}
+		};
+		
+		select.addValueChangeListener(listener);
+		
+		addComponent(select, 0, 0, 3, 1);
+		
+		//add posts
 		Iterator<Post> it = posts.iterator();
 		for (int y = 0; y < 9; y++) {
 			if (it.hasNext()) {

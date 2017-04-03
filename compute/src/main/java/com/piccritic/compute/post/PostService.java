@@ -25,6 +25,7 @@ import com.piccritic.database.post.AlbumException;
 import com.piccritic.database.post.Post;
 import com.piccritic.database.post.PostConnector;
 import com.piccritic.database.post.PostException;
+import com.piccritic.database.post.PostConnector.PostSortOption;
 import com.piccritic.database.user.Critic;
 import com.piccritic.database.user.JPAUserConnector;
 import com.piccritic.database.user.UserConnector;	
@@ -149,6 +150,11 @@ public class PostService implements PostServiceInterface {
 	@Override
 	public List<Post> getPosts(int number) throws PostException {
 		return pc.getPosts(number);
+	}
+	
+	
+	public List<Post> getPosts(int number, PostSortOption option) throws PostException {
+		return pc.getPosts(number, option);
 	}
 	
 }
