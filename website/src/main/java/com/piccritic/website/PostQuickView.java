@@ -37,6 +37,7 @@ public class PostQuickView extends GridLayout {
 		List<String> sortOptions = new ArrayList<>();
 		sortOptions.add("Title");
 		sortOptions.add("Upload Date");
+		sortOptions.add("License");
 		
 		ComboBox select = new ComboBox("Select sorting option");
 		select.addItems(sortOptions);

@@ -46,6 +46,8 @@ public class DefaultView extends PostQuickView implements View {
 			option = PostSortOption.TITLE;
 		} else if (sortOption.equals("UploadDate")) {
 			option = PostSortOption.UPLOAD_DATE;
+		} else if (sortOption.equals("License")) {
+			option = PostSortOption.LICENSE;
 		}
 		posts.clear();
 		

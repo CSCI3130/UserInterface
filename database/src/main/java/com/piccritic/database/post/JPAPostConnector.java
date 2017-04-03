@@ -135,13 +135,19 @@ public class JPAPostConnector extends JPAConnector<Post> implements PostConnecto
 			TypedQuery<Post> q;
 			switch (option) {
 				case UPLOAD_DATE:
-					q = entity.createQuery("SELECT c from Post c ORDER BY c.uploadDate", Post.class);
+					q = entity.createQuery("SELECT p FROM Post p ORDER BY p.uploadDate", Post.class);
 					break;
 				case TITLE:
-					q = entity.createQuery("SELECT c from Post c ORDER BY c.title", Post.class);
+					q = entity.createQuery("SELECT p FROM Post p ORDER BY p.title", Post.class);
 					break;
+				case LICENSE:
+					q = entity.createQuery("SELECT p FROM Post p LEFT JOIN p.license l ORDER BY l.licenseType", Post.class);
+					break;
+//				case NUM_COMMENTS:
+//					q = entity.createQuery("SELECT p FROM Post p JOIN p.comments comments GROUP BY p.path ORDER BY COUNT(p.path)", Post.class);
+//					break;
 				default:
-					q = entity.createQuery("SELECT c from Post c", Post.class);
+					q = entity.createQuery("SELECT p FROM Post p", Post.class);
 					break;
 			}
 			q.setMaxResults(number);

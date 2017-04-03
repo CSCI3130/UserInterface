@@ -20,7 +20,8 @@ public interface PostConnector {
 
 	public enum PostSortOption {
 		UPLOAD_DATE,
-		TITLE
+		TITLE,
+		LICENSE
 	}
 	
 	/**
