@@ -1,9 +1,6 @@
 package com.piccritic.database.feedback;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 import java.sql.Date;
 import java.util.HashSet;
@@ -136,6 +133,18 @@ public class RatingConnectorTest {
 		} catch (RatingException e) {
 			fail(e.getLocalizedMessage());
 		}
+	}
+	
+	@Test
+	public void TestQueryRating() {
+	  assertNotNull(rc.queryRating(post, critic));
+	  /*
+	  Post tmpPost = new Post();
+	  assertNull(rc.queryRating(tmpPost, critic));
+	  Critic tmpCritic = new Critic();
+	  assertNull(rc.queryRating(tmpPost, tmpCritic));
+	  assertNull(rc.queryRating(post, tmpCritic));
+	  */
 	}
 	
 	@After

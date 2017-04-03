@@ -15,6 +15,7 @@ import com.piccritic.database.feedback.CommentException;
 import com.piccritic.database.feedback.VoteException;
 import com.piccritic.database.post.Post;
 import com.piccritic.database.post.PostException;
+import com.piccritic.database.user.Critic;
 import com.piccritic.website.feedback.CommentComponent;
 import com.piccritic.website.feedback.CommentForm;
 import com.piccritic.website.feedback.RatingComponent;
@@ -43,7 +44,7 @@ public class ViewPost extends VerticalLayout implements View {
 	private Post post; // post object to view
 	private Image image = new Image();
 	private Label postDescription = new Label();
-	private RatingComponent ratings = new RatingComponent();
+	private RatingComponent ratings;
 	private List<Comment> comments;
 	private UserServiceInterface us = MasterService.userService;
 	private FeedbackServiceInterface fs = MasterService.feedbackService;
@@ -59,7 +60,6 @@ public class ViewPost extends VerticalLayout implements View {
 	public ViewPost() {
 		addComponent(image);
 		addComponent(postDescription);
-		addComponent(ratings);
 		addComponent(license);
 		setMargin(true);
 		setSpacing(true);
@@ -84,7 +84,7 @@ public class ViewPost extends VerticalLayout implements View {
 			delete.addClickListener(e -> {
 				try {
 					service.deletePost(post);
-					Notification.show("Post deleted successfuly", Type.TRAY_NOTIFICATION);
+					Notification.show("Post deleted successfully", Type.TRAY_NOTIFICATION);
 				} catch (PostException | CommentException | VoteException e1) {
 					Notification.show(e1.getLocalizedMessage(), Type.WARNING_MESSAGE);
 				}
@@ -97,6 +97,9 @@ public class ViewPost extends VerticalLayout implements View {
 		
 		if (LoginService.getLoginStatus() == LoginStatus.LOGGED_IN) {
 			addComponent(commentForm);
+      Critic loggedInUser = MasterService.userService.select(LoginService.getHandle());
+      ratings = new RatingComponent(post, loggedInUser);
+			addComponent(ratings);
 		}
 		
 		try {

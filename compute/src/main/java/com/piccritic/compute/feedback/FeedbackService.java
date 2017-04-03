@@ -35,92 +35,111 @@ import com.piccritic.database.user.Critic;
  */
 public class FeedbackService implements FeedbackServiceInterface {
 	private static FeedbackServiceInterface instance;
-  	private static CommentConnector cc;
-  	private static VoteConnector vc;
-  	private static RatingConnector rc;
-  	private static PostConnector pc;
-  	
-  	final private static int upperScoreLimit = 2;
-  	final private static int lowerScoreLimit = -5;
-  	final private static int ratingWeight = 2; 
-  	final private static int repGain = 1;
-  	final private static int repLoss = -1;
-  	
-  	private FeedbackService() {
-      	MasterConnector.init();
-  		cc = MasterConnector.commentConnector;
-      	vc = MasterConnector.voteConnector;
-      	rc = MasterConnector.ratingConnector;
-      	pc = MasterConnector.postConnector;
-    }
-  	
-  	public static FeedbackServiceInterface createService() {
-      	if (instance == null) {
+	private static CommentConnector cc;
+	private static VoteConnector vc;
+	private static RatingConnector rc;
+	private static PostConnector pc;
+	
+	final private static int upperScoreLimit = 2;
+	final private static int lowerScoreLimit = -5;
+	final private static int ratingWeight = 2;
+	final private static int repGain = 1;
+	final private static int repLoss = -1;
+	
+	private FeedbackService() {
+		MasterConnector.init();
+		cc = MasterConnector.commentConnector;
+		vc = MasterConnector.voteConnector;
+		rc = MasterConnector.ratingConnector;
+		pc = MasterConnector.postConnector;
+	}
+	
+	public static FeedbackServiceInterface createService() {
+		if (instance == null) {
 			final FeedbackServiceInterface service = new FeedbackService();
-          	instance = service;
-        }
-      	
-      	return instance;
-    }
-  	
-  	/* (non-Javadoc)
-	 * @see com.piccritic.compute.feedback.FeedbackServiceInterface#getUpperScoreLimit()
+			instance = service;
+		}
+		
+		return instance;
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.piccritic.compute.feedback.FeedbackServiceInterface#
+	 * getUpperScoreLimit()
 	 */
-  	@Override
+	@Override
 	public int getUpperScoreLimit() {
-  		return upperScoreLimit;
-  	}
-  	
-  	/* (non-Javadoc)
-	 * @see com.piccritic.compute.feedback.FeedbackServiceInterface#getLowerScoreLimit()
+		return upperScoreLimit;
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.piccritic.compute.feedback.FeedbackServiceInterface#
+	 * getLowerScoreLimit()
 	 */
-  	@Override
-	public int  getLowerScoreLimit() {
-  		return lowerScoreLimit;
-  	}
-  	
-  	/* (non-Javadoc)
+	@Override
+	public int getLowerScoreLimit() {
+		return lowerScoreLimit;
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.piccritic.compute.feedback.FeedbackServiceInterface#getRepGain()
 	 */
-  	@Override
+	@Override
 	public int getRepGain() {
-  		return repGain;
-  	}
-  	
-  	/* (non-Javadoc)
+		return repGain;
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.piccritic.compute.feedback.FeedbackServiceInterface#getRepLoss()
 	 */
-  	@Override
+	@Override
 	public int getRepLoss() {
-  		return repLoss;
-  	}
-  	
-  	/*
-  	 * (non-Javadoc)
-  	 * @see com.piccritic.compute.feedback.FeedbackServiceInterface#getRatingWeight()
-  	 */
-	public int getRatingWeight(){
+		return repLoss;
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.piccritic.compute.feedback.FeedbackServiceInterface#getRatingWeight()
+	 */
+	public int getRatingWeight() {
 		return ratingWeight;
 	}
-  
-  	
-  	/* (non-Javadoc)
-	 * @see com.piccritic.compute.feedback.FeedbackServiceInterface#getComments(com.piccritic.database.post.Post)
+	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.piccritic.compute.feedback.FeedbackServiceInterface#getComments(com.
+	 * piccritic.database.post.Post)
 	 */
 	@Override
 	public List<Comment> getComments(Post post) throws PostException {
-		//return pc.selectPost(post.getPath()).getComments();
+		// return pc.selectPost(post.getPath()).getComments();
 		return cc.getComments(post);
 	}
-
-	/* (non-Javadoc)
-	 * @see com.piccritic.compute.feedback.FeedbackServiceInterface#insertComment(com.piccritic.database.feedback.Comment)
+	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.piccritic.compute.feedback.FeedbackServiceInterface#insertComment(com
+	 * .piccritic.database.feedback.Comment)
 	 */
 	@Override
 	public Comment insertComment(Comment comment) throws CommentException {
 		if (comment.getCreationDate() == null) {
-			comment.setCreationDate( new Date(Calendar.getInstance().getTime().getTime()));
-		}	
+			comment.setCreationDate(new Date(Calendar.getInstance().getTime().getTime()));
+		}
 		Comment inserted = cc.insertComment(comment);
 		if (inserted == null) {
 			throw new CommentException("Error inserting comment.");
@@ -128,16 +147,24 @@ public class FeedbackService implements FeedbackServiceInterface {
 		return inserted;
 	}
 	
-	/* (non-Javadoc)
-	 * @see com.piccritic.compute.feedback.FeedbackServiceInterface#deleteComment(com.piccritic.database.feedback.Comment)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.piccritic.compute.feedback.FeedbackServiceInterface#deleteComment(com
+	 * .piccritic.database.feedback.Comment)
 	 */
 	@Override
 	public boolean deleteComment(Comment comment) throws CommentException {
 		return cc.deleteComment(comment);
 	}
 	
-	/* (non-Javadoc)
-	 * @see com.piccritic.compute.feedback.FeedbackServiceInterface#getAvgRatings(com.piccritic.database.post.Post)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.piccritic.compute.feedback.FeedbackServiceInterface#getAvgRatings(com
+	 * .piccritic.database.post.Post)
 	 */
 	@Override
 	public Rating getAvgRatings(Post post) {
@@ -157,18 +184,21 @@ public class FeedbackService implements FeedbackServiceInterface {
 		}
 		
 		int size = post.getRatings().size();
-
-		avg.setFocus(focus/size);
-		avg.setColor(color/size);
-		avg.setExposure(exposure/size);
-		avg.setLighting(lighting/size);
-		avg.setComposition(composition/size);
+		if (size == 0) size = 1;
+		avg.setFocus(focus / size);
+		avg.setColor(color / size);
+		avg.setExposure(exposure / size);
+		avg.setLighting(lighting / size);
+		avg.setComposition(composition / size);
 		
 		return avg;
 	}
 	
-	/* (non-Javadoc)
-	 * @see com.piccritic.compute.feedback.FeedbackServiceInterface#getVote(com.piccritic.database.user.Critic, com.piccritic.database.feedback.Comment)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.piccritic.compute.feedback.FeedbackServiceInterface#getVote(com.
+	 * piccritic.database.user.Critic, com.piccritic.database.feedback.Comment)
 	 */
 	@Override
 	public Vote getVote(Critic critic, Comment comment) {
@@ -180,8 +210,12 @@ public class FeedbackService implements FeedbackServiceInterface {
 		}
 	}
 	
-	/* (non-Javadoc)
-	 * @see com.piccritic.compute.feedback.FeedbackServiceInterface#insertVote(com.piccritic.database.feedback.Vote)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.piccritic.compute.feedback.FeedbackServiceInterface#insertVote(com.
+	 * piccritic.database.feedback.Vote)
 	 */
 	@Override
 	public Vote insertVote(Vote vote) {
@@ -201,8 +235,12 @@ public class FeedbackService implements FeedbackServiceInterface {
 		return inserted;
 	}
 	
-	/* (non-Javadoc)
-	 * @see com.piccritic.compute.feedback.FeedbackServiceInterface#deleteVote(com.piccritic.database.feedback.Vote)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.piccritic.compute.feedback.FeedbackServiceInterface#deleteVote(com.
+	 * piccritic.database.feedback.Vote)
 	 */
 	@Override
 	public boolean deleteVote(Vote vote) throws VoteException {
@@ -213,29 +251,33 @@ public class FeedbackService implements FeedbackServiceInterface {
 		return vc.deleteVote(v);
 	}
 	
-	/* (non-Javadoc)
-	 * @see com.piccritic.compute.feedback.FeedbackServiceInterface#getScore(com.piccritic.database.feedback.Comment)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.piccritic.compute.feedback.FeedbackServiceInterface#getScore(com.
+	 * piccritic.database.feedback.Comment)
 	 */
 	@Override
 	public int getScore(Comment comment) {
 		return vc.getScore(comment);
 	}
 	
-	
 	/*
 	 * (non-Javadoc)
-	 * @see com.piccritic.compute.feedback.FeedbackServiceInterface#getCriticCommentReputation(com.piccritic.database.user.Critic)
+	 * 
+	 * @see com.piccritic.compute.feedback.FeedbackServiceInterface#
+	 * getCriticCommentReputation(com.piccritic.database.user.Critic)
 	 */
 	@Override
-	public int getCriticCommentReputation(Critic critic){
+	public int getCriticCommentReputation(Critic critic) {
 		int total = 0;
 		List<Comment> comments = cc.getComments(critic);
-		for(Comment comment : comments){
+		for (Comment comment : comments) {
 			int score = getScore(comment);
-			if(score >= upperScoreLimit){
+			if (score >= upperScoreLimit) {
 				total += repGain;
-			}
-			else if(score <= lowerScoreLimit){
+			} else if (score <= lowerScoreLimit) {
 				total += repLoss;
 			}
 		}
@@ -244,64 +286,78 @@ public class FeedbackService implements FeedbackServiceInterface {
 	
 	/*
 	 * (non-Javadoc)
-	 * @see com.piccritic.compute.feedback.FeedbackServiceInterface#getCriticPostReputation(com.piccritic.database.user.Critic)
+	 * 
+	 * @see com.piccritic.compute.feedback.FeedbackServiceInterface#
+	 * getCriticPostReputation(com.piccritic.database.user.Critic)
 	 */
 	public int getCriticPostReputation(Critic critic) {
 		int total = 0;
-		//TODO unsure if the following line has consequences, but it seemed necessary. maybe add a fs.refresh method?
-		pc = new JPAPostConnector(); //refreshes DB connection
+		// TODO unsure if the following line has consequences, but it seemed
+		// necessary. maybe add a fs.refresh method?
+		pc = new JPAPostConnector(); // refreshes DB connection
 		List<Post> posts = pc.getPosts(critic);
-		for(Post post : posts) {
+		for (Post post : posts) {
 			Rating avg = getAvgRatings(post);
-			if(avg.getAverage() >= 2.5){
+			if (avg.getAverage() >= 2.5) {
 				total += repGain;
-			}
-			else if(avg.getAverage() < 2.5){
+			} else if (avg.getAverage() < 2.5) {
 				total += repLoss;
 			}
 		}
 		return total;
 	}
 	
-	/* (non-Javadoc)
-	 * @see com.piccritic.compute.feedback.FeedbackServiceInterface#calculateReputation(com.piccritic.database.user.Critic)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.piccritic.compute.feedback.FeedbackServiceInterface#
+	 * calculateReputation(com.piccritic.database.user.Critic)
 	 */
 	public long calculateReputation(Critic critic) {
 		int commentRep = getCriticCommentReputation(critic);
 		int ratingRep = getCriticPostReputation(critic);
-		int totalRep = commentRep + ratingRep*ratingWeight;
+		int totalRep = commentRep + ratingRep * ratingWeight;
 		
-		return totalRep; 
+		return totalRep;
 	}
-
+	
+	public Rating queryRating(Post post, Critic critic) {
+		if (post == null || critic == null) {
+			return null;
+		}
+		
+		return MasterConnector.ratingConnector.queryRating(post, critic);
+	}
+	
 	@Override
 	public Rating insertRating(Rating rating) throws RatingException {
 		return rc.insertRating(rating);
 	}
-
+	
 	@Override
 	public boolean deleteRating(Rating rating) {
-		if( rating == null | rating.getCritic() == null | rating.getPost() == null) {
+		if (rating == null | rating.getCritic() == null | rating.getPost() == null) {
 			return false;
 		}
 		Rating tmp = rc.selectRating(rating.getId());
 		return rc.deleteRating(tmp);
 	}
-
+	
 	@Override
 	public Rating updateRating(Rating rating) throws RatingException {
-		/* rc.updateRating(rating);
-		return selectRating(rating.getId());*/
+		/*
+		 * rc.updateRating(rating); return selectRating(rating.getId());
+		 */
 		deleteRating(rating);
 		rating.setId(null);
 		return insertRating(rating);
 	}
-
+	
 	@Override
 	public Rating selectRating(Long id) {
 		return rc.selectRating(id);
 	}
-
+	
 	@Override
 	public List<Vote> getVotes(Comment comment) {
 		return vc.getVotes(comment);

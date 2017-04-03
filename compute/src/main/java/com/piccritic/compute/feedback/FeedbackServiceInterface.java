@@ -126,6 +126,8 @@ public interface FeedbackServiceInterface {
 	 */
 	public long calculateReputation(Critic critic);
 	
+	public Rating queryRating(Post post, Critic critic);
+	
 	Rating insertRating(Rating rating) throws RatingException;
 
 	boolean deleteRating(Rating rating);

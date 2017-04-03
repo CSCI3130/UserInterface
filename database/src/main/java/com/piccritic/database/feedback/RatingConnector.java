@@ -4,6 +4,9 @@
  */
 package com.piccritic.database.feedback;
 
+import com.piccritic.database.post.Post;
+import com.piccritic.database.user.Critic;
+
 /**
  * This interface provides methods that read to and write from the database
  * with regard to {@link Rating} objects.
@@ -39,4 +42,13 @@ public interface RatingConnector {
 	 * @return true on successful deletion
 	 */
 	public boolean deleteRating(Rating rating);
+	
+	/**
+	 * Searches for a Rating belonging to the specified Post and Critic.
+	 * 
+	 * @param post the Post that the Rating belongs to
+	 * @param critic the Critic that submitted the rating
+	 * @return the Rating matching the Post and Critic
+	 */
+	public Rating queryRating(Post post, Critic critic);
 }
