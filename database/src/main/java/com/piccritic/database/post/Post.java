@@ -10,6 +10,7 @@ import java.util.Set;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
@@ -20,6 +21,7 @@ import org.hibernate.annotations.FetchMode;
 import com.piccritic.database.feedback.Comment;
 import com.piccritic.database.feedback.Rating;
 import com.piccritic.database.license.License;
+import com.piccritic.database.tag.Tag;
 
 /**
  * this class is a Java bean that defines the database table
@@ -40,7 +42,7 @@ public class Post {
 	private Date uploadDate;
 	private String title;
 	private String description;
-
+	
 	@ManyToOne(optional=true, fetch=FetchType.EAGER)
 	private License license;
 	@ManyToOne(optional=false)
@@ -52,6 +54,9 @@ public class Post {
 	
 	@OneToMany(fetch=FetchType.EAGER, mappedBy="post")
 	private Set<Rating> ratings;
+	
+	@ManyToMany(fetch=FetchType.EAGER)
+	private Set<Tag> tags;
 
 	public String getPath() {
 		return path;
@@ -123,9 +128,17 @@ public class Post {
 		this.license = license;
 	}
 	
+	public Set<Tag> getTags() {
+		return tags;
+	}
+
+	public void setTags(Set<Tag> tags) {
+		this.tags = tags;
+	}
+	
 	public String toString() {
 		return String.format("Post{path=%s, uploadDate=%s, title=%s, description=%s, album.id=%d}", 
-				/*(id == null) ? null:id.longValue(),*/ path, (uploadDate == null) ? null :uploadDate.toString(),
+				path, (uploadDate == null) ? null :uploadDate.toString(),
 				title, description, (album == null) ? null : album.getId());
 	}
 	

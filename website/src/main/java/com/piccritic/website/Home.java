@@ -46,7 +46,6 @@ public class Home extends HorizontalSplitPanel {
 		navigator.addView(UserView.NAME, UserView.class);
 		if (navigator.getState().isEmpty()) {
 			navigator.navigateTo(DefaultView.NAME);
-			System.out.println(navigator.getState());
 		} else {
 			navigator.navigateTo(navigator.getState());
 		}

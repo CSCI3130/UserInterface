@@ -39,7 +39,7 @@ public class PicCritic extends UI {
 
 
 	@WebServlet(urlPatterns = "/*", name = "MyUIServlet", asyncSupported = true)
-	@VaadinServletConfiguration(ui = PicCritic.class, productionMode = false)
+	@VaadinServletConfiguration(ui = PicCritic.class, productionMode = true)
 	public static class MyUIServlet extends VaadinServlet {
 		private static final long serialVersionUID = 1L;
 	}

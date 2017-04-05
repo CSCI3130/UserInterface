@@ -6,6 +6,8 @@ import com.piccritic.compute.license.LicenseService;
 import com.piccritic.compute.license.LicenseServiceInterface;
 import com.piccritic.compute.post.PostService;
 import com.piccritic.compute.post.PostServiceInterface;
+import com.piccritic.compute.tag.TagInterface;
+import com.piccritic.compute.tag.TagService;
 import com.piccritic.compute.user.UserService;
 import com.piccritic.compute.user.UserServiceInterface;
 
@@ -15,11 +17,13 @@ public class MasterService {
 	public static UserServiceInterface userService;
 	public static LicenseServiceInterface licenseService;
 	public static PostServiceInterface postService;
+	public static TagInterface tagService;
 	
 	public static void init() {
 		if (feedbackService == null) feedbackService = FeedbackService.createService();
 		if (userService == null) userService = UserService.createService();
 		if (licenseService == null) licenseService = new LicenseService();
 		if (postService == null) postService = new PostService();
+		if (tagService == null) tagService = new TagService();
 	}
 }
