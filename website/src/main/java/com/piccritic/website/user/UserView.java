@@ -32,7 +32,10 @@ public class UserView extends PostQuickView implements View {
 	public void enter(ViewChangeEvent event) {
 		if (event.getParameters() != null && event.getParameters() != "") {
 			UserServiceInterface service = MasterService.userService;
-			critic = service.select(event.getParameters());
+			System.out.println(event.getParameters());
+			System.out.println(event.getParameters().replaceAll("/.*", ""));
+			critic = service.select(event.getParameters().replaceAll("/.*", ""));
+			removeComponent(select);
 			if (critic != null) {
 				Iterator<Album> i = critic.getAlbums().iterator();
 				if (i.hasNext()) {

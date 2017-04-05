@@ -28,6 +28,7 @@ import com.vaadin.ui.themes.ValoTheme;
 public class PostQuickView extends VerticalLayout {
 
 	protected Critic critic;
+	protected ComboBox select;
 	Image image;
 	HorizontalLayout tagSearch = new HorizontalLayout();
 	GridLayout gl = new GridLayout(3, 3);
@@ -50,24 +51,14 @@ public class PostQuickView extends VerticalLayout {
 		addComponent(tagSearch);
 		gl.setSizeFull();
 		gl.setHeightUndefined();
-		addComponent(gl);
-	}
-	
-	public PostQuickView(Critic c) {
-		this();
-		critic = c;
-	}
-
-	public void initPosts(List<Post> posts) {
-		gl.removeAllComponents();
-				
+		
 		//add sorting options combo box
 		List<String> sortOptions = new ArrayList<>();
 		sortOptions.add("Title");
 		sortOptions.add("Upload Date");
 		sortOptions.add("License");
 		
-		ComboBox select = new ComboBox("Select sorting option");
+		select = new ComboBox("Select sorting option");
 		select.addItems(sortOptions);
 		
 		ValueChangeListener listener = new ValueChangeListener() {
@@ -85,6 +76,12 @@ public class PostQuickView extends VerticalLayout {
 		
 		addComponent(select);
 		
+		addComponent(gl);
+		
+		
+	}
+
+	public void initPosts(List<Post> posts) {		
 		//add posts
 		gl.removeAllComponents();
 		if (posts == null) {
