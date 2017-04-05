@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.piccritic.compute.MasterService;
 import com.piccritic.database.post.Post;
+import com.piccritic.database.post.PostConnector.PostSortOption;
 import com.piccritic.database.post.PostException;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
@@ -38,7 +39,28 @@ public class DefaultView extends PostQuickView implements View {
 
 	@Override
 	public void enter(ViewChangeEvent event) {
-		//addComponent(new Label("Welcome to Pic Critic!!"));
+		String sortOption = event.getParameters();
+		PostSortOption option = null;
+		
+		if (sortOption.equals("Title")) {
+			option = PostSortOption.TITLE;
+		} else if (sortOption.equals("UploadDate")) {
+			option = PostSortOption.UPLOAD_DATE;
+		} else if (sortOption.equals("License")) {
+			option = PostSortOption.LICENSE;
+		}
+		posts.clear();
+		
+		try {
+			if (option != null) {
+				posts.addAll(MasterService.postService.getPosts(9, option));
+			} else {
+				posts.addAll(MasterService.postService.getPosts(9));
+			}
+		} catch (PostException e) {
+			e.printStackTrace();
+		}
+		initPosts(posts);
 	}
 
 }

@@ -122,4 +122,39 @@ public class JPAPostConnector extends JPAConnector<Post> implements PostConnecto
 			return null;
 		}
 	}
+	
+	/**
+	 * Gets a specified number of posts from the database, sorted by option.
+	 * @param number of posts to get.
+	 * @param option to sort posts by.
+	 * @return sorted list of posts from the database.
+	 * @throws PostException
+	 */
+	public List<Post> getPosts(int number, PostSortOption option) throws PostException {	
+		try {
+			TypedQuery<Post> q;
+			switch (option) {
+				case UPLOAD_DATE:
+					q = entity.createQuery("SELECT p FROM Post p ORDER BY p.uploadDate", Post.class);
+					break;
+				case TITLE:
+					q = entity.createQuery("SELECT p FROM Post p ORDER BY p.title", Post.class);
+					break;
+				case LICENSE:
+					q = entity.createQuery("SELECT p FROM Post p LEFT JOIN p.license l ORDER BY l.licenseType", Post.class);
+					break;
+//				case NUM_COMMENTS:
+//					q = entity.createQuery("SELECT p FROM Post p JOIN p.comments comments GROUP BY p.path ORDER BY COUNT(p.path)", Post.class);
+//					break;
+				default:
+					q = entity.createQuery("SELECT p FROM Post p", Post.class);
+					break;
+			}
+			q.setMaxResults(number);
+			return q.getResultList();
+		} catch (Exception e) {
+			System.out.println(e.toString());
+			return null;
+		}
+	}
 }

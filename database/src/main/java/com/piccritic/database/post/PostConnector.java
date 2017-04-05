@@ -18,6 +18,12 @@ import com.piccritic.database.user.Critic;
  */
 public interface PostConnector {
 
+	public enum PostSortOption {
+		UPLOAD_DATE,
+		TITLE,
+		LICENSE
+	}
+	
 	/**
 	 * Inserts the specified Post into the database.
 	 * 
@@ -61,11 +67,20 @@ public interface PostConnector {
 	 */
 	public List<Post> getPosts(Critic critic);
 
-	/*
+	/**
 	 * Gets a specified number of posts from the database.
 	 * @param number of posts to get.
 	 * @return list of posts from the database.
 	 * @throws PostException
 	 */
 	public List<Post> getPosts(int number) throws PostException;
+	
+	/**
+	 * Gets a specified number of posts from the database, sorted by option.
+	 * @param number of posts to get.
+	 * @param option to sort posts by.
+	 * @return sorted list of posts from the database.
+	 * @throws PostException
+	 */
+	public List<Post> getPosts(int number, PostSortOption option) throws PostException;
 }

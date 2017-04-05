@@ -10,7 +10,9 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.junit.After;
@@ -21,6 +23,9 @@ import com.piccritic.database.feedback.Comment;
 import com.piccritic.database.feedback.Rating;
 import com.piccritic.database.license.AttributionNonCommercialLicense;
 import com.piccritic.database.license.JPALicenseConnector;
+import com.piccritic.database.license.License;
+import com.piccritic.database.license.LicenseConnector;
+import com.piccritic.database.post.PostConnector.PostSortOption;
 import com.piccritic.database.user.Critic;
 import com.piccritic.database.user.JPAUserConnector;
 import com.piccritic.database.user.UserConnector;
@@ -43,6 +48,7 @@ public class PostConnectorTest {
 	Post post4 = new Post();
 	Album album = new Album();
 	Critic critic = new Critic();
+	Comment comments[] = new Comment[10];
 
 	private String firstName = "firstName";
 	private String handle = "handlePCT";
@@ -55,7 +61,12 @@ public class PostConnectorTest {
 	private String path2 = "/path2";
 	private String path3 = "/path3";
 	private String path4 = "/path4";
+	private long day = 24*3600000;
 	private Date date = new Date(0);
+	private Date date1 = new Date(day);
+	private Date date2 = new Date(2*day);
+	private Date date3 = new Date(3*day);
+	private Date date4 = new Date(4*day);
 
 	private Set<Post> postSet = new HashSet<Post>();
 	private Set<Album> albumSet = new HashSet<Album>();
@@ -65,10 +76,12 @@ public class PostConnectorTest {
 	PostConnector pc = new JPAPostConnector();
 	AlbumConnector ac = new JPAAlbumConnector();
 	UserConnector uc = new JPAUserConnector();
+	LicenseConnector lc = new JPALicenseConnector();
 
 	@Before
 	public void init() {
 		new JPALicenseConnector();
+		
 		postSet.add(post);
 		postSet.add(post1);
 		postSet.add(post2);
@@ -87,33 +100,37 @@ public class PostConnectorTest {
 		album.setPosts(postSet);
 		album.setName(albumName);
 
-		post.setUploadDate(date);
-		post.setTitle(postTitle);
+		post.setUploadDate(date4);
+		post.setTitle("Epsilon");
 		post.setDescription("description");
-		post.setComments(commentSet);
 		post.setRatings(ratingSet);
+		post.setComments(commentSet);
+		post.setLicense(lc.selectLicense(License.ATTRIBUTION_NON_COMMERCIAL_NO_DERIVS));
 
-		post1.setUploadDate(date);
-		post1.setTitle(postTitle);
+		post1.setUploadDate(date2);
+		post1.setTitle("Delta");
 		post1.setDescription("description");
+		post1.setLicense(lc.selectLicense(License.ATTRIBUTION_NON_COMMERCIAL));
 		
 		post2.setUploadDate(date);
-		post2.setTitle(postTitle);
+		post2.setTitle("Cookie");
 		post2.setDescription("description");
+		post2.setLicense(lc.selectLicense(License.ATTRIBUTION_NO_DERIVS));
 		
-		post3.setUploadDate(date);
-		post3.setTitle(postTitle);
+		post3.setUploadDate(date1);
+		post3.setTitle("Beta");
 		post3.setDescription("description");
+		post3.setLicense(lc.selectLicense(License.ATTRIBUTION_NON_COMMERCIAL_SHAREALIKE));
 		
-		post4.setUploadDate(date);
-		post4.setTitle(postTitle);
+		post4.setUploadDate(date3);
+		post4.setTitle("Alpha");
 		post4.setDescription("description");
+		post4.setLicense(lc.selectLicense(License.ATTRIBUTION_SHAREALIKE));
 		try {
 			uc.insertCritic(critic, hash);
 			album.setCritic(critic);
 			ac.insertAlbum(album);
 			post.setPath(path);
-			post.setLicense(new AttributionNonCommercialLicense());
 			post1.setPath(path1);
 			post2.setPath(path2);
 			post3.setPath(path3);
@@ -128,6 +145,7 @@ public class PostConnectorTest {
 			pc.insertPost(post2);
 			pc.insertPost(post3);
 			pc.insertPost(post4);
+			
 		} catch (UserException|PostException|AlbumException e) {
 			fail(e.getMessage());
 		}
@@ -219,6 +237,48 @@ public class PostConnectorTest {
 		}
 	}
 	
+	@Test
+	public void testGetPostSortTitle() {
+		try {
+			List<Post> posts = pc.getPosts(5, PostSortOption.TITLE);
+			assertEquals(post4, posts.get(0));
+			assertEquals(post3, posts.get(1));
+			assertEquals(post2, posts.get(2));
+			assertEquals(post1, posts.get(3));
+			assertEquals(post, posts.get(4));
+		} catch (PostException e) {
+			fail(e.getLocalizedMessage());
+		}
+	}
+	
+	@Test
+	public void testGetPostSortDate() {
+		try {
+			List<Post> posts = pc.getPosts(5, PostSortOption.UPLOAD_DATE);
+			assertEquals(post2, posts.get(0));
+			assertEquals(post3, posts.get(1));
+			assertEquals(post1, posts.get(2));
+			assertEquals(post4, posts.get(3));
+			assertEquals(post, posts.get(4));
+		} catch (PostException e) {
+			fail(e.getLocalizedMessage());
+		}
+	}
+	
+	@Test
+	public void testGetPostSortLicense() {
+		try {
+			List<Post> posts = pc.getPosts(5, PostSortOption.LICENSE);
+			
+			assertEquals(post2, posts.get(0));
+			assertEquals(post1, posts.get(1));
+			assertEquals(post, posts.get(2));
+			assertEquals(post3, posts.get(3));
+			assertEquals(post4, posts.get(4));
+		} catch (PostException e) {
+			fail(e.getLocalizedMessage());
+		}
+	}
 	
 	@After
 	public void tearDown() {
