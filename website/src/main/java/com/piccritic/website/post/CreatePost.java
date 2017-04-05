@@ -153,6 +153,7 @@ public class CreatePost extends Window implements SucceededListener {
 			description.validate();
 			post.setDescription(description.getValue());
 			post.setTitle(title.getValue());
+			post.setLicense(license.getValue());
 			
 			Collection<String> tagCollection = tags.getTags();
 			Set<Tag> tagSet = new HashSet<Tag>();
