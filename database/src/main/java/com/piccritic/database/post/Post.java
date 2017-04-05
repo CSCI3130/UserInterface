@@ -55,7 +55,7 @@ public class Post {
 	@OneToMany(fetch=FetchType.EAGER, mappedBy="post")
 	private Set<Rating> ratings;
 	
-	@ManyToMany(fetch=FetchType.EAGER, mappedBy="posts")
+	@ManyToMany(fetch=FetchType.EAGER)
 	private Set<Tag> tags;
 
 	public String getPath() {

@@ -32,7 +32,7 @@ public class UserView extends PostQuickView implements View {
 	public void enter(ViewChangeEvent event) {
 		if (event.getParameters() != null && event.getParameters() != "") {
 			UserServiceInterface service = MasterService.userService;
-			Critic critic = service.select(event.getParameters());
+			critic = service.select(event.getParameters());
 			if (critic != null) {
 				Iterator<Album> i = critic.getAlbums().iterator();
 				if (i.hasNext()) {
@@ -43,6 +43,8 @@ public class UserView extends PostQuickView implements View {
 					} else {
 						Notification.show("This user has no posts", Type.WARNING_MESSAGE);
 					}
+				} else {
+					Notification.show("This user has no albums", Type.WARNING_MESSAGE);
 				}
 			} else {
 				Notification.show("Invalid user", Type.WARNING_MESSAGE); //critic is null

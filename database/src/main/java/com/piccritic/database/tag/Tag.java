@@ -26,7 +26,7 @@ public class Tag {
 	@Pattern(regexp="[a-z]+")
 	private String tag;	
 	
-	@ManyToMany(fetch=FetchType.EAGER)
+	@ManyToMany(fetch=FetchType.EAGER, mappedBy="tags")
 	private Set<Post> posts;
 	
 	public String getTag() {

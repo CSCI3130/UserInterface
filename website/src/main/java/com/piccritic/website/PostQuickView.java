@@ -5,34 +5,62 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import com.piccritic.compute.MasterConnector;
 import com.piccritic.database.post.Post;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
+import com.piccritic.database.user.Critic;
+import com.piccritic.website.post.TagChooser;
 import com.vaadin.server.FileResource;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.ComboBox;
+import com.vaadin.ui.Button;
 import com.vaadin.ui.GridLayout;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Image;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Notification;
+import com.vaadin.ui.Notification.Type;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
-public class PostQuickView extends GridLayout {
+public class PostQuickView extends VerticalLayout {
 
+	protected Critic critic;
 	Image image;
+	HorizontalLayout tagSearch = new HorizontalLayout();
+	GridLayout gl = new GridLayout(3, 3);
+	TagChooser chooser = new TagChooser();
+	Button searchTags = new Button("Filter", e -> {
+		List<String> tags = chooser.getTags();
+		List<Post> posts = MasterConnector.tagConnector.findPosts(tags, critic);
+		if (posts == null || posts.isEmpty() ) {
+			Notification.show("No results", Type.WARNING_MESSAGE);
+		} else {
+			initPosts(posts);
+		}
+	});
 
 	public PostQuickView() {
-		super(4, 3);
 		setSizeFull();
 		setHeightUndefined();
+		tagSearch.addComponent(chooser);
+		tagSearch.addComponent(searchTags);
+		addComponent(tagSearch);
+		gl.setSizeFull();
+		gl.setHeightUndefined();
+		addComponent(gl);
+	}
+	
+	public PostQuickView(Critic c) {
+		this();
+		critic = c;
 	}
 
 	public void initPosts(List<Post> posts) {
-		this.removeAllComponents();
-		
-		System.out.println("does this happen twice?");
-		
+		gl.removeAllComponents();
+				
 		//add sorting options combo box
 		List<String> sortOptions = new ArrayList<>();
 		sortOptions.add("Title");
@@ -55,13 +83,17 @@ public class PostQuickView extends GridLayout {
 		
 		select.addValueChangeListener(listener);
 		
-		addComponent(select, 0, 0, 3, 1);
+		addComponent(select);
 		
 		//add posts
+		gl.removeAllComponents();
+		if (posts == null) {
+			return;
+		}
 		Iterator<Post> it = posts.iterator();
 		for (int y = 0; y < 9; y++) {
 			if (it.hasNext()) {
-				addComponent(new PostTile(it.next()));
+				gl.addComponent(new PostTile(it.next()));
 			} else {
 				return;
 			}

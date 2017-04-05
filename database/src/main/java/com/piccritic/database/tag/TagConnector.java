@@ -6,6 +6,9 @@ package com.piccritic.database.tag;
 
 import java.util.List;
 
+import com.piccritic.database.post.Post;
+import com.piccritic.database.user.Critic;
+
 public interface TagConnector {
 	/**
 	 * Inserts a new tag into the database
@@ -20,9 +23,8 @@ public interface TagConnector {
 	 * 
 	 * @param query
 	 * @return List of tags
-	 * @throws TagException
 	 */
-	public List<Tag> findTags(String query) throws TagException;
+	public List<Tag> findTags(String query);
 	
 	/**
 	 * Deletes a tag
@@ -32,6 +34,13 @@ public interface TagConnector {
 	 */
 	public boolean deleteTag(Tag tag) throws TagException;
 	
+	/**
+	 * Selects posts by tags
+	 * @param tags
+	 * @param critic
+	 * @return
+	 */
+	public List<Post> findPosts(List<String> tags, Critic critic);	
 	
 
 }
