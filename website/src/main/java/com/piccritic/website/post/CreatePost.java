@@ -1,21 +1,24 @@
 package com.piccritic.website.post;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.piccritic.compute.post.PostService;
+import com.piccritic.compute.MasterService;
+import com.piccritic.compute.post.PostServiceInterface;
+import com.piccritic.compute.tag.TagInterface;
 import com.piccritic.database.post.Album;
 import com.piccritic.database.post.AlbumException;
 import com.piccritic.database.post.Post;
 import com.piccritic.database.post.PostException;
+import com.piccritic.database.tag.Tag;
+import com.piccritic.database.tag.TagException;
 import com.piccritic.website.license.LicenseChooser;
 import com.piccritic.website.login.LoginService;
 import com.vaadin.annotations.Theme;
 import com.vaadin.server.FileResource;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.FormLayout;
-import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Image;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Notification.Type;
@@ -24,7 +27,6 @@ import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.Upload;
-import com.vaadin.ui.Upload.ChangeListener;
 import com.vaadin.ui.Upload.SucceededEvent;
 import com.vaadin.ui.Upload.SucceededListener;
 import com.vaadin.ui.Window;
@@ -43,14 +45,15 @@ public class CreatePost extends Window implements SucceededListener {
 	private TextField title = new TextField("Post Title");
 	private LicenseChooser license = new LicenseChooser();
 	private Upload upload;
-	private GridLayout tags = new GridLayout(2, 2);
 	private Post post = new Post();
 	private ImageReceiver receiver;
 	private Image image = new Image("Uploaded Image");
 	private Button confirm = new Button("Confirm", this::confirmUpload);
-	private PostService service = new PostService();
+	private PostServiceInterface service = MasterService.postService;
+	private TagInterface tagservice = MasterService.tagService;
 	private String handle;
 	private FormLayout form = new FormLayout();
+	private TagChooser tags = new TagChooser();
 
 	/**
 	 * This window is responsible for creating a post form with an @see Upload
@@ -87,10 +90,7 @@ public class CreatePost extends Window implements SucceededListener {
 
 		confirm.setEnabled(false);
 		description.setRequired(true);
-		tags.addComponent(new CheckBox("Nature"), 0, 0);
-		tags.addComponent(new CheckBox("People"), 1, 0);
-		tags.addComponent(new CheckBox("Sports"), 0, 1);
-		tags.addComponent(new CheckBox("Urban"), 1, 1);
+		
 		title.setRequired(true);
 		setupImagereceiver();
 	}
@@ -129,6 +129,7 @@ public class CreatePost extends Window implements SucceededListener {
 			image.setVisible(true);
 			confirm.setEnabled(true);
 		}
+		tags.setVisible(false);
 	}
 
 	@Override
@@ -152,6 +153,24 @@ public class CreatePost extends Window implements SucceededListener {
 			description.validate();
 			post.setDescription(description.getValue());
 			post.setTitle(title.getValue());
+			post.setLicense(license.getValue());
+			
+			Collection<String> tagCollection = tags.getTags();
+			Set<Tag> tagSet = new HashSet<Tag>();
+			
+			for (String t: tagCollection) {
+				Tag tag = new Tag();
+				tag.setTag(t);
+				
+				//Set<Post> posts = tag.getPosts();
+				//posts.add(post);
+				//tag.setPosts(posts);
+				tagservice.insertTag(tag);
+				tagSet.add(tag);
+			}
+			
+			post.setTags(tagSet);
+			
 			if (service != null) {
 				Album defaultAlbum = service.getDefaultAlbum(LoginService.getHandle());
 				post.setAlbum(defaultAlbum);
@@ -173,7 +192,7 @@ public class CreatePost extends Window implements SucceededListener {
 			
 			Notification.show("Could not create post.", Type.WARNING_MESSAGE);
 
-		} catch (PostException|AlbumException e) {
+		} catch (PostException|AlbumException | TagException e) {
 			upload.interruptUpload();
 			Notification.show(e.getMessage(), Type.WARNING_MESSAGE);
 		}

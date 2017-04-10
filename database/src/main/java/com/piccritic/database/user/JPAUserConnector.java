@@ -4,44 +4,36 @@
  */
 package com.piccritic.database.user;
 
-import java.util.Set;
-
-import javax.validation.ConstraintViolation;
-import javax.validation.Validation;
-
 import com.piccritic.database.JPAConnector;
 import com.vaadin.addon.jpacontainer.EntityItem;
 import com.vaadin.addon.jpacontainer.JPAContainer;
 import com.vaadin.addon.jpacontainer.JPAContainerFactory;
 
 /**
- * This class enables connection to the database using JPAContainers. It has a
- * number of methods for performing user-related operations on the database.
- * 
- * @author Ryan Lowe<br>
- *         Damien Robichaud
+ * This class enables a connection to the database using JPAContainers. It has a number of methods for
+ * performing user-related operations on the database. Implements {@link UserConnector}. Extends {@link JPAConnector}.
+ * @author Ryan Lowe<br>Damien Robichaud
  */
-public class JPAUserConnector extends JPAConnector implements UserConnector {
+public class JPAUserConnector extends JPAConnector<Critic> implements UserConnector {
 
-	private JPAContainer<Critic> critics;
 	private JPAContainer<UserLogin> logins;
 
+	/**
+	 * Initializes the JPAContainers for this UserConnector.
+	 */
 	public JPAUserConnector() {
-		critics = JPAContainerFactory.make(Critic.class, entity);
+		super(Critic.class);
 		logins = JPAContainerFactory.make(UserLogin.class, entity);
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.piccritic.database.user.UserConnector#insertCritic(com.piccritic.
-	 * database.user.Critic, java.lang.String)
+	 * @see com.piccritic.database.user.UserConnector#insertCritic(com.piccritic.database.user.Critic, java.lang.String)
 	 */
 	public Critic insertCritic(Critic critic, String hash) throws UserException {
 
 		validate(critic);
-		critics.addEntity(critic);
+		container.addEntity(critic);
 		UserLogin login = new UserLogin();
 		login.setHandle(critic.getHandle());
 		login.setHash(hash);
@@ -52,40 +44,32 @@ public class JPAUserConnector extends JPAConnector implements UserConnector {
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.piccritic.database.user.UserConnector#deleteCritic(com.piccritic.
-	 * database.user.Critic)
+	 * @see com.piccritic.database.user.UserConnector#deleteCritic(com.piccritic.database.user.Critic)
 	 */
 	public boolean deleteCritic(Critic critic) {
 		String handle = critic.getHandle();
-		critics.removeItem(handle);
+		container.removeItem(handle);
 		logins.removeItem(handle);
 
-		return !critics.containsId(handle) && !logins.containsId(handle);
+		return !container.containsId(handle) && !logins.containsId(handle);
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.piccritic.database.user.UserConnector#selectCritic(java.lang.String)
+	 * @see com.piccritic.database.user.UserConnector#selectCritic(java.lang.String)
 	 */
 	public Critic selectCritic(String handle) {
-		EntityItem<Critic> criticItem = critics.getItem(handle);
+		EntityItem<Critic> criticItem = container.getItem(handle);
 		return (criticItem != null) ? criticItem.getEntity() : null;
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.piccritic.database.user.UserConnector#updateCritic(com.piccritic.
-	 * database.user.Critic)
+	 * @see com.piccritic.database.user.UserConnector#updateCritic(com.piccritic.database.user.Critic)
 	 */
 	@SuppressWarnings("unchecked")
 	public Critic updateCritic(Critic critic) throws UserException {
-		EntityItem<Critic> criticItem = critics.getItem(critic.getHandle());
+		EntityItem<Critic> criticItem = container.getItem(critic.getHandle());
 		
 		validate(critic);
 		criticItem.getItemProperty("firstName").setValue(critic.getFirstName());
@@ -99,10 +83,7 @@ public class JPAUserConnector extends JPAConnector implements UserConnector {
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.piccritic.database.user.UserConnector#updateCritic(com.piccritic.
-	 * database.user.Critic, java.lang.String)
+	 * @see com.piccritic.database.user.UserConnector#updateCritic(com.piccritic.database.user.Critic, java.lang.String)
 	 */
 	@SuppressWarnings("unchecked")
 	public Critic updateCritic(Critic critic, String hash) throws UserException {
@@ -115,9 +96,7 @@ public class JPAUserConnector extends JPAConnector implements UserConnector {
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.piccritic.database.user.UserConnector#getUserHash(java.lang.String)
+	 * @see com.piccritic.database.user.UserConnector#getUserHash(java.lang.String)
 	 */
 	public String getUserHash(String handle) {
 
@@ -128,18 +107,17 @@ public class JPAUserConnector extends JPAConnector implements UserConnector {
 		return (String) login.getItemProperty("hash").getValue();
 	}
 	
-	/**
-	 * Validates the fields and throws exceptions when the fields
-	 * do not currently abide by the rules defined in the critic class
-	 * 
-	 * @param critic
-	 * @throws UserException Message for the UI portion of the code.
+	/*
+	 * (non-Javadoc)
+	 * @see com.piccritic.database.JPAConnector#validate(java.lang.Object)
 	 */
-	private void validate(Critic critic) throws UserException {
-		Set<ConstraintViolation<Critic>> violations = Validation.buildDefaultValidatorFactory().getValidator()
-				.validate(critic);
-		for (ConstraintViolation<Critic> violation : violations) {
-			throw new UserException(violation.getPropertyPath() + " " + violation.getMessage());
+	protected void validate(Critic critic) throws UserException {
+		// in the super validate method, violation.getPropertyPath() + " " + violation.getMessage());
+		// is not present as it was in iteration 2 in this method. Leaving it out for now unless it is needed.
+		try{
+			super.validate(critic);
+		} catch(Exception e) {
+			throw new UserException(e.getMessage());
 		}
 	}
 	

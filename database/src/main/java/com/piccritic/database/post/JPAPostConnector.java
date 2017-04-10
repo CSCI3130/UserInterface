@@ -5,89 +5,26 @@
 package com.piccritic.database.post;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
-import javax.persistence.EntityManager;
-import javax.persistence.Persistence;
-import javax.persistence.Query;
 import javax.persistence.TypedQuery;
-import javax.validation.ConstraintViolation;
-import javax.validation.Validation;
 
-import com.piccritic.database.feedback.Comment;
-import com.piccritic.database.feedback.Rating;
-import com.piccritic.database.user.Critic;
 import com.piccritic.database.JPAConnector;
+import com.piccritic.database.user.Critic;
 import com.vaadin.addon.jpacontainer.EntityItem;
-import com.vaadin.addon.jpacontainer.JPAContainer;
-import com.vaadin.addon.jpacontainer.JPAContainerFactory;
 
 /**
- * This class implements {@link PostConnector} using
- * Vaadin JPAContainers.
- * 
+ * This class enables a connection to the database using JPAContainers. It has a number of methods for 
+ * performing post-related operations on the database. Implements {@link PostConnector}. Extends {@link JPAConnector}.
  * @author Ryan Lowe<br>Jonathan Ignacio<br>Damien Robichaud
  */
-public class JPAPostConnector extends JPAConnector implements PostConnector {
-	
-	private JPAContainer<Album> albums;
-	private JPAContainer<Post> posts;
+public class JPAPostConnector extends JPAConnector<Post> implements PostConnector {
 	
 	/**
-	 * Initializes the JPAContainers for this PostConnector.
+	 * Initializes the JPAContainer for this PostConnector.
 	 */
 	public JPAPostConnector() {
-		albums = JPAContainerFactory.make(Album.class, entity);
-		posts = JPAContainerFactory.make(Post.class, entity);
-	}
-	
-	/* (non-Javadoc)
-	 * @see com.piccritic.database.post.PostConnector#insertAlbum(com.piccritic.database.post.Album)
-	 */
-	public Album insertAlbum(Album album) throws AlbumException {
-		validate(album);
-		album.setId(null);
-		album.setId((Long) albums.addEntity(album));
-		return selectAlbum(album.getId());
-	}
-	
-	/* (non-Javadoc)
-	 * @see com.piccritic.database.post.PostConnector#updateAlbum(com.piccritic.database.post.Album)
-	 */
-	@SuppressWarnings("unchecked")
-	public Album updateAlbum(Album album) throws AlbumException {
-		EntityItem<Album> albumItem = albums.getItem(album.getId());
-		
-		validate(album);
-		albumItem.getItemProperty("name").setValue(album.getName());
-		albumItem.commit();
-		
-		return selectAlbum(album.getId());
-	}
-	
-	/* (non-Javadoc)
-	 * @see com.piccritic.database.post.PostConnector#selectAlbum(Long)
-	 */
-	public Album selectAlbum(Long id) {
-		EntityItem<Album> albumItem = albums.getItem(id);
-		return (albumItem != null) ? albumItem.getEntity() : null;
-	}
-	
-	/* (non-Javadoc)
-	 * @see com.piccritic.database.post.PostConnector#deleteAlbum(com.piccritic.database.post.Album)
-	 */
-	public boolean deleteAlbum(Album album) throws AlbumException {
-		validate(album);
-		if (album == null) {
-			throw new AlbumException("Cannot delete null album");
-		}
-		albums.removeItem(album.getId());
-		return !albums.containsId(album.getId());
-		
+		super(Post.class);
 	}
 	
 	/* (non-Javadoc)
@@ -95,7 +32,7 @@ public class JPAPostConnector extends JPAConnector implements PostConnector {
 	 */
 	public Post insertPost(Post post) throws PostException {
 		validate(post);
-		posts.addEntity(post);
+		container.addEntity(post);
 		return selectPost(post.getPath());
 	}
 	
@@ -105,7 +42,7 @@ public class JPAPostConnector extends JPAConnector implements PostConnector {
 	@SuppressWarnings("unchecked")
 	public Post updatePost(Post post) throws PostException {
 		validate(post);
-		EntityItem<Post> postItem = posts.getItem(post.getPath());
+		EntityItem<Post> postItem = container.getItem(post.getPath());
 		if (postItem == null) {
 			throw new PostException("Cannot update null post");
 		}
@@ -120,7 +57,7 @@ public class JPAPostConnector extends JPAConnector implements PostConnector {
 	 * @see com.piccritic.database.post.PostConnector#selectPost(Long)
 	 */
 	public Post selectPost(String path) {
-		EntityItem<Post> postItem = posts.getItem(path);
+		EntityItem<Post> postItem = container.getItem(path);
 		return (postItem != null) ? postItem.getEntity() : null;
 	}
 	
@@ -133,35 +70,19 @@ public class JPAPostConnector extends JPAConnector implements PostConnector {
 			throw new PostException("Cannot delete null post");
 		}
 		post.getAlbum().getPosts().remove(post);
-		posts.removeItem(post.getPath());
-		return !posts.containsId(post.getPath());
+		container.removeItem(post.getPath());
+		return !container.containsId(post.getPath());
 	}
 	
-	/**
-	 * Validates the fields and throws exceptions when the fields
-	 * do not currently abide by the rules defined in the album class
-	 * 
-	 * @param album
-	 * @throws AlbumException Message for the UI portion of the code.
+	/*
+	 * (non-Javadoc)
+	 * @see com.piccritic.database.JPAConnector#validate(java.lang.Object)
 	 */
-	private void validate(Album album) throws AlbumException {
-		Set<ConstraintViolation<Album>> violations = Validation.buildDefaultValidatorFactory().getValidator().validate(album);
-		for (ConstraintViolation<Album> violation : violations) {
-			throw new AlbumException(violation.getMessage());
-		}
-	}
-	
-	/**
-	 * Validates the fields and throws exceptions when the fields
-	 * do not currently abide by the rules defined in the post class
-	 * 
-	 * @param post
-	 * @throws PostException Message for the UI portion of the code.
-	 */
-	private void validate(Post post) throws PostException {
-		Set<ConstraintViolation<Post>> violations = Validation.buildDefaultValidatorFactory().getValidator().validate(post);
-		for (ConstraintViolation<Post> violation : violations) {
-			throw new PostException(violation.getMessage());
+	protected void validate(Post post) throws PostException {
+		try {
+			super.validate(post);
+		} catch(Exception e) {
+			throw new PostException(e.getLocalizedMessage());
 		}
 	}
 	
@@ -170,16 +91,15 @@ public class JPAPostConnector extends JPAConnector implements PostConnector {
 	 * @see com.piccritic.database.post.PostConnector#getPosts(com.piccritic.database.user.Critic)
 	 */
 	public List<Post> getPosts(Critic critic){
-		critic.getAlbums();
 		String query1 = "SELECT a FROM Album a WHERE a.critic = :crit ORDER BY a.creationDate";
-		TypedQuery<Album> q = albums.getEntityProvider().getEntityManager().createQuery(query1, Album.class)
+		TypedQuery<Album> q = entity.createQuery(query1, Album.class)
 				.setParameter("crit", critic);
 		List<Post> postList = new ArrayList<Post>();
 		List<Album> albums = q.getResultList();
 		
 		for(Album album: albums){
 			String query2 = "SELECT p FROM Post p WHERE p.album = :album";
-			TypedQuery<Post> q2 = posts.getEntityProvider().getEntityManager().createQuery(query2, Post.class)
+			TypedQuery<Post> q2 = entity.createQuery(query2, Post.class)
 					.setParameter("album", album);
 			postList.addAll(q2.getResultList());
 		}
@@ -194,7 +114,42 @@ public class JPAPostConnector extends JPAConnector implements PostConnector {
 	 */
 	public List<Post> getPosts(int number) throws PostException {	
 		try {
-			TypedQuery<Post> q = posts.getEntityProvider().getEntityManager().createQuery("SELECT c from Post c", Post.class);
+			TypedQuery<Post> q = entity.createQuery("SELECT c from Post c", Post.class);
+			q.setMaxResults(number);
+			return q.getResultList();
+		} catch (Exception e) {
+			System.out.println(e.toString());
+			return null;
+		}
+	}
+	
+	/**
+	 * Gets a specified number of posts from the database, sorted by option.
+	 * @param number of posts to get.
+	 * @param option to sort posts by.
+	 * @return sorted list of posts from the database.
+	 * @throws PostException
+	 */
+	public List<Post> getPosts(int number, PostSortOption option) throws PostException {	
+		try {
+			TypedQuery<Post> q;
+			switch (option) {
+				case UPLOAD_DATE:
+					q = entity.createQuery("SELECT p FROM Post p ORDER BY p.uploadDate", Post.class);
+					break;
+				case TITLE:
+					q = entity.createQuery("SELECT p FROM Post p ORDER BY p.title", Post.class);
+					break;
+				case LICENSE:
+					q = entity.createQuery("SELECT p FROM Post p LEFT JOIN p.license l ORDER BY l.licenseType", Post.class);
+					break;
+//				case NUM_COMMENTS:
+//					q = entity.createQuery("SELECT p FROM Post p JOIN p.comments comments GROUP BY p.path ORDER BY COUNT(p.path)", Post.class);
+//					break;
+				default:
+					q = entity.createQuery("SELECT p FROM Post p", Post.class);
+					break;
+			}
 			q.setMaxResults(number);
 			return q.getResultList();
 		} catch (Exception e) {

@@ -3,9 +3,11 @@ package com.piccritic.website.post;
 import java.io.File;
 import java.util.List;
 
+import com.piccritic.compute.MasterService;
 import com.piccritic.compute.feedback.FeedbackService;
 import com.piccritic.compute.feedback.FeedbackServiceInterface;
 import com.piccritic.compute.post.PostService;
+import com.piccritic.compute.post.PostServiceInterface;
 import com.piccritic.compute.user.UserService;
 import com.piccritic.compute.user.UserServiceInterface;
 import com.piccritic.database.feedback.Comment;
@@ -43,8 +45,8 @@ public class ViewPost extends VerticalLayout implements View {
 	private Label postDescription = new Label();
 	private RatingComponent ratings = new RatingComponent();
 	private List<Comment> comments;
-	private UserServiceInterface us = UserService.createService();
-	private FeedbackServiceInterface fs = FeedbackService.createService();
+	private UserServiceInterface us = MasterService.userService;
+	private FeedbackServiceInterface fs = MasterService.feedbackService;
 	private CommentForm commentForm = new CommentForm(fs);
 	private Label license = new Label();
 
@@ -65,7 +67,7 @@ public class ViewPost extends VerticalLayout implements View {
 
 	@Override
 	public void enter(ViewChangeEvent event) {
-		PostService service = new PostService();
+		PostServiceInterface service = MasterService.postService;
 		post = service.getPost(event.getParameters());
 		if (post == null) {
 			Notification.show("Error 404"+event.getParameters(), Type.ERROR_MESSAGE);

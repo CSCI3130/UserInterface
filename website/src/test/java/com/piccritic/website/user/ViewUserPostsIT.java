@@ -1,9 +1,24 @@
 package com.piccritic.website.user;
 
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
+import java.io.File;
+import java.io.IOException;
+import java.sql.Date;
+import java.util.HashSet;
+import java.util.Set;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
 import com.piccritic.database.license.AttributionLicense;
 import com.piccritic.database.license.JPALicenseConnector;
 import com.piccritic.database.post.Album;
+import com.piccritic.database.post.AlbumConnector;
 import com.piccritic.database.post.AlbumException;
+import com.piccritic.database.post.JPAAlbumConnector;
 import com.piccritic.database.post.JPAPostConnector;
 import com.piccritic.database.post.Post;
 import com.piccritic.database.post.PostConnector;
@@ -14,19 +29,6 @@ import com.piccritic.database.user.UserConnector;
 import com.piccritic.database.user.UserException;
 import com.piccritic.website.PicCriticIT;
 import com.vaadin.testbench.elements.ImageElement;
-
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-
-import java.sql.Date;
-import java.util.HashSet;
-import java.util.Set;
-import java.io.File;
-import java.io.IOException;
-
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
 
 /**
  * This class contains JUnit tests, which are run using Vaadin TestBench 4.
@@ -44,7 +46,7 @@ public class ViewUserPostsIT extends PicCriticIT {
 	Critic critic = new Critic();
 	
 	private String firstName = "firstName";
-	private String handle = "handle";
+	private String handle = "handleVUPIT";
 	private String lastName = "lastName";
 	private String hash = "hash";
 	private String albumName = "album";
@@ -58,6 +60,7 @@ public class ViewUserPostsIT extends PicCriticIT {
 	
 	JPALicenseConnector lc = new JPALicenseConnector();
 	PostConnector pc = new JPAPostConnector();
+	AlbumConnector ac = new JPAAlbumConnector();
 	UserConnector uc = new JPAUserConnector();
 	
 	private void openUserPage(String user) {
@@ -88,7 +91,7 @@ public class ViewUserPostsIT extends PicCriticIT {
 			image.createNewFile();
 			uc.insertCritic(critic, hash);
 			album.setCritic(critic);
-			pc.insertAlbum(album);
+			ac.insertAlbum(album);
 			post.setPath(path);
 			post.setAlbum(album);
 			pc.insertPost(post);
@@ -111,7 +114,7 @@ public class ViewUserPostsIT extends PicCriticIT {
 		try {
 			image.delete();
 			pc.deletePost(post);
-			pc.deleteAlbum(album);
+			ac.deleteAlbum(album);
 		} catch (Exception e) {
 			e.getLocalizedMessage();
 		}

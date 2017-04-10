@@ -12,15 +12,17 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.piccritic.database.license.AttributionLicense;
-import com.piccritic.database.license.JPALicenseConnector;
 import com.piccritic.database.feedback.Comment;
 import com.piccritic.database.feedback.CommentConnector;
 import com.piccritic.database.feedback.JPACommentConnector;
 import com.piccritic.database.feedback.Rating;
 import com.piccritic.database.feedback.Vote;
+import com.piccritic.database.license.AttributionLicense;
+import com.piccritic.database.license.JPALicenseConnector;
 import com.piccritic.database.post.Album;
+import com.piccritic.database.post.AlbumConnector;
 import com.piccritic.database.post.AlbumException;
+import com.piccritic.database.post.JPAAlbumConnector;
 import com.piccritic.database.post.JPAPostConnector;
 import com.piccritic.database.post.Post;
 import com.piccritic.database.post.PostConnector;
@@ -45,7 +47,7 @@ public class AddPostComponentsIT extends PicCriticIT {
 	Vote vote = new Vote();
 	
 	private String firstName = "firstName";
-	private String handle = "handle";
+	private String handle = "handleAPCIT";
 	private String lastName = "lastName";
 	private String hash = "hash";
 	private String albumName = "album";
@@ -63,6 +65,7 @@ public class AddPostComponentsIT extends PicCriticIT {
 	
 	JPALicenseConnector lc = new JPALicenseConnector();
 	PostConnector pc = new JPAPostConnector();
+	AlbumConnector ac = new JPAAlbumConnector();
 	UserConnector uc = new JPAUserConnector();
 //	RatingConnector rc = new JPARatingConnector();
 	CommentConnector cc = new JPACommentConnector();
@@ -125,7 +128,7 @@ public class AddPostComponentsIT extends PicCriticIT {
 			uc.insertCritic(critic, hash);
 			
 			album.setCritic(critic);
-			pc.insertAlbum(album);
+			ac.insertAlbum(album);
 			
 			post.setPath(path);
 			post.setAlbum(album);
@@ -201,7 +204,7 @@ public class AddPostComponentsIT extends PicCriticIT {
 		try {
 			cc.deleteComment(cc.getComments(post).get(0));
 			pc.deletePost(post);
-			pc.deleteAlbum(album);
+			ac.deleteAlbum(album);
 		} catch (PostException | AlbumException e) {
 			e.getLocalizedMessage();
 		}

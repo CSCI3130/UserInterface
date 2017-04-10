@@ -6,8 +6,6 @@ package com.piccritic.database.post;
 
 import java.util.List;
 
-import com.piccritic.database.feedback.Comment;
-import com.piccritic.database.feedback.Rating;
 import com.piccritic.database.user.Critic;
 
 /**
@@ -19,41 +17,12 @@ import com.piccritic.database.user.Critic;
  * 			ian-dawson
  */
 public interface PostConnector {
-	
-	/**
-	 * Inserts the specified Album into the database.
-	 * 
-	 * @param album the album to insert
-	 * @return the same album, with a generated ID
-	 * @throws AlbumException if the album validation fails
-	 */
-	public Album insertAlbum(Album album) throws AlbumException;
-	
-	/**
-	 * Updates the specified Album in the database.
-	 * 
-	 * @param album the album to update
-	 * @return the same album
-	 * @throws AlbumException if the album validation fails
-	 */
-	public Album updateAlbum(Album album) throws AlbumException;
-	
-	/**
-	 * Gets the Album with the matching ID from the database.
-	 * 
-	 * @param id the id to search for
-	 * @return the album with the given ID, or null if it doesn't exist
-	 */
-	public Album selectAlbum(Long id);
-	
-	/**
-	 * Deletes the specified Album from the database.
-	 * 
-	 * @param album the album to delete
-	 * @return true on successful delete
-	 * @throws AlbumException if the album validation fails
-	 */
-	public boolean deleteAlbum(Album album) throws AlbumException;
+
+	public enum PostSortOption {
+		UPLOAD_DATE,
+		TITLE,
+		LICENSE
+	}
 	
 	/**
 	 * Inserts the specified Post into the database.
@@ -98,11 +67,20 @@ public interface PostConnector {
 	 */
 	public List<Post> getPosts(Critic critic);
 
-	/*
+	/**
 	 * Gets a specified number of posts from the database.
 	 * @param number of posts to get.
 	 * @return list of posts from the database.
 	 * @throws PostException
 	 */
 	public List<Post> getPosts(int number) throws PostException;
+	
+	/**
+	 * Gets a specified number of posts from the database, sorted by option.
+	 * @param number of posts to get.
+	 * @param option to sort posts by.
+	 * @return sorted list of posts from the database.
+	 * @throws PostException
+	 */
+	public List<Post> getPosts(int number, PostSortOption option) throws PostException;
 }
